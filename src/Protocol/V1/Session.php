@@ -50,6 +50,9 @@ class Session extends AbstractSession
                         }
                     } elseif ($responseMessage->isRecord()) {
                         $response['records'][] = $responseMessage;
+                    } elseif ($responseMessage->isFailure()) {
+                        var_dump($responseMessage);
+                        exit();
                     }
                 }
             }
@@ -65,6 +68,7 @@ class Session extends AbstractSession
     public function init()
     {
         $ua = Driver::getUserAgent();
+        $ua = 'ExampleDriver/1.0';
         $this->sendMessage(new InitMessage($ua));
         $responseMessage = $this->receiveMessage();
         if ($responseMessage->isSuccess()) {

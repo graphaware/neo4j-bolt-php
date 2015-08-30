@@ -8,9 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Neo4j\PackStream\PackStream;
+namespace GraphAware\Bolt\PackStream;
 
 use GraphAware\Bolt\Exception\SerializationException;
+use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Constants;
 
 class Packer
@@ -48,16 +49,54 @@ class Packer
     {
         $stream = '';
         if (is_string($v)) {
-            $v = utf8_encode($v);
-            $l = mb_strlen($v, 'ASCII');
-            $stream .= $this->getTextMarker($l);
-            $stream .= $v;
+            $stream .= $this->packText($v);
         } elseif (is_array($v)) {
             $size = count($v);
             $stream .= $this->getMapMarker($size);
+            foreach ($v as $k => $value) {
+                $stream .= $this->pack($k);
+                $stream .= $this->pack($value);
+            }
+        } elseif (is_int($v)) {
+            $stream .= $this->packInteger($v);
         }
 
         return $stream;
+    }
+
+    public function packText($value)
+    {
+        $value = utf8_decode($value);
+        $length = strlen($value);
+        $b = '';
+        if ($length < 16) {
+            $b .= chr(Constants::TEXT_TINY + $length);
+            $b .= $value;
+            return $b;
+        }
+
+        if ($length < 256) {
+            $b .= chr(Constants::TEXT_8);
+            $b .= $this->packUnsignedShortShort($length);
+            $b .= $value;
+            return $b;
+        }
+
+        if ($length < 65536) {
+            $b .= chr(Constants::TEXT_16);
+            $b .= $this->packUnsignedShort($length);
+            $b .= $value;
+            return $b;
+        }
+
+        if ($length < PHP_INT_MAX && $length < 4294967295) {
+            $b .= chr(Constants::INT_32);
+            $b .= $this->packUnsignedLong($length);
+            $b .= $value;
+            return $b;
+        }
+
+        throw new \OutOfBoundsException(sprintf('The value %s can not be packed, length is out of bound', $value));
     }
 
     public function getTextMarker($length)
@@ -89,15 +128,6 @@ class Packer
         return chr(self::MISC_ZERO) . chr(self::MISC_ZERO);
     }
 
-    public function getPullAllMessage()
-    {
-        $msg = $this->getStructureMarker(0);
-        $msg .= chr(self::SIGNATURE_PULL_ALL);
-        $length = $this->getSizeMarker($msg);
-
-        return $length . $msg . $this->getEndSignature();
-    }
-
     public function getSizeMarker($stream)
     {
         $size = mb_strlen($stream, 'ASCII');
@@ -105,40 +135,32 @@ class Packer
         return pack('n', $size);
     }
 
-    public function packBigEndian($v)
-    {
-        return pack('N', $v);
-    }
-
-    public function getStandardQueryStructureMarker()
-    {
-        return hex2bin(dechex(self::STRUCTURE_TINY + 2));
-    }
-
-    public function getMessages($signature, array $fields = array())
-    {
-        $stream = '';
-        $stream .= $this->packStructureHeader(count($fields), $signature);
-        foreach ($fields as $field) {
-            $stream .= $this->pack($field);
-        }
-
-        return $stream;
-
-    }
-
     public function packStructureHeader($length, $signature)
     {
         $stream = '';
         $packedSig = chr($signature);
-        if ($length < self::SIZE_TINY) {
-            $stream .= chr(self::STRUCTURE_TINY + $length);
+        if ($length < Constants::SIZE_TINY) {
+            $stream .= chr(Constants::STRUCTURE_TINY + $length);
             $stream .= $packedSig;
+            return $stream;
         }
 
-        return $stream;
-    }
+        if ($length < Constants::SIZE_MEDIUM) {
+            $stream .= chr(Constants::STRUCTURE_MEDIUM);
+            $stream .= $this->packUnsignedShortShort($length);
+            $stream .= $packedSig;
+            return $stream;
+        }
 
+        if ($length < Constants::SIZE_LARGE) {
+            $stream .= chr(Constants::STRUCTURE_LARGE);
+            $stream .= $this->packSignedShort($length);
+            $stream .= $packedSig;
+            return $stream;
+        }
+
+        throw new SerializationException(sprintf('Unable pack the size "%d" of the structure, Out of bound !', $length));
+    }
 
     /**
      * @param $length
@@ -160,5 +182,69 @@ class Packer
         }
 
         return $bytes;
+    }
+
+    public function packBigEndian($v)
+    {
+        return pack('N', $v);
+    }
+
+    public function packInteger($value)
+    {
+        $value = (int) $value;
+        if ($this->isShortShort($value)) {
+            // tiny ints
+        }
+
+        if ($this->isShort($value)) {
+            $b = '';
+            $b .= chr(Constants::INT_8);
+            $b .= $this->packSignedShort($value);
+            return $b;
+        }
+
+    }
+
+    public function packUnsignedShortShort($integer)
+    {
+        return pack('C', $integer);
+    }
+
+    public function packSignedShort($integer)
+    {
+        return pack('s', $integer);
+    }
+
+    public function packUnsignedShort($integer)
+    {
+        return pack('n', $integer);
+    }
+
+    public function packUnsignedLong($integer)
+    {
+        return pack('N', $integer);
+    }
+
+    public function isShortShort($value)
+    {
+        if (in_array($value, range(-16, 127))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isShort($integer)
+    {
+        $min = 128;
+        $max = 32767;
+        $minMin = -129;
+        $minMax = -32768;
+
+        if (in_array($integer, range($min, $max)) || in_array($integer, range($minMin, $minMax))) {
+            return true;
+        }
+
+        return false;
     }
 }

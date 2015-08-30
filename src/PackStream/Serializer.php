@@ -4,15 +4,16 @@ namespace GraphAware\Bolt\PackStream;
 
 use GraphAware\Bolt\PackStream\Structure\MessageStructure;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use GraphAware\Bolt\Protocol\Message\FailureMessage;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\RecordMessage;
 use GraphAware\Bolt\Protocol\Message\SuccessMessage;
-use Neo4j\PackStream\PackStream\Packer;
+use GraphAware\Bolt\PackStream\Packer;
 
 class Serializer
 {
     /**
-     * @var \Neo4j\PackStream\PackStream\Packer
+     * @var \GraphAware\Bolt\PackStream\Packer
      */
     protected $packer;
 
@@ -21,10 +22,6 @@ class Serializer
      */
     protected $unpacker;
 
-    /**
-     * @param \Neo4j\PackStream\PackStream\Packer  $packer
-     * @param \GraphAware\Bolt\PackStream\Unpacker $unpacker
-     */
     public function __construct(Packer $packer, Unpacker $unpacker)
     {
         $this->packer = $packer;
@@ -34,8 +31,10 @@ class Serializer
     public function serialize(AbstractMessage $message)
     {
         $buffer = '';
-        $buffer .= $this->packStructureHeader($message->getFieldsLength(), $message->getSignature());
-        $buffer .= $this->packFields($message->getFields());
+        $buffer .= $this->packer->packStructureHeader($message->getFieldsLength(), $message->getSignature());
+        foreach ($message->getFields() as $field) {
+            $buffer .= $this->packer->pack($field);
+        }
 
         $message->setSerialization($buffer);
     }
@@ -48,6 +47,8 @@ class Serializer
             return $this->convertStructureToSuccessMessage($structure, $message);
         } elseif ($structure->isRecord()) {
             return $this->convertStructureToRecordMessage($structure, $message);
+        } elseif ($structure->isFailure()) {
+            return $this->convertStructureToFailureMessage($structure, $message);
         }
 
         return $structure;
@@ -65,27 +66,15 @@ class Serializer
     {
         $message = new RecordMessage($structure->getElements()[0]);
         $message->setSerialization($rawMessage->getBytes());
-        //print_r($structure);
 
         return $message;
     }
 
-    public function packStructureHeader($length, $signature)
+    public function convertStructureToFailureMessage(MessageStructure $structure, RawMessage $rawMessage)
     {
-        $stream = '';
-        $stream .= $this->packer->getStructureMarker($length);
-        $stream .= chr($signature);
+        $message = new FailureMessage($structure->getElements()[0]);
+        $message->setSerialization($rawMessage->getBytes());
 
-        return $stream;
-    }
-
-    public function packFields(array $fields)
-    {
-        $stream = '';
-        foreach ($fields as $field) {
-            $stream .= $this->packer->pack($field);
-        }
-
-        return $stream;
+        return $message;
     }
 }

@@ -4,7 +4,7 @@ namespace GraphAware\Bolt;
 
 use GraphAware\Bolt\IO\Socket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
-use Neo4j\PackStream\PackStream\Packer;
+use GraphAware\Bolt\PackStream\Packer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use GraphAware\Bolt\Exception\HandshakeException;
 use GraphAware\Bolt\Protocol\V1\Session as SessionV1;
@@ -56,6 +56,10 @@ class Driver
         return $this->sessionRegistry->getSession($this->versionAgreed);
     }
 
+    /**
+     * @return mixed
+     * @throws \GraphAware\Bolt\Exception\IOException
+     */
     public function handshake()
     {
         $packer = new Packer();
@@ -70,30 +74,7 @@ class Driver
         $rawHandshakeResponse = $this->io->read(4);
         $response = unpack('N', $rawHandshakeResponse);
         $version = $response[1];
+
         return $version;
-    }
-
-    public function recv()
-    {
-        $nextChunkLength = 2;
-        do {
-            echo '----' . PHP_EOL;
-            $chunkHeader = $this->io->read($nextChunkLength);
-            $chunkSize = $this->getChunkLength($chunkHeader);
-            $this->io->read($chunkSize);
-            $nextChunkLength = $this->getChunkLength($this->io->read(2));
-            echo '-';
-            var_dump($nextChunkLength);
-            echo '-' . PHP_EOL;
-        } while($nextChunkLength > 0);
-    }
-
-    public function getChunkLength($chunkHeader)
-    {
-        $length = hexdec(bin2hex($chunkHeader));
-        if (0 === $length) {
-            echo 'END MESSAGE ENCOUNTERED' . PHP_EOL;
-        }
-        return (int) $length;
     }
 }

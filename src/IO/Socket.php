@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the Neo4j PackStream package.
+ * This file is part of the GraphAware Bolt package.
  *
- * (c) Christophe Willemsen <willemsen.christophe@gmail.com>
+ * (c) GraphAware Ltd <christophe@graphaware.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -82,7 +82,7 @@ class Socket extends AbstractIO
 
     public function write($data)
     {
-        //echo 'C: ' . Helper::prettyHex($data) . PHP_EOL;
+        echo 'C: ' . Helper::prettyHex($data) . PHP_EOL;
         $len = mb_strlen($data, 'ASCII');
 
         while (true) {

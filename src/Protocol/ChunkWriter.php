@@ -4,8 +4,7 @@ namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\Misc\Helper;
-use Neo4j\PackStream\PackStream\Packer;
-
+use GraphAware\Bolt\PackStream\Packer;
 class ChunkWriter
 {
     const MAX_CHUNK_SIZE = 8192;
@@ -16,7 +15,7 @@ class ChunkWriter
     protected $io;
 
     /**
-     * @var \Neo4j\PackStream\PackStream\Packer
+     * @var \GraphAware\Bolt\PackStream\Packer
      */
     protected $packer;
 

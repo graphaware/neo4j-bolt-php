@@ -16,7 +16,6 @@
     },
     "autoload": {
       "psr-4": {
-        "Neo4j\\PackStream\\": "src/",
           "GraphAware\\Bolt\\": "src/"
       }
     },
