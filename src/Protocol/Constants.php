@@ -13,6 +13,8 @@ namespace GraphAware\Bolt\Protocol;
 
 class Constants
 {
+    // SIGNATURES
+
     const SIGNATURE_RUN = 0x10;
 
     const SIGNATURE_PULL_ALL = 0x3f;
@@ -34,12 +36,16 @@ class Constants
     const SIGNATURE_PATH = 0x50;
 
 
+    // STRUCTURES
+
     const STRUCTURE_TINY = 0xb0;
 
     const STRUCTURE_MEDIUM = 0xdc;
 
     const STRUCTURE_LARGE = 0xdd;
 
+
+    // TEXTS
 
     const TEXT_TINY = 0x80;
 
@@ -50,6 +56,8 @@ class Constants
     const TEXT_32 = 0xd2;
 
 
+    // INTEGERS
+
     const INT_8 = 0xc8;
 
     const INT_16 = 0xc9;
@@ -57,6 +65,9 @@ class Constants
     const INT_32 = 0xca;
 
     const INT_64 = 0xcb;
+
+
+    // MAPS
 
     const MAP_TINY = 0xa0;
 
@@ -66,8 +77,19 @@ class Constants
 
     const MAP_32 = 0xda;
 
+
+    // LISTS
+
     const LIST_TINY = 0x90;
 
+    const LIST_8 = 0xd4;
+
+    const LIST_16 = 0xd5;
+
+    const LIST_32 = 0xd6;
+
+
+    // SIZES
 
     const SIZE_TINY = 16;
 
@@ -81,6 +103,8 @@ class Constants
 
     const SIZE_LARGE = 65536;
 
+
+    // MISC
 
     const MISC_ZERO = 0x00;
 

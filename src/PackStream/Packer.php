@@ -23,7 +23,7 @@ class Packer
         if (is_string($v)) {
             $stream .= $this->packText($v);
         } elseif (is_array($v)) {
-            $stream .= $this->packArray($v);
+            $stream .= $this->isList($v) ? $this->packList($v) : $this->packMap($v);
         } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
         }
@@ -31,17 +31,64 @@ class Packer
         return $stream;
     }
 
-    public function packArray(array $array)
+    public function isList(array $array)
+    {
+        foreach ($array as $k => $v) {
+            if (!is_int($k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function packList(array $array)
+    {
+        $size = count($array);
+        $b = $this->getListSizeMarker($size);
+        foreach ($array as $k => $v) {
+            $b .= $this->pack($v);
+        }
+
+        return $b;
+    }
+
+    public function packMap(array $array)
     {
         $size = count($array);
         $b = '';
         $b .= $this->getMapSizeMarker($size);
         foreach ($array as $k => $v) {
-            $b .= $this->pack($k);
+            $b .= $this->pack((string) $k);
             $b .= $this->pack($v);
         }
 
         return $b;
+    }
+
+    public function getListSizeMarker($size)
+    {
+        $b = '';
+        if ($size < Constants::SIZE_TINY) {
+            $b .= chr(Constants::LIST_TINY + $size);
+            return $b;
+        }
+        if ($size < Constants::SIZE_8) {
+            $b .= chr(Constants::LIST_8);
+            $b .= $this->packUnsignedShortShort($size);
+            return $b;
+        }
+        if ($b < Constants::SIZE_16) {
+            $b .= chr(Constants::LIST_16);
+            $b .= $this->packUnsignedShort($size);
+            return $b;
+        }
+        if ($b < Constants::SIZE_32) {
+            $b .= chr(Constants::LIST_32);
+            $b .= $this->packUnsignedLong($size);
+            return $b;
+        }
+
+        throw new SerializationException(sprintf('Unable to create marker for List size %d', $size));
     }
 
     public function getMapSizeMarker($size)
@@ -53,14 +100,17 @@ class Packer
         }
         if ($size < Constants::SIZE_8) {
             $b .= chr(Constants::MAP_8);
+            $b .= $this->packUnsignedShortShort($size);
             return $b;
         }
         if ($size < Constants::SIZE_16) {
             $b .= chr(Constants::MAP_16);
+            $b .= $this->packUnsignedShort($size);
             return $b;
         }
         if ($size < Constants::SIZE_32) {
             $b .= chr(Constants::MAP_32);
+            $b .= $this->packUnsignedLong($size);
             return $b;
         }
 
