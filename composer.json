@@ -1,12 +1,12 @@
 {
-    "name": "ikwattro/neo4j-packstream-php",
-    "description": "Neo4j Packstream Binary Protocol PHP Driver",
+    "name": "graphaware/neo4j-bolt",
+    "description": "Neo4j Bolt Binary Protocol PHP Driver",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Christophe Willemsen",
-            "email": "willemsen.christophe@gmail.com"
+            "email": "christophe@graphaware.com"
         }
     ],
     "require": {
