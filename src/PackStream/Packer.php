@@ -26,6 +26,14 @@ class Packer
             $stream .= $this->isList($v) ? $this->packList($v) : $this->packMap($v);
         } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
+        } elseif (is_null($v)) {
+            $stream .= chr(Constants::MARKER_NULL);
+        } elseif (true === $v) {
+            $stream .= chr(Constants::MARKER_TRUE);
+        } elseif (false === $v) {
+            $stream .= chr(Constants::MARKER_FALSE);
+        } elseif (is_float($v)) {
+            // packFloat
         }
 
         return $stream;
@@ -227,17 +235,18 @@ class Packer
     public function packInteger($value)
     {
         $value = (int) $value;
+        $b = '';
         if ($this->isShortShort($value)) {
-            // tiny ints
-        }
-
-        if ($this->isShort($value)) {
-            $b = '';
             $b .= chr(Constants::INT_8);
             $b .= $this->packSignedShort($value);
             return $b;
         }
 
+        if ($this->isShort($value)) {
+            $b .= chr(Constants::INT_8);
+            $b .= $this->packSignedShort($value);
+            return $b;
+        }
     }
 
     public function packUnsignedShortShort($integer)
