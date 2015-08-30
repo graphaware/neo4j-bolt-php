@@ -10,6 +10,14 @@ This library will remain in 1.0.0-dev version until stable release of Neo4j's Bo
 
 ---
 
+### References :
+
+* Documentation : http://remoting.neotechnology.com.s3-website-eu-west-1.amazonaws.com
+* Python driver : https://github.com/neo4j/neo4j-python-driver
+* Bolt How-To : https://github.com/nigelsmall/bolt-howto
+* Java Driver : https://github.com/neo4j/neo4j-java-driver
+* Neo4j 3.0 alpha : http://alpha.neotechnology.com.s3-website-eu-west-1.amazonaws.com/
+
 ### Installation
 
 Require the package in your composer dependencies :
