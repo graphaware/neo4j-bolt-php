@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the GraphAware Bolt package.
+ *
+ * (c) GraphAware Ltd <christophe@graphaware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace GraphAware\Bolt\Protocol;
 
 class Constants
@@ -51,10 +60,22 @@ class Constants
 
     const MAP_TINY = 0xa0;
 
+    const MAP_8 = 0xd8;
+
+    const MAP_16 = 0xd9;
+
+    const MAP_32 = 0xda;
+
     const LIST_TINY = 0x90;
 
 
     const SIZE_TINY = 16;
+
+    const SIZE_8 = 256;
+
+    const SIZE_16 = 65536;
+
+    const SIZE_32 = 4294967295;
 
     const SIZE_MEDIUM = 256;
 

@@ -2,6 +2,7 @@
 
 namespace GraphAware\Bolt;
 
+use GraphAware\Bolt\Exception\IOException;
 use GraphAware\Bolt\IO\Socket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
@@ -58,7 +59,7 @@ class Driver
 
     /**
      * @return mixed
-     * @throws \GraphAware\Bolt\Exception\IOException
+     * @throws \GraphAware\Bolt\Exception\HandshakeException
      */
     public function handshake()
     {
@@ -70,11 +71,28 @@ class Driver
         foreach (array(1,0,0,0) as $v) {
             $msg .= $packer->packBigEndian($v);
         }
-        $this->io->write($msg);
-        $rawHandshakeResponse = $this->io->read(4);
-        $response = unpack('N', $rawHandshakeResponse);
-        $version = $response[1];
+        try {
+            $this->io->write($msg);
+            $rawHandshakeResponse = $this->io->read(4);
+            $response = unpack('N', $rawHandshakeResponse);
+            $version = $response[1];
 
-        return $version;
+            if (0 === $version) {
+                $this->throwHandshakeException(sprintf('Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
+                    json_encode(array(1,0,0,0))));
+            }
+
+            return $version;
+        } catch (IOException $e) {
+            $this->throwHandshakeException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param string $message
+     */
+    private function throwHandshakeException($message)
+    {
+        throw new HandshakeException($message);
     }
 }

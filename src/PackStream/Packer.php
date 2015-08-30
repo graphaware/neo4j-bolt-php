@@ -1,8 +1,9 @@
 <?php
+
 /*
- * This file is part of the Neo4j PackStream package.
+ * This file is part of the GraphAware Bolt package.
  *
- * (c) Christophe Willemsen <willemsen.christophe@gmail.com>
+ * (c) GraphAware Ltd <christophe@graphaware.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,52 +17,55 @@ use GraphAware\Bolt\Protocol\Constants;
 
 class Packer
 {
-    const SIGNATURE_RUN = 0x10;
-    const SIGNATURE_PULL_ALL = 0x3f;
-    const SIGNATURE_INIT = 0x01;
-    const SIGNATURE_SUCCESS = 0x70;
-    const SIGNATURE_RECORD = 0x71;
-    const SIGNATURE_IGNORE = 0x7e;
-    const SIGNATURE_FAILURE = 0x7f;
-
-    const STRUCTURE_TINY = 0xb0;
-    const STRUCTURE_MEDIUM = 0xdc;
-    const STRUCTURE_LARGE = 0xdd;
-
-    const TEXT_TINY = 0x80;
-    const TEXT_REGULAR = 0xd0;
-
-    const MAP_TINY = 0xa0;
-
-    const SIZE_TINY = 16;
-    const SIZE_MEDIUM = 256;
-    const SIZE_LARGE = 65536;
-
-    const MISC_ZERO = 0x00;
-
-    const MARKER_NULL = 0xc0;
-
-    const MARKER_TRUE = 0xc3;
-
-    const MARKER_FALSE = 0xc2;
-
     public function pack($v)
     {
         $stream = '';
         if (is_string($v)) {
             $stream .= $this->packText($v);
         } elseif (is_array($v)) {
-            $size = count($v);
-            $stream .= $this->getMapMarker($size);
-            foreach ($v as $k => $value) {
-                $stream .= $this->pack($k);
-                $stream .= $this->pack($value);
-            }
+            $stream .= $this->packArray($v);
         } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
         }
 
         return $stream;
+    }
+
+    public function packArray(array $array)
+    {
+        $size = count($array);
+        $b = '';
+        $b .= $this->getMapSizeMarker($size);
+        foreach ($array as $k => $v) {
+            $b .= $this->pack($k);
+            $b .= $this->pack($v);
+        }
+
+        return $b;
+    }
+
+    public function getMapSizeMarker($size)
+    {
+        $b = '';
+        if ($size < Constants::SIZE_TINY) {
+            $b .= chr(Constants::MAP_TINY + $size);
+            return $b;
+        }
+        if ($size < Constants::SIZE_8) {
+            $b .= chr(Constants::MAP_8);
+            return $b;
+        }
+        if ($size < Constants::SIZE_16) {
+            $b .= chr(Constants::MAP_16);
+            return $b;
+        }
+        if ($size < Constants::SIZE_32) {
+            $b .= chr(Constants::MAP_32);
+            return $b;
+        }
+
+
+        throw new SerializationException(sprintf('Unable to pack Array with size %d. Out of bound !', $size));
     }
 
     public function packText($value)
@@ -99,33 +103,14 @@ class Packer
         throw new \OutOfBoundsException(sprintf('The value %s can not be packed, length is out of bound', $value));
     }
 
-    public function getTextMarker($length)
-    {
-        if ($length < self::SIZE_TINY) {
-            return hex2bin(dechex(self::TEXT_TINY + $length));
-        } else {
-            $marker = chr(self::TEXT_REGULAR);
-            $marker .= pack('c', $length);
-
-            return $marker;
-        }
-    }
-
-    public function getMapMarker($length)
-    {
-        if ($length < self::SIZE_TINY) {
-            return hex2bin(dechex(self::MAP_TINY + $length));
-        }
-    }
-
     public function getRunSignature()
     {
-        return chr(self::SIGNATURE_RUN);
+        return chr(Constants::SIGNATURE_RUN);
     }
 
     public function getEndSignature()
     {
-        return chr(self::MISC_ZERO) . chr(self::MISC_ZERO);
+        return str_repeat(chr(Constants::MISC_ZERO), 2);
     }
 
     public function getSizeMarker($stream)
