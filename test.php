@@ -20,5 +20,5 @@ var_dump($d);
 //$session->run('MATCH (n:Person) WHERE n.processed = {val} RETURN n', array('val' => true));
 //$session->run('MATCH (n:Person) SET n += {props}', array('props' => ['active' => false, 'admin' => 1]));
 //$session->run('MATCH (n:Person {name: {name}}) RETURN n', array('name' => 'roger', 'id' => 1));
-$session->run('MATCH (n:Person {name: {name}}) RETURN n', array('name' => 'roger', 'id' => 1));
+$session->run('MATCH (n:Integer {value: {value}}) RETURN n', array('value' => 1));
 //print_r($response);

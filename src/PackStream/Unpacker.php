@@ -129,7 +129,7 @@ class Unpacker
         }
 
         // Checks for TINY INTS
-        if ($this->isInRange(0x00, 0x7f, $marker) || $this->isInRange(0xf00, 0xff, $marker)) {
+        if ($this->isInRange(0x00, 0x7f, $marker) || $this->isInRange(0xf0, 0xff, $marker)) {
             $walker->rewind(1);
             $integer = $this->readSignedShortShort($walker);
 

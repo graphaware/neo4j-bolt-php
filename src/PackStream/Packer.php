@@ -38,7 +38,13 @@ class Packer
         } elseif (false === $v) {
             $stream .= chr(Constants::MARKER_FALSE);
         } elseif (is_float($v)) {
-            // packFloat
+            // if it is 64 bit integers casted to float
+            $r = $v + $v;
+            if ('double' === gettype($r)) {
+                $stream .= $this->packInteger($v);
+            }
+        } else {
+            throw new BoltInvalidArgumentException(sprintf('Could not pack the value %s', $v));
         }
 
         return $stream;
@@ -279,13 +285,20 @@ class Packer
      */
     public function packInteger($value)
     {
+        var_dump((string) $value);
         $value = (int) $value;
         $pow15 = pow(2,15);
         $pow31 = pow(2,31);
         $b = '';
         if ($value > -16 && $value < 128) {
+            //$b .= chr(Constants::INT_8);
+            //$b .= $this->packBigEndian($value, 2);
+            $b .= $this->packSignedShortShort($value);
+            return $b;
+        }
+        if ($value > -129 && $value < -16) {
             $b .= chr(Constants::INT_8);
-            $b .= $this->packBigEndian($value, 2);
+            $b .= $this->packSignedShortShort($value);
             return $b;
         }
         if ($value < -16 && $value > -129) {
@@ -298,7 +311,7 @@ class Packer
             $b .= $this->packBigEndian($value, 2);
             return $b;
         }
-        if ($value > -16 && $value < 128) {
+        if ($value >= -16 && $value < 128) {
             $b .= $this->packSignedShortShort($value);
             return $b;
         }
@@ -308,9 +321,22 @@ class Packer
             return $b;
         }
         if ($value > 32767 && $value < $pow31) {
-            var_dump(pow(2,15));
             $b .= chr(Constants::INT_32);
             $b .= $this->packBigEndian($value, 4);
+            return $b;
+        }
+
+        // 32 INTEGERS MINUS
+        if ($value >= (-1*abs(pow(2,31))) && $value < (-1*abs(pow(2,15)))) {
+            $b .= chr(Constants::INT_32);
+            $b .= $this->packBigEndian($value, 4);
+            return $b;
+        }
+
+        // 64 INTEGERS MINUS
+        if ($value >= ((-1*abs(pow(2,63)))-1) && $value < (-1*abs(pow(2,31)))) {
+            $b .= chr(Constants::INT_64);
+            $b .= $this->packBigEndian($value, 8);
             return $b;
         }
 
