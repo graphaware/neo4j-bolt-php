@@ -21,6 +21,7 @@ use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
+use GraphAware\Bolt\Exception\MessageFailureException;
 
 class Session extends AbstractSession
 {
@@ -117,7 +118,13 @@ class Session extends AbstractSession
 
         $rawMessage = new RawMessage($bytes);
 
-        return $this->serializer->deserialize($rawMessage);
+        $message = $this->serializer->deserialize($rawMessage);
+
+        if ($message->isFailure()) {
+            throw new MessageFailureException($message->getFullMessage());
+        }
+
+        return $message;
     }
 
     /**

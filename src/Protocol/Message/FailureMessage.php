@@ -34,5 +34,20 @@ class FailureMessage extends AbstractMessage
         return self::MESSAGE_TYPE;
     }
 
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getMessage()
+    {
+        return $this->getMessage();
+    }
+
+    public function getFullMessage()
+    {
+        return $this->code . ' : ' . $this->message;
+    }
+
 
 }

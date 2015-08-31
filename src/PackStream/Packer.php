@@ -26,7 +26,7 @@ class Packer
         if (is_string($v)) {
             $stream .= $this->packText($v);
         } elseif (is_array($v)) {
-            $stream .= $this->isList($v) ? $this->packList($v) : $this->packMap($v);
+            $stream .= ($this->isList($v) && !empty($v)) ? $this->packList($v) : $this->packMap($v);
         } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
         } elseif (is_null($v)) {
@@ -165,7 +165,7 @@ class Packer
         $b = '';
         $b .= $this->getMapSizeMarker($size);
         foreach ($array as $k => $v) {
-            $b .= $this->pack((string) $k);
+            $b .= $this->pack($k);
             $b .= $this->pack($v);
         }
 
