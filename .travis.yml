@@ -11,6 +11,7 @@ before_install:
     - mkdir neo
     - tar xzf neo4j-enterprise-3.0.0-alpha.LATEST-unix.tar.gz -C neo --strip-components=1 > null
     - neo/bin/neo4j start > null
+    - composer install --prefer-source --no-interaction
     - composer self-update
 
 script:
