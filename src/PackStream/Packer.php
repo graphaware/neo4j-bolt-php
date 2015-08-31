@@ -169,7 +169,6 @@ class Packer
      */
     public function packMap(array $array)
     {
-        var_dump($array);
         $size = count($array);
         $b = '';
         $b .= $this->getMapSizeMarker($size);
@@ -177,7 +176,6 @@ class Packer
             $b .= $this->pack($k);
             $b .= $this->pack($v);
         }
-        var_dump(\GraphAware\Bolt\Misc\Helper::prettyHex($b));
 
         return $b;
     }
@@ -285,7 +283,6 @@ class Packer
      */
     public function packInteger($value)
     {
-        var_dump((string) $value);
         $value = (int) $value;
         $pow15 = pow(2,15);
         $pow31 = pow(2,31);
