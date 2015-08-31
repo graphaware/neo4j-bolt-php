@@ -1,0 +1,20 @@
+language: php
+sudo: false
+php:
+    - 5.5
+    - 5.6
+    - 7.0
+
+
+before_install:
+    - wget http://alpha.neotechnology.com.s3-website-eu-west-1.amazonaws.com/neo4j-enterprise-3.0.0-alpha.LATEST-unix.tar.gz > null
+    - mkdir neo
+    - tar xzf neo4j-enterprise-3.0.0-alpha.LATEST-unix.tar.gz -C neo --strip-components=1 > null
+    - neo/bin/neo4j start > null
+    - composer self-update
+
+script:
+    - vendor/bin/phpunit
+
+notifications:
+    email: "christophe@graphaware.com"
