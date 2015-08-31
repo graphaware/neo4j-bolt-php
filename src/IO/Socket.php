@@ -82,7 +82,7 @@ class Socket extends AbstractIO
 
     public function write($data)
     {
-        echo 'C: ' . Helper::prettyHex($data) . PHP_EOL;
+        //echo 'C: ' . Helper::prettyHex($data) . PHP_EOL;
         $len = mb_strlen($data, 'ASCII');
 
         while (true) {
@@ -136,7 +136,7 @@ class Socket extends AbstractIO
             ));
         }
 
-        echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
+        //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
 
         return $res;
     }

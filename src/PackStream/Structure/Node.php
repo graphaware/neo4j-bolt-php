@@ -33,7 +33,7 @@ class Node extends AbstractElement
      * @param \GraphAware\Bolt\PackStream\Structure\ListCollection $labels
      * @param \GraphAware\Bolt\PackStream\Structure\Map $properties
      */
-    public function __construct(TextElement $identity, ListCollection $labels, Map $properties)
+    public function __construct(SimpleElement $identity, ListCollection $labels, Map $properties)
     {
         $this->identity = $identity;
         $this->labels = $labels;
@@ -64,5 +64,8 @@ class Node extends AbstractElement
         return $this->properties;
     }
 
-
+    public function getValue()
+    {
+        return $this;
+    }
 }

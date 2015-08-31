@@ -22,6 +22,6 @@ class SimpleElement extends AbstractElement
 
     public function getValue()
     {
-        $this->getValue();
+        return $this->value;
     }
 }

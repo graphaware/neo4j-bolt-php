@@ -19,15 +19,20 @@ class ListCollection extends AbstractElement
 
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
+        $this->elements = [];
     }
 
     public function add(AbstractElement $element)
     {
-        $this->elements->add($element);
+        $this->elements[] = $element;
     }
 
-    public function getElements()
+    public function getList()
+    {
+        return $this->elements;
+    }
+
+    public function getValue()
     {
         return $this->elements;
     }

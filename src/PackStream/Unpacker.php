@@ -100,7 +100,6 @@ class Unpacker
         }
 
         if ($this->isMarker($marker, Constants::INT_8)) {
-            var_dump('INT8');
             $integer = $this->readSignedShortShort($walker);
 
             return $this->unpackInteger($integer);
@@ -177,12 +176,12 @@ class Unpacker
     {
         $textString = $walker->read($size);
 
-        return new TextElement($textString);
+        return new SimpleElement($textString);
     }
 
     public function unpackInteger($value)
     {
-        return new IntegerElement($value);
+        return new SimpleElement($value);
     }
 
     public function unpackMap($size, BytesWalker $walker)
@@ -191,7 +190,7 @@ class Unpacker
         for ($i = 0; $i < $size; ++$i) {
             $identifier = $this->unpackElement($walker);
             $value = $this->unpackElement($walker);
-            $map->set($identifier->__toString(), $value);
+            $map->set($identifier->getValue(), $value);
         }
 
         return $map;

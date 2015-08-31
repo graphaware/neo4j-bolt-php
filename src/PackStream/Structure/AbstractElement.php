@@ -11,4 +11,4 @@
 
 namespace GraphAware\Bolt\PackStream\Structure;
 
-abstract class AbstractElement{}
+abstract class AbstractElement implements ElementInterface{}

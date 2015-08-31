@@ -13,6 +13,7 @@ namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
 use GraphAware\Bolt\Misc\Helper;
+use GraphAware\Bolt\PackStream\Structure\ListCollection;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
@@ -22,6 +23,7 @@ use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
+use GraphAware\Bolt\Result\Result;
 
 class Session extends AbstractSession
 {
@@ -36,7 +38,8 @@ class Session extends AbstractSession
 
     public function run($statement, array $parameters = array(), $autoReceive = true)
     {
-        $response = [];
+        $response = new Result();
+        $fields = new ListCollection();
         $messages = array(
             new RunMessage($statement, $parameters),
             new PullAllMessage()
@@ -56,13 +59,11 @@ class Session extends AbstractSession
                     if ($responseMessage->isSuccess()) {
                         $hasMore = false;
                         if ($responseMessage->hasFields()) {
-                            //var_dump($responseMessage);
+                            $fields = $responseMessage->getFields();
                         }
                     } elseif ($responseMessage->isRecord()) {
-                        $response['records'][] = $responseMessage;
+                        $response->addRecord($fields, $responseMessage);
                     } elseif ($responseMessage->isFailure()) {
-                        var_dump($responseMessage);
-                        exit();
                     }
                 }
             }
@@ -77,6 +78,7 @@ class Session extends AbstractSession
 
     public function init()
     {
+        $t = microtime(true);
         $ua = Driver::getUserAgent();
         $ua = 'ExampleDriver/1.0';
         $this->sendMessage(new InitMessage($ua));
@@ -86,6 +88,9 @@ class Session extends AbstractSession
         } else {
             throw new \Exception('Unable to INIT');
         }
+        $e = microtime(true);
+        $d = $e - $t;
+        echo 'INIT TIME : ' . $d . PHP_EOL;
         /*
         $init = $this->packer->getMessages(Constants::SIGNATURE_INIT, array($ua));
         $message = $this->packer->getSizeMarker($init) . $init . $this->packer->getEndSignature();

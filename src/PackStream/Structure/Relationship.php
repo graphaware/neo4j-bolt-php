@@ -14,22 +14,22 @@ namespace GraphAware\Bolt\PackStream\Structure;
 class Relationship extends AbstractElement
 {
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\TextElement
+     * @var
      */
     protected $identity;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\TextElement
+     * @var
      */
     protected $startNode;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\TextElement
+     * @var
      */
     protected $endNode;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\TextElement
+     * @var
      */
     protected $type;
 
@@ -39,18 +39,18 @@ class Relationship extends AbstractElement
     protected $properties;
 
     /**
-     * @param \GraphAware\Bolt\PackStream\Structure\TextElement $identity
-     * @param \GraphAware\Bolt\PackStream\Structure\TextElement $startNode
-     * @param \GraphAware\Bolt\PackStream\Structure\TextElement $endNode
-     * @param \GraphAware\Bolt\PackStream\Structure\TextElement $type
+     * @param \GraphAware\Bolt\PackStream\Structure\SimpleElement $identity
+     * @param \GraphAware\Bolt\PackStream\Structure\SimpleElement $startNode
+     * @param \GraphAware\Bolt\PackStream\Structure\SimpleElement $endNode
+     * @param \GraphAware\Bolt\PackStream\Structure\SimpleElement $type
      * @param \GraphAware\Bolt\PackStream\Structure\Map $properties
      */
-    public function __construct(TextElement $identity, TextElement $startNode, TextElement $endNode, TextElement $type, Map $properties)
+    public function __construct(SimpleElement $identity, SimpleElement $startNode, SimpleElement $endNode, SimpleElement $type, Map $properties)
     {
-        $this->identity = $identity;
-        $this->startNode = $startNode;
-        $this->endNode = $endNode;
-        $this->type = $type;
+        $this->identity = $identity->getValue();
+        $this->startNode = $startNode->getValue();
+        $this->endNode = $endNode->getValue();
+        $this->type = $type->getValue();
         $this->properties = $properties;
     }
 
@@ -94,5 +94,11 @@ class Relationship extends AbstractElement
         return $this->properties;
     }
 
-
+    /**
+     * @return $this
+     */
+    public function getValue()
+    {
+        return $this;
+    }
 }

@@ -23,7 +23,7 @@ class RecordMessage extends AbstractMessage
     public function __construct(ListCollection $list)
     {
         parent::__construct(Constants::SIGNATURE_RECORD);
-        $this->values = $list;
+        $this->values = $list->getList();
     }
 
     public function getMessageType()

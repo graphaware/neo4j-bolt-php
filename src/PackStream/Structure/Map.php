@@ -55,4 +55,9 @@ class Map extends AbstractElement
     {
         return $this->size;
     }
+
+    public function getValue()
+    {
+        return $this->elements;
+    }
 }
