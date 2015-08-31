@@ -13,7 +13,10 @@ class PackingIntegrationTest extends IntegrationTestCase
         $this->client->createIndex('Integer', 'value');
     }
 
-    
+    public function testTinyIntegersPacking()
+    {
+        $this->doRangeTest(1, 15);
+    }
 
     public function testInt8IntegersPacking()
     {
