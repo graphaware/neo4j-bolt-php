@@ -280,9 +280,12 @@ class Packer
     public function packInteger($value)
     {
         $value = (int) $value;
+        $pow15 = pow(2,15);
+        $pow31 = pow(2,31);
         $b = '';
         if ($value > -16 && $value < 128) {
-            $b .= $this->packSignedShortShort($value);
+            $b .= chr(Constants::INT_8);
+            $b .= $this->packBigEndian($value, 2);
             return $b;
         }
         if ($value < -16 && $value > -129) {
@@ -299,18 +302,19 @@ class Packer
             $b .= $this->packSignedShortShort($value);
             return $b;
         }
-        if ($value > 127 && $value < 32768) {
+        if ($value > 127 && $value < $pow15) {
             $b .= chr(Constants::INT_16);
             $b .= $this->packBigEndian($value, 2);
             return $b;
         }
-        if ($value > 32767 && $value < pow(2, 15)) {
+        if ($value > 32767 && $value < $pow31) {
+            var_dump(pow(2,15));
             $b .= chr(Constants::INT_32);
             $b .= $this->packBigEndian($value, 4);
             return $b;
         }
 
-
+        throw new BoltOutOfBoundsException(sprintf('Out of bound value, max is %d and you give %d', PHP_INT_MAX, $value));
     }
 
     /**
