@@ -24,4 +24,20 @@ class SimpleElement extends AbstractElement
     {
         return $this->value;
     }
+
+    public function __toString()
+    {
+        if (null === $this->value) {
+            return (string) 'null';
+        }
+
+        if (true === $this->value) {
+            return 'true';
+        }
+
+        if (false === $this->value) {
+            return 'false';
+        }
+        return (string) $this->getValue();
+    }
 }

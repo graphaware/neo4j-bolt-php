@@ -3,6 +3,7 @@
 namespace GraphAware\Bolt\Console;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,12 +51,15 @@ class Run extends Command
         $session = $driver->getSession();
         $statement = $input->getArgument('statement');
         try {
-            $session->run($statement, $p);
+            $result = $session->run($statement, $p);
         } catch (BoltExceptionInterface $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
 
-        $output->writeln($statement);
+        $table = new Table($output);
+        $table->setHeaders($result->getFields()->getList());
+        $table->setRows($result->getRecords());
+        $table->render();
     }
 
     public function setArgv(array $args)

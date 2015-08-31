@@ -39,7 +39,6 @@ class Session extends AbstractSession
     public function run($statement, array $parameters = array(), $autoReceive = true)
     {
         $response = new Result();
-        $fields = new ListCollection();
         $messages = array(
             new RunMessage($statement, $parameters),
             new PullAllMessage()
@@ -59,17 +58,17 @@ class Session extends AbstractSession
                     if ($responseMessage->isSuccess()) {
                         $hasMore = false;
                         if ($responseMessage->hasFields()) {
-                            $fields = $responseMessage->getFields();
+                            $response->setFields($responseMessage->getFields());
                         }
                     } elseif ($responseMessage->isRecord()) {
-                        $response->addRecord($fields, $responseMessage);
+                        $response->addRecord($responseMessage);
                     } elseif ($responseMessage->isFailure()) {
                     }
                 }
             }
             $e = microtime(true);
             $d = $e - $t;
-            var_dump($d);
+            echo 'Request + Response Time : ' . $d . PHP_EOL;
             return $response;
         }
 

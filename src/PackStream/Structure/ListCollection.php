@@ -36,4 +36,14 @@ class ListCollection extends AbstractElement
     {
         return $this->elements;
     }
+
+    public function toArray()
+    {
+        $arr = [];
+        foreach ($this->getValue() as $v) {
+            $arr[] = $v->getValue();
+        }
+
+        return $arr;
+    }
 }

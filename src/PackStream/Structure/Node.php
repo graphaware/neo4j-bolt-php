@@ -68,4 +68,13 @@ class Node extends AbstractElement
     {
         return $this;
     }
+
+    public function __toString()
+    {
+        $str = '';
+        $str .= $this->identity->getValue() . ', ';
+        $str .= 'labels : ' . json_encode($this->getLabels()->toArray()) . ', properties : ' . json_encode($this->getProperties()->toArray());
+
+        return $str;
+    }
 }

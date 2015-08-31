@@ -60,4 +60,14 @@ class Map extends AbstractElement
     {
         return $this->elements;
     }
+
+    public function toArray()
+    {
+        $arr = [];
+        foreach ($this->elements as $k => $v) {
+            $arr[$k] = $v->getValue();
+        }
+
+        return $arr;
+    }
 }
