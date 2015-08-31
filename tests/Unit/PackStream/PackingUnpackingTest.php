@@ -80,6 +80,16 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($binary, $this->packer->pack($text));
     }
 
+    public function testPackingText16()
+    {
+        $text = str_repeat("a", (Constants::SIZE_16)-1);
+        $length = strlen($text);
+        $bin = chr(Constants::TEXT_16) . $this->packer->packUnsignedShort($length) . $text;
+        $w = $this->getWalkerForBinary($bin);
+        $this->assertEquals(new TextElement($text), $this->unpacker->unpackElement($w));
+        $this->assertEquals($bin, $this->packer->pack($text));
+    }
+
     public function testGetSignature()
     {
         $bytes = hex2bin("b170a0");
