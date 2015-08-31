@@ -68,7 +68,6 @@ class Unpacker
                 default:
                     throw new SerializationException(sprintf('Unable to unpack structure from byte %s', Helper::prettyHex($marker)));
             }
-            exit();
         }
 
         if ($this->isMarkerHigh($marker, Constants::MAP_TINY)) {

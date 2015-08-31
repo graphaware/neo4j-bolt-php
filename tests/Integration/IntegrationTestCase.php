@@ -2,22 +2,22 @@
 
 namespace GraphAware\Bolt\Tests\Integration;
 
-use GraphAware\Bolt\Bolt;
+use GraphAware\Bolt\Driver;
 
 abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \GraphAware\Bolt\Bolt
+     * @var \GraphAware\Bolt\Driver
      */
     protected $driver;
 
     public function setUp()
     {
-        $this->driver = new Bolt('localhost', 7687);
+        $this->driver = new Driver('localhost', 7687);
     }
 
     /**
-     * @return \GraphAware\Bolt\Bolt
+     * @return \GraphAware\Bolt\Driver
      */
     public function getDriver()
     {

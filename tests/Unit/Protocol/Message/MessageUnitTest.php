@@ -2,7 +2,10 @@
 
 namespace GraphAware\Bolt\Tests\Protocol\Message;
 
+use GraphAware\Bolt\PackStream\Structure\Map;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
+use GraphAware\Bolt\Protocol\Message\SuccessMessage;
+use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 
 /**
  * Class MessageUnitTest
@@ -13,10 +16,9 @@ use GraphAware\Bolt\Protocol\Message\RawMessage;
  */
 class MessageUnitTest extends \PHPUnit_Framework_TestCase
 {
-    public function testRawMessageIsSuccess()
+    public function testSuccessMessageWithoutFields()
     {
-        $binary = 0x70;
-        $msg = new RawMessage($binary);
-        $this->assertTrue($msg->isSuccess());
+        $message = new SuccessMessage(new Map(0));
+        $this->assertInstanceOf(AbstractMessage::class, $message);
     }
 }
