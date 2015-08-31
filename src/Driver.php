@@ -78,7 +78,7 @@ class Driver
         }
         $msg = '';
         foreach (array(1,0,0,0) as $v) {
-            $msg .= $packer->packBigEndian($v);
+            $msg .= $packer->packBigEndian($v, 4);
         }
         try {
             $this->io->write($msg);

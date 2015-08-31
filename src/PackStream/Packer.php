@@ -11,6 +11,8 @@
 
 namespace GraphAware\Bolt\PackStream;
 
+use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
+use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
 use GraphAware\Bolt\Protocol\Constants;
 
@@ -161,6 +163,7 @@ class Packer
      */
     public function packMap(array $array)
     {
+        var_dump($array);
         $size = count($array);
         $b = '';
         $b .= $this->getMapSizeMarker($size);
@@ -168,6 +171,7 @@ class Packer
             $b .= $this->pack($k);
             $b .= $this->pack($v);
         }
+        var_dump(\GraphAware\Bolt\Misc\Helper::prettyHex($b));
 
         return $b;
     }
@@ -270,15 +274,6 @@ class Packer
     }
 
     /**
-     * @param $v
-     * @return string
-     */
-    public function packBigEndian($v)
-    {
-        return pack('N', $v);
-    }
-
-    /**
      * @param $value
      * @return string
      */
@@ -286,17 +281,36 @@ class Packer
     {
         $value = (int) $value;
         $b = '';
-        if ($this->isShortShort($value)) {
+        if ($value > -16 && $value < 128) {
+            $b .= $this->packSignedShortShort($value);
+            return $b;
+        }
+        if ($value < -16 && $value > -129) {
             $b .= chr(Constants::INT_8);
-            $b .= $this->packSignedShort($value);
+            $b .= $this->packSignedShortShort($value);
+            return $b;
+        }
+        if ($value < -128 && $value > -32769) {
+            $b .= chr(Constants::INT_16);
+            $b .= $this->packBigEndian($value, 2);
+            return $b;
+        }
+        if ($value > -16 && $value < 128) {
+            $b .= $this->packSignedShortShort($value);
+            return $b;
+        }
+        if ($value > 127 && $value < 32768) {
+            $b .= chr(Constants::INT_16);
+            $b .= $this->packBigEndian($value, 2);
+            return $b;
+        }
+        if ($value > 32767 && $value < pow(2, 15)) {
+            $b .= chr(Constants::INT_32);
+            $b .= $this->packBigEndian($value, 4);
             return $b;
         }
 
-        if ($this->isShort($value)) {
-            $b .= chr(Constants::INT_8);
-            $b .= $this->packSignedShort($value);
-            return $b;
-        }
+
     }
 
     /**
@@ -308,13 +322,21 @@ class Packer
         return pack('C', $integer);
     }
 
+    public function packSignedShortShort($integer)
+    {
+        return pack('c', $integer);
+    }
+
     /**
      * @param $integer
      * @return string
      */
     public function packSignedShort($integer)
     {
-        return pack('s', $integer);
+        $p = pack('s', $integer);
+        $v = ord($p);
+
+        return $v >> 32;
     }
 
     /**
@@ -364,5 +386,35 @@ class Packer
         }
 
         return false;
+    }
+
+    public function packBigEndian($x, $bytes)
+    {
+        if (($bytes <= 0) || ($bytes % 2)) {
+            throw new BoltInvalidArgumentException(sprintf('Expected bytes count must be multiply of 2, %s given', $bytes));
+        }
+        $ox = $x;
+        $isNeg = false;
+        if (is_int($x)) {
+            if ($x < 0) {
+                $isNeg = true;
+                $x = abs($x);
+            }
+        } else {
+            throw new BoltInvalidArgumentException('Only integer values are supported');
+        }
+        if ($isNeg) {
+            $x = bcadd($x, -1, 0);
+        } //in negative domain starting point is -1, not 0
+        $res = array();
+        for ($b = 0; $b < $bytes; $b += 2) {
+            $chnk = (int) bcmod($x, 65536);
+            $x = bcdiv($x, 65536, 0);
+            $res[] = pack('n', $isNeg ? ~$chnk : $chnk);
+        }
+        if ($x || ($isNeg && ($chnk & 0x8000))) {
+            throw new BoltOutOfBoundsException(sprintf('Overflow detected while attempting to pack %s into %s bytes', $ox, $bytes));
+        }
+        return implode(array_reverse($res));
     }
 }
