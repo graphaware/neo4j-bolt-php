@@ -24,6 +24,8 @@ This library will remain in 1.0.0-dev version until stable release of Neo4j's Bo
 
 #### Command line usage
 
+[![Imgur](http://i.imgur.com/25gnaVk.png)]
+
 Clone this repo and install the dependencies:
 
 ```bash
