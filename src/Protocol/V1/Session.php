@@ -68,7 +68,7 @@ class Session extends AbstractSession
             }
             $e = microtime(true);
             $d = $e - $t;
-            echo 'Request + Response Time : ' . $d . PHP_EOL;
+            //echo 'Request + Response Time : ' . $d . PHP_EOL;
             return $response;
         }
 
@@ -89,7 +89,7 @@ class Session extends AbstractSession
         }
         $e = microtime(true);
         $d = $e - $t;
-        echo 'INIT TIME : ' . $d . PHP_EOL;
+        //echo 'INIT TIME : ' . $d . PHP_EOL;
         /*
         $init = $this->packer->getMessages(Constants::SIGNATURE_INIT, array($ua));
         $message = $this->packer->getSizeMarker($init) . $init . $this->packer->getEndSignature();

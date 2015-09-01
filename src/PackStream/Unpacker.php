@@ -112,13 +112,13 @@ class Unpacker
         }
 
         if ($this->isMarker($marker, Constants::INT_32)) {
-            $integer = $this->readUnsignedLong($walker);
+            $integer = $this->readSignedLong($walker);
 
             return $this->unpackInteger($integer);
         }
 
         if ($this->isMarker($marker, Constants::INT_64)) {
-            $integer = $this->readUnsignedLongLong($walker);
+            $integer = $this->readSignedLongLong($walker);
 
             return $this->unpackInteger($integer);
         }
@@ -208,11 +208,6 @@ class Unpacker
         }
 
         return $list;
-    }
-
-    public function unpack($v, BytesWalker $walker = null)
-    {
-
     }
 
     public function getStructureSize(BytesWalker $walker)
@@ -328,9 +323,9 @@ class Unpacker
 
     public function readSignedLongLong(BytesWalker $walker)
     {
-        list(, $v) = unpack('q', $walker->read(8));
+        list(, $high, $low) = unpack('N2', $walker->read(8));
 
-        return $v;
+        return (int) bcadd($high << 32, $low, 0);
     }
 
     public function isInRange($start, $end, $byte)

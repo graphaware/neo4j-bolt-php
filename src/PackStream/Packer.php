@@ -283,7 +283,6 @@ class Packer
      */
     public function packInteger($value)
     {
-        $value = (int) $value;
         $pow15 = pow(2,15);
         $pow31 = pow(2,31);
         $b = '';
@@ -314,26 +313,34 @@ class Packer
         }
         if ($value > 127 && $value < $pow15) {
             $b .= chr(Constants::INT_16);
-            $b .= $this->packBigEndian($value, 2);
+            $b .= pack('n', $value);
             return $b;
         }
         if ($value > 32767 && $value < $pow31) {
             $b .= chr(Constants::INT_32);
-            $b .= $this->packBigEndian($value, 4);
+            $b .= pack('N', $value);
             return $b;
         }
 
         // 32 INTEGERS MINUS
         if ($value >= (-1*abs(pow(2,31))) && $value < (-1*abs(pow(2,15)))) {
             $b .= chr(Constants::INT_32);
-            $b .= $this->packBigEndian($value, 4);
+            $b .= pack('N', $value);
+            return $b;
+        }
+
+        // 64 INTEGERS POS
+        if ($value >= pow(2,31) && $value < pow(2,63)) {
+            $b .= chr(Constants::INT_64);
+            //$b .= $this->packBigEndian($value, 8);
+            $b .= pack('J', $value);
             return $b;
         }
 
         // 64 INTEGERS MINUS
         if ($value >= ((-1*abs(pow(2,63)))-1) && $value < (-1*abs(pow(2,31)))) {
             $b .= chr(Constants::INT_64);
-            $b .= $this->packBigEndian($value, 8);
+            $b .= pack('J', $value);
             return $b;
         }
 
@@ -382,6 +389,11 @@ class Packer
     public function packUnsignedLong($integer)
     {
         return pack('N', $integer);
+    }
+
+    public function packUnsignedLongLong($value)
+    {
+        return pack('J', $value);
     }
 
     /**

@@ -86,10 +86,28 @@ class PackingIntegrationTest extends IntegrationTestCase
      */
     public function testMin64IntegersEnd()
     {
-        $this->markTestSkipped();
-        $min = (-1*abs(pow(2,63)));
-        var_dump((string) $min);
+        $min = -1*abs(pow(2,63));
+        $this->doRangeTest((int) $min, (int) $min+1);
+    }
+
+    /**
+     * @group 64
+     */
+    public function test64Integers()
+    {
+        $min = pow(2,31);
         $this->doRangeTest($min, $min+100);
+    }
+
+    /**
+     * @group 64
+     * @group fail
+     */
+    public function test64IntegersEnd()
+    {
+        $this->emptyDB();
+        $max = (int) bcpow(2, 63);
+        $this->doRangeTest($max-100, $max);
     }
 
     private function doRangeTest($min, $max)
