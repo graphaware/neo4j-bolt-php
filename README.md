@@ -20,6 +20,12 @@ This library will remain in 1.0.0-dev version until stable release of Neo4j's Bo
 * Java Driver : https://github.com/neo4j/neo4j-java-driver
 * Neo4j 3.0 alpha : http://alpha.neotechnology.com.s3-website-eu-west-1.amazonaws.com/
 
+### Requirements:
+
+* PHP5.6+ (support for 5.5 soon)
+* Neo4j3.0
+* Raw sockets available
+
 ### Installation
 
 #### Command line usage
