@@ -124,6 +124,7 @@ class PackingIntegrationTest extends IntegrationTestCase
         foreach ($range as $i) {
             $response = $session->run('MATCH (n:Integer) WHERE n.value = {value} RETURN n.value', ['value' => $i]);
             $this->assertCount(1, $response->getRecords());
+            $this->assertEquals($i, $response->getRecords()[0]['n.value']);
         }
     }
 }
