@@ -12,10 +12,7 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\Misc\Helper;
-use GraphAware\Bolt\PackStream\Structure\ListCollection;
 use GraphAware\Bolt\Protocol\AbstractSession;
-use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 use GraphAware\Bolt\Protocol\Message\InitMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
@@ -56,7 +53,6 @@ class Session extends AbstractSession
         }
 
         $this->sendMessages($messages);
-        $t = microtime(true);
         if ($autoReceive) {
             foreach ($messages as $m) {
                 $hasMore = true;
@@ -73,9 +69,6 @@ class Session extends AbstractSession
                     }
                 }
             }
-            $e = microtime(true);
-            $d = $e - $t;
-            //echo 'Request + Response Time : ' . $d . PHP_EOL;
             return $response;
         }
 
@@ -84,9 +77,7 @@ class Session extends AbstractSession
 
     public function init()
     {
-        $t = microtime(true);
         $ua = Driver::getUserAgent();
-        $ua = 'ExampleDriver/1.0';
         $this->sendMessage(new InitMessage($ua));
         $responseMessage = $this->receiveMessage();
         if ($responseMessage->isSuccess()) {
@@ -94,15 +85,7 @@ class Session extends AbstractSession
         } else {
             throw new \Exception('Unable to INIT');
         }
-        $e = microtime(true);
-        $d = $e - $t;
-        //echo 'INIT TIME : ' . $d . PHP_EOL;
-        /*
-        $init = $this->packer->getMessages(Constants::SIGNATURE_INIT, array($ua));
-        $message = $this->packer->getSizeMarker($init) . $init . $this->packer->getEndSignature();
-        $this->io->write($message);
-        */
-
+        $this->isInitialized = true;
     }
 
     public function runPipeline(Pipeline $pipeline)
