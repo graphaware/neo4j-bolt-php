@@ -15,6 +15,11 @@ interface SessionInterface
 {
     public static function getProtocolVersion();
 
+    /**
+     * @param $statement
+     * @param array $parameters
+     * @return \GraphAware\Bolt\Result\Result
+     */
     public function run($statement, array $parameters = array());
 
     public function runPipeline(Pipeline $pipeline);

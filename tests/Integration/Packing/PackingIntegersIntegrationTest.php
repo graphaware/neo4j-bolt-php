@@ -21,6 +21,9 @@ class PackingIntegrationTest extends IntegrationTestCase
         $this->client->createIndex('Integer', 'value');
     }
 
+    /**
+     * @group tinyint
+     */
     public function testTinyIntegersPacking()
     {
         $this->doRangeTest(0, 127);
@@ -113,14 +116,12 @@ class PackingIntegrationTest extends IntegrationTestCase
     private function doRangeTest($min, $max)
     {
         $range = range($min, $max);
-        $tx = $this->client->prepareTransaction();
+        $session = $this->driver->getSession();
         foreach ($range as $i) {
             $q = 'CREATE (n:Integer) SET n.value = {value}';
-            $tx->pushQuery($q, ['value' => $i]);
+            $session->run($q, ['value' => $i]);
         }
-        $tx->commit();
 
-        $session = $this->driver->getSession();
         foreach ($range as $i) {
             $response = $session->run('MATCH (n:Integer) WHERE n.value = {value} RETURN n.value', ['value' => $i]);
             $this->assertCount(1, $response->getRecords());

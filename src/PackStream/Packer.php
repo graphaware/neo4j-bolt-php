@@ -217,7 +217,6 @@ class Packer
      */
     public function packText($value)
     {
-        $value = utf8_decode($value);
         $length = strlen($value);
         $b = '';
         if ($length < 16) {
@@ -240,14 +239,16 @@ class Packer
             return $b;
         }
 
-        if ($length < PHP_INT_MAX && $length < 4294967295) {
-            $b .= chr(Constants::INT_32);
+        if ($length < 2147483643) {
+            $b .= chr(Constants::TEXT_32);
             $b .= $this->packUnsignedLong($length);
             $b .= $value;
             return $b;
         }
 
-        throw new \OutOfBoundsException(sprintf('The value %s can not be packed, length is out of bound', $value));
+        throw new \OutOfBoundsException(sprintf('String size overflow, Max PHP String size is %d, you gave a string of size %d',
+            2147483647,
+            $length));
     }
 
     /**

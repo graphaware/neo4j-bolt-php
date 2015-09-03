@@ -13,6 +13,8 @@ namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\PackStream\Packer;
+use GraphAware\Bolt\Protocol\Message\RunMessage;
+
 class ChunkWriter
 {
     const MAX_CHUNK_SIZE = 8192;
@@ -44,10 +46,20 @@ class ChunkWriter
         $raw = '';
         foreach ($messages as $msg) {
             $chunkData = $msg->getSerialization();
-            $raw .= $this->packer->getSizeMarker($chunkData);
-            $raw .= $chunkData;
+            $chunks = $this->splitChunk($chunkData);
+            foreach ($chunks as $chunk) {
+                $raw .= $this->packer->getSizeMarker($chunk);
+                $raw .= $chunk;
+            }
             $raw .= $this->packer->getEndSignature();
         }
         $this->io->write($raw);
+    }
+
+    public function splitChunk($data)
+    {
+        $chunks = str_split($data, self::MAX_CHUNK_SIZE);
+
+        return $chunks;
     }
 }

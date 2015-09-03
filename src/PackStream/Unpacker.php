@@ -34,6 +34,13 @@ class Unpacker
 
     const IGNORED = 'IGNORED';
 
+    protected $is64bits;
+
+    public function __construct()
+    {
+        $this->is64bits = PHP_INT_SIZE == 8;
+    }
+
     public function unpackRaw(RawMessage $message)
     {
         $walker = new BytesWalker($message);
@@ -335,11 +342,32 @@ class Unpacker
         return in_array(ord($byte), $range);
     }
 
+    public function read_longlong(BytesWalker $walker)
+    {
+        $this->bitcount = $this->bits = 0;
+        list(, $hi, $lo) = unpack('N2', $walker->read(8));
+        $msb = self::getLongMSB($hi);
+        if (!$this->is64bits) {
+            if ($msb) {
+                $hi = sprintf('%u', $hi);
+            }
+            if (self::getLongMSB($lo)) {
+                $lo = sprintf('%u', $lo);
+            }
+        }
+        return bcadd($this->is64bits && !$msb ? $hi << 32 : bcmul($hi, '4294967296', 0), $lo, 0);
+    }
+
     private function correctEndianness($byteString)
     {
         $tmp = unpack('S', "\x01\x00");
         $isLittleEndian = $tmp[1] == 1;
 
         return $isLittleEndian ? strrev($byteString) : $byteString;
+    }
+
+    private static function getLongMSB($longInt)
+    {
+        return (bool) ($longInt & 0x80000000);
     }
 }

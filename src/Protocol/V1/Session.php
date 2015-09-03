@@ -36,6 +36,13 @@ class Session extends AbstractSession
         return self::PROTOCOL_VERSION;
     }
 
+    /**
+     * @param $statement
+     * @param array $parameters
+     * @param bool|true $autoReceive
+     * @return \GraphAware\Bolt\Result\Result
+     * @throws \Exception
+     */
     public function run($statement, array $parameters = array(), $autoReceive = true)
     {
         $response = new Result();
@@ -110,14 +117,15 @@ class Session extends AbstractSession
     {
         $bytes = '';
 
-        $nextChunkLength = 2;
+        $chunkHeader = $this->io->read(2);
+        list(, $chunkSize) = unpack('n', $chunkHeader);
+        $nextChunkLength = $chunkSize;
         do {
-            $chunkHeader = $this->io->read($nextChunkLength);
-            $chunkSize = hexdec(bin2hex($chunkHeader));
-            if ($chunkSize) {
-                $bytes .= $this->io->read($chunkSize);
+            if ($nextChunkLength) {
+                $bytes .= $this->io->read($nextChunkLength);
             }
-            $nextChunkLength = hexdec(bin2hex($this->io->read(2)));
+            list(, $next) = unpack('n', $this->io->read(2));
+            $nextChunkLength = $next;
         } while($nextChunkLength > 0);
 
         $rawMessage = new RawMessage($bytes);
