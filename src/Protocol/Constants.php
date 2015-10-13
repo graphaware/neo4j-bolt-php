@@ -19,6 +19,8 @@ class Constants
 
     const SIGNATURE_PULL_ALL = 0x3f;
 
+    const SIGNATURE_DISCARD_ALL = 0x2f;
+
     const SIGNATURE_SUCCESS = 0x70;
 
     const SIGNATURE_INIT = 0x01;

@@ -13,7 +13,6 @@ namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\PackStream\Packer;
-use GraphAware\Bolt\Protocol\Message\RunMessage;
 
 class ChunkWriter
 {

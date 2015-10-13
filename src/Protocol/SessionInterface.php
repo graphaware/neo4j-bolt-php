@@ -23,4 +23,9 @@ interface SessionInterface
     public function run($statement, array $parameters = array());
 
     public function runPipeline(Pipeline $pipeline);
+
+    /**
+     * @return \GraphAware\Bolt\Protocol\Pipeline
+     */
+    public function createPipeline();
 }

@@ -40,4 +40,14 @@ abstract class AbstractSession implements SessionInterface
         $this->serializer = new Serializer($this->packer, $this->unpacker);
         $this->writer = new ChunkWriter($this->io, $this->packer);
     }
+
+    public function getSerializer()
+    {
+        return $this->serializer;
+    }
+
+    public function getWriter()
+    {
+        return $this->writer;
+    }
 }

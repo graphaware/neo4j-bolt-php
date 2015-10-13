@@ -136,7 +136,7 @@ class Socket extends AbstractIO
             ));
         }
 
-        //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
+        echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
 
         return $res;
     }

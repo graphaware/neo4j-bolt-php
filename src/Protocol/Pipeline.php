@@ -11,25 +11,41 @@
 
 namespace GraphAware\Bolt\Protocol;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
+use GraphAware\Bolt\Protocol\Message\PullAllMessage;
+use GraphAware\Bolt\Protocol\Message\RunMessage;
+use GraphAware\Bolt\Result\Result;
 
 class Pipeline
 {
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection|\GraphAware\Bolt\Protocol\Message[]
+     * @var \GraphAware\Bolt\Protocol\SessionInterface
      */
-    protected $messages;
+    protected $session;
 
     /**
-     *
+     * @var \GraphAware\Bolt\Protocol\Message\AbstractMessage[]
      */
-    public function __construct()
+    protected $messages = [];
+
+    public function __construct(SessionInterface $session)
     {
-        $this->messages = new ArrayCollection();
+        $this->session = $session;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection|\GraphAware\Bolt\Protocol\Message[]
+     * @param string $query
+     * @param array $parameters
+     */
+    public function push($query, array $parameters = array())
+    {
+        $this->messages[] = new RunMessage($query, $parameters);
+        $this->messages[] = new DiscardAllMessage();
+    }
+
+    /**
+     * @return \GraphAware\Bolt\Protocol\Message\AbstractMessage[]
      */
     public function getMessages()
     {
@@ -37,24 +53,35 @@ class Pipeline
     }
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message $message
+     * @return bool
      */
-    public function addMessage(Message $message)
+    public function isEmpty()
     {
-        $this->messages->add($message);
+        return empty($this->messages);
     }
 
-    /**
-     * @param \GraphAware\Bolt\Protocol\Message[] $messages
-     */
-    public function addMessages(array $messages)
+    public function flush()
     {
-        foreach ($messages as $message) {
-            if (!$message instanceof Message) {
-                throw new \InvalidArgumentException('Method Pipeline#addMessages accepts only Message instances');
-            }
-
-            $this->messages->add($message);
+        if (!$this->session->isInitialized) {
+            $this->session->init();
         }
+
+        $response = new Result();
+
+        $this->session->sendMessages($this->messages);
+        foreach ($this->messages as $message) {
+            $hasMore = true;
+            while ($hasMore) {
+                $responseMessage = $this->session->receiveMessage();
+                if ($responseMessage->isSuccess()) {
+                    $hasMore = false;
+                } elseif ($responseMessage->isRecord()) {
+                    $response->addRecord($responseMessage);
+                } elseif ($responseMessage->isFailure()) {
+                }
+            }
+        }
+
+        return $response;
     }
 }

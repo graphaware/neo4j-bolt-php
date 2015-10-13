@@ -14,6 +14,7 @@ namespace GraphAware\Bolt\Protocol\V1;
 use GraphAware\Bolt\Driver;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
 use GraphAware\Bolt\Protocol\Message\InitMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
@@ -26,7 +27,7 @@ class Session extends AbstractSession
 {
     const PROTOCOL_VERSION = 1;
 
-    protected $isInitialized = false;
+    public $isInitialized = false;
 
     public static function getProtocolVersion()
     {
@@ -40,13 +41,18 @@ class Session extends AbstractSession
      * @return \GraphAware\Bolt\Result\Result
      * @throws \Exception
      */
-    public function run($statement, array $parameters = array(), $autoReceive = true)
+    public function run($statement, array $parameters = array(), $discard = false, $autoReceive = true)
     {
         $response = new Result();
         $messages = array(
             new RunMessage($statement, $parameters),
-            new PullAllMessage()
+            //new PullAllMessage()
         );
+        if (!$discard) {
+            $messages[] = new DiscardAllMessage();
+        } else {
+            $messages[] = new PullAllMessage();
+        }
 
         if (!$this->isInitialized) {
             $this->init();
@@ -91,6 +97,14 @@ class Session extends AbstractSession
     public function runPipeline(Pipeline $pipeline)
     {
 
+    }
+
+    /**
+     * @return \GraphAware\Bolt\Protocol\Pipeline
+     */
+    public function createPipeline()
+    {
+        return new Pipeline($this);
     }
 
     /**
