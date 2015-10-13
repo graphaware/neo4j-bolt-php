@@ -48,7 +48,7 @@ class Session extends AbstractSession
             new RunMessage($statement, $parameters),
             //new PullAllMessage()
         );
-        if (!$discard) {
+        if ($discard) {
             $messages[] = new DiscardAllMessage();
         } else {
             $messages[] = new PullAllMessage();
