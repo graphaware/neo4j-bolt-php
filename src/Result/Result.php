@@ -10,7 +10,7 @@ class Result
     protected $records = [];
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\ListCollection
+     * @var \GraphAware\Bolt\PackStream\Structure\ListCollection|array
      */
     protected $fields;
 
@@ -25,8 +25,14 @@ class Result
         $this->records[] = $rec;
     }
 
-    public function setFields(ListCollection $fields)
+    /**
+     * @param \GraphAware\Bolt\PackStream\Structure\ListCollection|array $fields
+     */
+    public function setFields($fields)
     {
+        if (!is_array($fields) && !$fields instanceof ListCollection) {
+            throw new \InvalidArgumentException('fields should be an array or an instance of fields collection');
+        }
         $this->fields = $fields;
     }
 

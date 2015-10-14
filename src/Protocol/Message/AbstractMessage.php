@@ -69,4 +69,9 @@ abstract class AbstractMessage implements MessageInterface
     {
         return $this->getMessageType() === 'RECORD';
     }
+
+    public function hasFields()
+    {
+        return !empty($this->fields);
+    }
 }
