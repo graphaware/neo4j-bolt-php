@@ -1,8 +1,9 @@
 <?php
+
 /*
  * This file is part of the GraphAware Bolt package.
  *
- * (c) GraphAware Ltd <christophe@graphaware.com>
+ * (c) Graph Aware Limited <http://graphaware.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -37,7 +38,7 @@ class Socket extends AbstractIO
 
     public function connect()
     {
-        $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
+        $this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if (!socket_connect($this->socket, $this->host, $this->port)) {
             $errno = socket_last_error($this->socket);
             $errstr = socket_strerror($errno);
@@ -51,6 +52,7 @@ class Socket extends AbstractIO
 
         socket_set_block($this->socket);
         socket_set_option($this->socket, SOL_TCP, TCP_NODELAY, 1);
+        //socket_set_option($this->socket, SOL_SOCKET, SO_PASSCRED
         socket_set_option($this->socket, SOL_SOCKET, SO_KEEPALIVE, 1);
         socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $this->timeout, 'usec' => 0));
         socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $this->timeout, 'usec' => 0));
@@ -136,7 +138,7 @@ class Socket extends AbstractIO
             ));
         }
 
-        echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
+        //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
 
         return $res;
     }
