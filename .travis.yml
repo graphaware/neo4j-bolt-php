@@ -6,6 +6,11 @@ php:
 jdk:
   - oraclejdk8
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 before_install:
     - wget http://alpha.neohq.net/dist/neo4j-enterprise-3.0.0-M01-NIGHTLY-unix.tar.gz > null
     - mkdir neo
