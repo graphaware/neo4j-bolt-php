@@ -12,9 +12,11 @@
 namespace GraphAware\Bolt\Result;
 
 use GraphAware\Bolt\PackStream\Structure\ListCollection;
-use GraphAware\Bolt\Protocol\Message\RecordMessage;
+use GraphAware\Common\Cypher\StatementInterface;
+use GraphAware\Common\Result\AbstractResult;
+use GraphAware\Common\Result\RecordInterface;
 
-class Result
+class Result extends AbstractResult
 {
     protected $records = [];
 
@@ -30,7 +32,15 @@ class Result
 
     protected $type;
 
-    public function addRecord(RecordMessage $recordMessage)
+    protected $summary;
+
+    public function __construct(StatementInterface $statement)
+    {
+        $this->summary = new ResultSummary($statement);
+        return parent::__construct($statement);
+    }
+
+    public function addRecord(RecordInterface $recordMessage)
     {
         $values = $recordMessage->getValues();
         $fields = $this->fields->getList();
@@ -75,5 +85,25 @@ class Result
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    public function summarize()
+    {
+        return $this->summary;
+    }
+
+    public function updateStatistics()
+    {
+        return $this->statistics;
+    }
+
+    public function statementType()
+    {
+        return $this->type;
+    }
+
+    public function hasSummary()
+    {
+        //
     }
 }

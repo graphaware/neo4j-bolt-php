@@ -22,6 +22,7 @@ use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Bolt\Result\Result;
+use GraphAware\Common\Cypher\Statement;
 
 class Session extends AbstractSession
 {
@@ -43,7 +44,7 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = array(), $discard = false, $autoReceive = true)
     {
-        $response = new Result();
+        $response = new Result(Statement::create($statement, $parameters));
         $messages = array(
             new RunMessage($statement, $parameters),
             //new PullAllMessage()
