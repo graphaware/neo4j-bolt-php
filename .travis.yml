@@ -3,7 +3,8 @@ sudo: false
 php:
     - 5.6
     - 7.0
-
+jdk:
+  - oraclejdk8
 
 before_install:
     - wget http://alpha.neohq.net/dist/neo4j-enterprise-3.0.0-M01-NIGHTLY-unix.tar.gz > null
