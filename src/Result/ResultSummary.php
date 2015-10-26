@@ -3,6 +3,7 @@
 namespace GraphAware\Bolt\Result;
 
 use GraphAware\Common\Cypher\StatementInterface;
+use GraphAware\Common\Result\StatementStatistics;
 use GraphAware\Common\Result\SummaryInterface;
 
 class ResultSummary implements SummaryInterface
@@ -13,7 +14,7 @@ class ResultSummary implements SummaryInterface
     protected $statement;
 
     /**
-     * @var array
+     * @var |GraphAware\Common\Result\StatementStatistics|null
      */
     protected $updateStatistics;
 
@@ -34,15 +35,24 @@ class ResultSummary implements SummaryInterface
     }
 
     /**
-     * @return array
+     * @return |GraphAware\Common\Result\StatementStatistics|null
      */
     public function updateStatistics()
     {
         return $this->updateStatistics;
     }
 
+    /**
+     * @param array $stats
+     */
     public function setStatistics(array $stats)
     {
-        $this->updateStatistics = $stats;
+        // Difference between http format and binary format of statistics
+        foreach ($stats as $k => $v) {
+            $nk = str_replace('-', '_', $k);
+            $stats[$nk] = $v;
+            unset($stats[$k]);
+        }
+        $this->updateStatistics = new StatementStatistics($stats);
     }
 }

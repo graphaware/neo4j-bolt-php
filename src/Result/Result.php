@@ -15,6 +15,7 @@ use GraphAware\Bolt\PackStream\Structure\ListCollection;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractResult;
 use GraphAware\Common\Result\RecordInterface;
+use GraphAware\Common\Result\StatementStatistics;
 
 class Result extends AbstractResult
 {

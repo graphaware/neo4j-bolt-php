@@ -9,6 +9,7 @@ use Behat\Gherkin\Node\TableNode;
 use GraphAware\Bolt\Driver;
 use GraphAware\Common\Result\SummaryInterface;
 use GraphAware\Common\Cypher\StatementInterface;
+use GraphAware\Common\Result\StatementStatisticsInterface;
 use PHPUnit_Framework_Assert as Assert;
 
 /**
@@ -127,6 +128,6 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function iShouldGetTheUpdatestatisticsBack()
     {
-        Assert::assertInternalType("array", $this->statistics);
+        Assert::assertInstanceOf(StatementStatisticsInterface::class, $this->statistics);
     }
 }
