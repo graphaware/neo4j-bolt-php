@@ -5,12 +5,9 @@ php:
     - 7.0
 
 before_install:
-    - rm -rf ~/.linuxbrew
-    - yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"
-    - export PATH="$HOME/.linuxbrew/bin:$PATH"
-    - export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
-    - export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
-    - brew install jdk
+    - sudo apt-get update > /dev/null
+    # install Oracle JDK8
+    - sh -c ./build/install-jdk8.sh
     - wget http://alpha.neohq.net/dist/neo4j-enterprise-3.0.0-M01-NIGHTLY-unix.tar.gz > null
     - mkdir neo
     - tar xzf neo4j-enterprise-3.0.0-M01-NIGHTLY-unix.tar.gz -C neo --strip-components=1 > null
