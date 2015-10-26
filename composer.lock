@@ -75,16 +75,16 @@
         },
         {
             "name": "graphaware/neo4j-common",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/graphaware/neo4j-php-commons.git",
-                "reference": "6913e07785c79032fc7f8ea938b3c2dd1cab0de9"
+                "reference": "7b484b4931886da4b989cd8263a7bc504515cc38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/6913e07785c79032fc7f8ea938b3c2dd1cab0de9",
-                "reference": "6913e07785c79032fc7f8ea938b3c2dd1cab0de9",
+                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/7b484b4931886da4b989cd8263a7bc504515cc38",
+                "reference": "7b484b4931886da4b989cd8263a7bc504515cc38",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +117,7 @@
                 "neo4j",
                 "statement"
             ],
-            "time": "2015-10-26 13:18:16"
+            "time": "2015-10-26 14:39:15"
         },
         {
             "name": "monolog/monolog",

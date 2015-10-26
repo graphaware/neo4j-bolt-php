@@ -9,7 +9,3 @@ sudo apt-get update
 sudo apt-get install -y oracle-java8-installer
 sudo update-alternatives --auto java
 sudo update-alternatives --auto javac
-
-# Add to environment
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-export JRE_HOME=/usr/lib/jvm/java-8-oracle

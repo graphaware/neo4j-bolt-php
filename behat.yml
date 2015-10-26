@@ -1,0 +1,7 @@
+default:
+    suites:
+        default:
+            contexts:
+                - ResultMetadataContext
+                #- SecondContext
+                #- ThirdContext

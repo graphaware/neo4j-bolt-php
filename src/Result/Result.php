@@ -65,6 +65,7 @@ class Result extends AbstractResult
     public function setStatistics(array $stats)
     {
         $this->statistics = $stats;
+        $this->summary->setStatistics($stats);
     }
 
     public function getStatistics()
