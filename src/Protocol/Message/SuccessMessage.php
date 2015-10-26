@@ -38,6 +38,25 @@ class SuccessMessage extends AbstractMessage
 
     public function hasFields()
     {
-        return !$this->map->isEmpty();
+        return $this->map->hasKey('fields');
+    }
+
+    public function hasStatistics()
+    {
+        return $this->map->hasKey('stats');
+    }
+
+    public function getStatistics()
+    {
+        return $this->map->get('stats');
+    }
+
+    public function hasType()
+    {
+        return $this->map->hasKey('type');
+    }
+    public function getType()
+    {
+        return $this->map->get('type');
     }
 }

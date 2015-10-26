@@ -69,6 +69,12 @@ class Session extends AbstractSession
                         if ($responseMessage->hasFields()) {
                             $response->setFields($responseMessage->getFields());
                         }
+                        if ($responseMessage->hasStatistics()) {
+                            $response->setStatistics($responseMessage->getStatistics()->toArray());
+                        }
+                        if ($responseMessage->hasType()) {
+                            $response->setType($responseMessage->getType());
+                        }
                     } elseif ($responseMessage->isRecord()) {
                         $response->addRecord($responseMessage);
                     } elseif ($responseMessage->isFailure()) {

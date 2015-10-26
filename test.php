@@ -11,10 +11,10 @@ $stopwatch = new Stopwatch();
 $session = $bolt->getSession();
 //$response = $session->run('MATCH (n:Person) WHERE HAS(n.name) RETURN n, n.name as name, n.born as birthyear LIMIT 10', array('years' => range(1940,1999)));
 
-
-$q = 'MATCH (n) DETACH DELETE n';
-$p = range(1,5000);
-$stopwatch->start('run');
-$result = $session->run($q, ['ids' => $p]);
+$stopwatch->start("run");
+//$result = $session->run("CREATE (n:Node) RETURN n", array());
+$r = $session->run("CREATE (n:Node) RETURN n", array());
+//print_r($result);
+print_r($r);
 $e = $stopwatch->stop('run');
 echo $e->getDuration() . PHP_EOL;

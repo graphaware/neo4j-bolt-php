@@ -37,6 +37,11 @@ class Map extends AbstractElement
         return null;
     }
 
+    public function hasKey($key)
+    {
+        return array_key_exists($key, $this->elements);
+    }
+
     public function contains($element)
     {
         if (in_array($element, $this->elements)) {

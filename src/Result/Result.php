@@ -23,6 +23,13 @@ class Result
      */
     protected $fields;
 
+    /**
+     * @var array
+     */
+    protected $statistics = [];
+
+    protected $type;
+
     public function addRecord(RecordMessage $recordMessage)
     {
         $values = $recordMessage->getValues();
@@ -45,6 +52,16 @@ class Result
         $this->fields = $fields;
     }
 
+    public function setStatistics(array $stats)
+    {
+        $this->statistics = $stats;
+    }
+
+    public function getStatistics()
+    {
+        return $this->statistics;
+    }
+
     public function getFields()
     {
         return $this->fields;
@@ -53,5 +70,10 @@ class Result
     public function getRecords()
     {
         return $this->records;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }
