@@ -23,6 +23,7 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
         $this->client = ClientBuilder::create()
             ->addConnection('default', 'http', 'localhost', 7474)
             ->setAutoFormatResponse(true)
+            ->setDefaultTimeout(20)
             ->build();
     }
 
@@ -44,7 +45,7 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 
     public function emptyDB()
     {
-        $q = 'MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE r,n';
+        $q = 'MATCH (n) DETACH DELETE n';
         $this->client->sendCypherQuery($q);
     }
 }
