@@ -15,6 +15,15 @@ $stopwatch->start("run");
 //$result = $session->run("CREATE (n:Node) RETURN n", array());
 $r = $session->run("CREATE (n:Node) RETURN n", array());
 //print_r($result);
-print_r($r);
+//print_r($r);
 $e = $stopwatch->stop('run');
 echo $e->getDuration() . PHP_EOL;
+
+$pipeline = $session->createPipeline();
+for ($i = 1; $i < 1000; ++$i) {
+    $pipeline->push("MERGE (p:PipelineTest {id: {id}}) RETURN id(p) as pid", ['id' => $i]);
+}
+$stopwatch->start('pipeline');
+$results = $pipeline->flush();
+$e = $stopwatch->stop('pipeline');
+echo count($results) . ' - - ' . $e->getDuration() . PHP_EOL;

@@ -28,7 +28,7 @@ class Socket extends AbstractIO
 
     protected $dispatcher;
 
-    public function __construct($host, $port, $timeout = 2, EventDispatcherInterface $dispatcher = null)
+    public function __construct($host, $port, $timeout = 5, EventDispatcherInterface $dispatcher = null)
     {
         $this->host = $host;
         $this->port = $port;
