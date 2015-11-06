@@ -48,4 +48,11 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
         $q = 'MATCH (n) DETACH DELETE n';
         $this->client->sendCypherQuery($q);
     }
+
+    public function emptyDBWithBolt()
+    {
+        $q = 'MATCH (n) DETACH DELETE n';
+        $session = $this->driver->getSession();
+        $session->run($q);
+    }
 }

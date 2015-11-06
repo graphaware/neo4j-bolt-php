@@ -41,6 +41,8 @@ class Driver
 
     protected $versionAgreed = false;
 
+    protected $session;
+
     public static function getUserAgent()
     {
         return 'GraphAware-BoltPHP/' . self::VERSION;
@@ -59,11 +61,17 @@ class Driver
      */
     public function getSession()
     {
+        if (null !== $this->session) {
+            return $this->session;
+        }
+
         if (!$this->versionAgreed) {
             $this->versionAgreed = $this->handshake();
         }
 
-        return $this->sessionRegistry->getSession($this->versionAgreed);
+        $this->session = $this->sessionRegistry->getSession($this->versionAgreed);
+
+        return $this->session;
     }
 
     /**
