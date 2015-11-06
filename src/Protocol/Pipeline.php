@@ -16,6 +16,7 @@ use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Result\Result;
+use GraphAware\Common\Cypher\Statement;
 
 class Pipeline
 {
@@ -41,7 +42,7 @@ class Pipeline
     public function push($query, array $parameters = array())
     {
         $this->messages[] = new RunMessage($query, $parameters);
-        $this->messages[] = new DiscardAllMessage();
+        $this->messages[] = new PullAllMessage();
     }
 
     /**
@@ -66,22 +67,39 @@ class Pipeline
             $this->session->init();
         }
 
-        $response = new Result();
+        $resultCursor = array();
 
         $this->session->sendMessages($this->messages);
         foreach ($this->messages as $message) {
+            if ($message instanceof RunMessage) {
+                $result = new Result(Statement::create($message->getStatement(), $message->getParams()));
+            }
             $hasMore = true;
             while ($hasMore) {
                 $responseMessage = $this->session->receiveMessage();
                 if ($responseMessage->isSuccess()) {
                     $hasMore = false;
+                    if ($responseMessage->hasFields()) {
+                        $result->setFields($responseMessage->getFields());
+                    }
+                    if ($responseMessage->hasStatistics()) {
+                        $result->setStatistics($responseMessage->getStatistics()->toArray());
+                    }
+                    if ($responseMessage->hasType()) {
+                        $result->setType($responseMessage->getType());
+                    }
                 } elseif ($responseMessage->isRecord()) {
-                    $response->addRecord($responseMessage);
+                    $result->addRecord($responseMessage);
                 } elseif ($responseMessage->isFailure()) {
                 }
             }
+
+            if ($message instanceof RunMessage) {
+                $resultCursor[] = $result;
+            }
+
         }
 
-        return $response;
+        return $resultCursor;
     }
 }

@@ -38,4 +38,14 @@ class RunMessage extends AbstractMessage
     {
         return array($this->statement, $this->params);
     }
+
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
+    }
 }
