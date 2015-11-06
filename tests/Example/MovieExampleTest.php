@@ -1,5 +1,7 @@
 <?php
 
+namespace GraphAware\Bolt\Tests\Example;
+
 use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
 
 /**

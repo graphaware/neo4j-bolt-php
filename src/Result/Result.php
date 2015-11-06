@@ -94,6 +94,9 @@ class Result extends AbstractResult
         return $this->summary;
     }
 
+    /**
+     * @return \GraphAware\Common\Result\StatementStatistics
+     */
     public function updateStatistics()
     {
         return $this->statistics;
