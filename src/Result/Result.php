@@ -11,6 +11,7 @@
 
 namespace GraphAware\Bolt\Result;
 
+use GraphAware\Bolt\PackStream\Structure\AbstractElement;
 use GraphAware\Bolt\PackStream\Structure\ListCollection;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractResult;
@@ -47,7 +48,13 @@ class Result extends AbstractResult
         $fields = $this->fields->getList();
         $rec = [];
         foreach ($fields as $k => $field) {
-            $rec[$field->getValue()] = $values[$k]->getValue();
+            $v = is_array($values[$k]->getValue()) ? array_map(function($n){
+                if ($n instanceof AbstractElement) {
+                    return $n->getValue();
+                }
+                return $n;
+            }, $values[$k]->getValue()) : $values[$k]->getValue();
+            $rec[$field->getValue()] = $v;
         }
         $this->records[] = $rec;
     }
@@ -82,6 +89,15 @@ class Result extends AbstractResult
     public function getRecords()
     {
         return $this->records;
+    }
+
+    public function getRecord()
+    {
+        if (count($this->records) < 1) {
+            throw new \InvalidArgumentException('No records');
+        }
+
+        return $this->records[0];
     }
 
     public function setType($type)

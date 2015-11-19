@@ -70,7 +70,7 @@ class Pipeline
         $resultCursor = array();
 
         $this->session->sendMessages($this->messages);
-        foreach ($this->messages as $message) {
+        foreach ($this->messages as $k => $message) {
             if ($message instanceof RunMessage) {
                 $result = new Result(Statement::create($message->getStatement(), $message->getParams()));
             }

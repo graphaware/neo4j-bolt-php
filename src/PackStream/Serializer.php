@@ -73,6 +73,7 @@ class Serializer
 
     public function convertStructureToRecordMessage(MessageStructure $structure, RawMessage $rawMessage)
     {
+        //print_r($structure);
         $message = new RecordMessage($structure->getElements()[0]);
         $message->setSerialization($rawMessage->getBytes());
 

@@ -149,7 +149,7 @@ class Unpacker
         }
 
         if ($this->isMarker($marker, Constants::MARKER_TRUE)) {
-            return new SimpleElement(true);
+            return new SimpleElement((bool) true);
         }
 
         if ($this->isMarker($marker, Constants::MARKER_FALSE)) {

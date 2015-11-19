@@ -20,9 +20,10 @@ $e = $stopwatch->stop('run');
 echo $e->getDuration() . PHP_EOL;
 
 $pipeline = $session->createPipeline();
-for ($i = 1; $i < 1000; ++$i) {
-    $pipeline->push("MERGE (p:PipelineTest {id: {id}}) RETURN id(p) as pid", ['id' => $i]);
+for ($i = 1; $i < 1500; ++$i) {
+    //$pipeline->push("MERGE (p:PipelineTest {id: {id}}) RETURN id(p) as pid", ['id' => $i]);
 }
+$pipeline->push('UNWIND {ids} as id MERGE (p:PipelineTest {id: id})', ['ids' => range(0,5000)]);
 $stopwatch->start('pipeline');
 $results = $pipeline->flush();
 $e = $stopwatch->stop('pipeline');
