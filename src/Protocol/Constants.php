@@ -105,6 +105,10 @@ class Constants
 
     const SIZE_LARGE = 65536;
 
+    // FLOAT
+
+    const MARKER_FLOAT = 0xc1;
+
 
     // MISC
 

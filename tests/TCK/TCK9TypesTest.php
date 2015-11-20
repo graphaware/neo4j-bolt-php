@@ -40,7 +40,7 @@ class TCK9TypesTest extends TCKTestCase
 
         // float
         $this->assertEquals(1.0, $this->runValue(1.0));
-        //$this->assertEquals(pi(), $this->runValue(pi()));
+        $this->assertEquals(pi(), $this->runValue(pi()));
 
         // string
         $this->assertEquals('GraphAware is awesome !', $this->runValue('GraphAware is awesome !'));

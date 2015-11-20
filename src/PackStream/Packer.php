@@ -29,6 +29,8 @@ class Packer
             $stream .= $this->packText($v);
         } elseif (is_array($v)) {
             $stream .= ($this->isList($v) && !empty($v)) ? $this->packList($v) : $this->packMap($v);
+        } elseif (is_float($v)) {
+            $stream .= $this->packFloat($v);
         } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
         } elseif (is_null($v)) {
@@ -178,6 +180,17 @@ class Packer
         }
 
         return $b;
+    }
+
+    /**
+     * @param $v
+     * @return int|string
+     */
+    public function packFloat($v) {
+        $str = chr(Constants::MARKER_FLOAT);
+        $str .= strrev(pack('d', $v));
+
+        return $str;
     }
 
     /**

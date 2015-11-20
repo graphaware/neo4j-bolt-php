@@ -143,6 +143,14 @@ class Unpacker
             return $this->unpackInteger($integer);
         }
 
+        // Checks for floats
+        if ($this->isMarker($marker, Constants::MARKER_FLOAT)) {
+
+            list(, $v) = unpack('d', strrev($walker->read(8)));
+
+            return new SimpleElement((float) $v);
+        }
+
         // Checks Primitive Values NULL, TRUE, FALSE
         if ($this->isMarker($marker, Constants::MARKER_NULL)) {
             return new SimpleElement(null);
