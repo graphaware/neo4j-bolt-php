@@ -43,7 +43,7 @@ QUERY;
         $result = $session->run($q, $p);
         $this->assertCount(1, $result->getRecords());
         foreach ($result->getRecords() as $record) {
-            $this->assertTrue(in_array('Movie', $record['m']->getLabels()->toArray()));
+            $this->assertTrue(in_array('Movie', $record['m']->getLabels()));
         }
     }
 }
