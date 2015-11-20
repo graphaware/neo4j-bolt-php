@@ -49,4 +49,13 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
             $this->assertTrue(in_array('Node', $node->getLabels()));
         }
     }
+
+    public function testUnpackingPaths()
+    {
+        // Reported bug
+        $this->markTestSkipped();
+        $session = $this->getSession();
+        $session->run("CREATE (a:A)-[:KNOWS]->(b:B)-[:LIKES]->(c:C)<-[:KNOWS]-(a)");
+        $result = $session->run("MATCH p=(a:A)-[]->(b) RETURN collect(p)");
+    }
 }

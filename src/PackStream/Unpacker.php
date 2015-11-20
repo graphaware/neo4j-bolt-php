@@ -72,6 +72,8 @@ class Unpacker
                     return $this->unpackNode($walker);
                 case Constants::SIGNATURE_RELATIONSHIP:
                     return $this->unpackRelationship($walker);
+                case Constants::SIGNATURE_PATH:
+                    return $this->unpackPath($walker);
                 default:
                     throw new SerializationException(sprintf('Unable to unpack structure from byte %s', Helper::prettyHex($marker)));
             }
@@ -185,6 +187,16 @@ class Unpacker
         $properties = $this->unpackElement($walker);
 
         return new Relationship($identity, $startNode, $endNode, $type, $properties);
+    }
+
+    public function unpackPath(BytesWalker $walker)
+    {
+        $nodes = $this->unpackElement($walker);
+        $rels = $this->unpackElement($walker);
+        $sequence = $this->unpackElement($walker);
+        print_r($sequence);
+
+        exit();
     }
 
     public function unpackText($size, BytesWalker $walker)
