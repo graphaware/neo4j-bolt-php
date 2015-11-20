@@ -53,7 +53,11 @@ class Node extends AbstractElement
      */
     public function getLabels()
     {
-        return $this->labels;
+        return $this->labels->toArray();
+    }
+
+    public function getProperty($k) {
+        return $this->properties->get($k);
     }
 
     /**

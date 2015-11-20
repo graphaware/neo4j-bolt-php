@@ -36,6 +36,14 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return \Graphaware\Bolt\Protocol\SessionInterface
+     */
+    public function getSession()
+    {
+        return $this->driver->getSession();
+    }
+
+    /**
      * @return \Neoxygen\NeoClient\Client
      */
     public function getClient()

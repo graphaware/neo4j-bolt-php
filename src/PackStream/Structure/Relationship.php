@@ -95,6 +95,15 @@ class Relationship extends AbstractElement
     }
 
     /**
+     * @param $key
+     * @return mixed
+     */
+    public function getProperty($key)
+    {
+        return $this->properties->get($key)->getValue();
+    }
+
+    /**
      * @return $this
      */
     public function getValue()
