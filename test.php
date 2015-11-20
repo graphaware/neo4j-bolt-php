@@ -10,4 +10,5 @@ $stopwatch = new Stopwatch();
 
 $session = $bolt->getSession();
 $session->run("MATCH (n) DETACH DELETE n");
-$session->run("CREATE (n:Node) SET n.prop = {f} RETURN n.prop", ['f' => pi()]);
+$result = $session->run("CREATE (n:Node) SET n.prop = {f} RETURN n.prop as p", ['f' => pi()]);
+print_r($result->getRecord()['p']);
