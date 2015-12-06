@@ -61,11 +61,13 @@ class Unpacker
     public function unpackElement(BytesWalker $walker)
     {
         $marker = $walker->read(1);
+        //echo Helper::prettyHex($marker) . PHP_EOL;
 
         // Structures
         if ($this->isInRange(0xb0, 0xbf, $marker)) {
             $walker->rewind(1);
             $structureSize = $this->getStructureSize($walker);
+            $elts = [];
             $signatureByte = ord($walker->read(1));
             switch ($signatureByte) {
                 case Constants::SIGNATURE_NODE:
@@ -73,7 +75,11 @@ class Unpacker
                 case Constants::SIGNATURE_RELATIONSHIP:
                     return $this->unpackRelationship($walker);
                 case Constants::SIGNATURE_PATH:
-                    return $this->unpackPath($walker);
+                    $v = $this->unpackPath($walker);
+                    //print_r($v);
+                    return $v;
+                case Constants::SIGNATURE_UNBOUND_RELATIONSHIP:
+                    return $this->unpackElement($walker);
                 default:
                     throw new SerializationException(sprintf('Unable to unpack structure from byte %s', Helper::prettyHex($marker)));
             }
@@ -191,12 +197,7 @@ class Unpacker
 
     public function unpackPath(BytesWalker $walker)
     {
-        $nodes = $this->unpackElement($walker);
-        $rels = $this->unpackElement($walker);
-        $sequence = $this->unpackElement($walker);
-        print_r($sequence);
-
-        exit();
+        return $this->unpackElement($walker);
     }
 
     public function unpackText($size, BytesWalker $walker)

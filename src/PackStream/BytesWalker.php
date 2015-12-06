@@ -101,4 +101,9 @@ class BytesWalker
     {
         return mb_strlen($this->bytes, $this->encoding);
     }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
 }

@@ -148,7 +148,7 @@ class Socket extends AbstractIO
             ));
         }
 
-        //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
+        echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
         $e = $this->stopwatch->stop($i);
         //echo $i . ' : ' . $e->getDuration() . PHP_EOL;
         return $res;

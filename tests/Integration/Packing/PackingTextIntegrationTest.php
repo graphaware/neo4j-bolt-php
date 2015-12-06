@@ -56,8 +56,8 @@ class PackingTextIntegrationTest extends IntegrationTestCase
      */
     public function testText32Packing()
     {
-        //$this->doRangeTest(65536, 65537);
-        //$this->doRangeTest(500000, 500000);
+        $this->doRangeTest(65536, 65537);
+        $this->doRangeTest(500000, 500000);
     }
 
     public function doRangeTest($min, $max)
@@ -70,10 +70,10 @@ class PackingTextIntegrationTest extends IntegrationTestCase
 
         foreach (range($min, $max) as $i) {
             $txt = str_repeat('a', $i);
-            $q = 'MATCH (n:Text) WHERE n.value = {value} RETURN count(n) as x';
+            $q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value as x';
             $response = $this->session->run($q, ['value' => $txt]);
             $this->assertCount(1, $response->getRecords());
-            $this->assertEquals(1, $response->getRecords()[0]['x']);
+            $this->assertEquals($txt, $response->getRecords()[0]['x']);
 
             //$q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value';
             //$response = $this->session->run($q, array('value' => $txt));

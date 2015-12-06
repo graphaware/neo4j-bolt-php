@@ -19,6 +19,9 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         $this->emptyDB();
     }
 
+    /**
+     * @group structure-node
+     */
     public function testUnpackingNode()
     {
         $session = $this->getSession();
@@ -50,12 +53,16 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * @group path
+     */
     public function testUnpackingPaths()
     {
         // Reported bug
-        $this->markTestSkipped();
+        //$this->markTestSkipped();
         $session = $this->getSession();
         $session->run("CREATE (a:A)-[:KNOWS]->(b:B)-[:LIKES]->(c:C)<-[:KNOWS]-(a)");
-        $result = $session->run("MATCH p=(a:A)-[]->(b) RETURN collect(p)");
+        $result = $session->run("MATCH p=(a:A)-[r*]->(b) RETURN p");
+        print_r($result);
     }
 }

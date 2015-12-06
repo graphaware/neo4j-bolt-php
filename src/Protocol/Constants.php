@@ -37,6 +37,8 @@ class Constants
 
     const SIGNATURE_PATH = 0x50;
 
+    const SIGNATURE_UNBOUND_RELATIONSHIP = 0x72;
+
 
     // STRUCTURES
 
