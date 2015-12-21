@@ -77,4 +77,12 @@ class Node implements NodeInterface
         return $this->properties[$key];
     }
 
+    /**
+     * @return array
+     */
+    public function values()
+    {
+        return $this->properties;
+    }
+
 }

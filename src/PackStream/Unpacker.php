@@ -74,6 +74,12 @@ class Unpacker
             return $this->unpackMap($size, $walker);
         }
 
+        if ($this->isMarker($marker, Constants::MAP_16)) {
+            $size = $this->readUnsignedShort($walker);
+
+            return $this->unpackMap($size, $walker);
+        }
+
         if ($this->isMarkerHigh($marker, Constants::TEXT_TINY)) {
             $textSize = $this->getLowNibbleValue($marker);
 
@@ -124,6 +130,17 @@ class Unpacker
 
         if ($this->isMarkerHigh($marker, Constants::LIST_TINY)) {
             $size = $this->getLowNibbleValue($marker);
+            return $this->unpackList($size, $walker);
+        }
+
+        if ($this->isMarker($marker, Constants::LIST_8)) {
+            $size = $this->readUnsignedShortShort($walker);
+
+            return $this->unpackList($size, $walker);
+        }
+
+        if ($this->isMarker($marker, Constants::LIST_16)) {
+            $size = $this->readUnsignedShort($walker);
             return $this->unpackList($size, $walker);
         }
 

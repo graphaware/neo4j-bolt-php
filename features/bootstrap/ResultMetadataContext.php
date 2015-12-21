@@ -7,7 +7,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
 use GraphAware\Bolt\Driver;
-use GraphAware\Common\Result\SummaryInterface;
+use GraphAware\Common\Result\ResultSummaryInterface;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\StatementStatisticsInterface;
 use PHPUnit_Framework_Assert as Assert;
@@ -46,7 +46,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function thereIsADriverConfiguredWithTheUri($arg1)
     {
-        $this->driver = new Driver("localhost", 7687);
+        $this->driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
     }
 
     /**
@@ -54,7 +54,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function iRunAStatement()
     {
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         $this->result = $session->run("CREATE (n:Node) RETURN n");
     }
 
@@ -71,7 +71,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function iShouldGetAResultSummaryBack()
     {
-        Assert::assertInstanceOf(SummaryInterface::class, $this->summary);
+        Assert::assertInstanceOf(ResultSummaryInterface::class, $this->summary);
     }
 
     /**
@@ -95,7 +95,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function iRunAStatementWithText($arg1)
     {
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         $this->result = $session->run($arg1);
     }
 
@@ -104,7 +104,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function iCanRequestTheStatementTextAndTheTextShouldBe($arg1)
     {
-        Assert::assertEquals($arg1, $this->statement->getQuery());
+        Assert::assertEquals($arg1, $this->statement->text());
     }
 
     /**
@@ -112,7 +112,7 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function theStatementParametersShouldBeAMap()
     {
-        Assert::assertInternalType("array", $this->statement->getParameters());
+        Assert::assertInternalType("array", $this->statement->parameters());
     }
 
     /**
