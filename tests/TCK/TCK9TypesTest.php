@@ -2,6 +2,10 @@
 
 namespace GraphAware\Bolt\Tests\TCK;
 
+use GraphAware\Common\Type\NodeInterface;
+use GraphAware\Common\Type\RelationshipInterface;
+use GraphAware\Common\Type\PathInterface;
+
 /**
  * @group tck
  * @group tck9
@@ -109,7 +113,18 @@ class TCK9TypesTest extends TCKTestCase
         $this->assertTrue(array_key_exists('labels', $result->getRecord()->value('map')));
         $this->assertInternalType('int', $result->getRecord()->value('map')['id']);
         $this->assertInternalType('array', $result->getRecord()->value('map')['labels']);
-        
+
+        // node
+        $result = $session->run("CREATE (n:Node) RETURN n");
+        $this->assertInstanceOf(NodeInterface::class, $result->getRecord()->value('n'));
+        $this->assertTrue($result->getRecord()->value('n')->hasLabel('Node'));
+
+        // collection of nodes
+        $result = $session->run("UNWIND range(0,2) as r CREATE (n:Node {value: r}) RETURN collect(n) as n");
+        $this->assertCount(3, $result->getRecord()->value('n'));
+        foreach ($result->getRecord()->value('n') as $n) {
+            $this->assertInstanceOf(NodeInterface::class, $n);
+        }
     }
 
     private function runValue($value)

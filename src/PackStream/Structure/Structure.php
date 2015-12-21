@@ -39,6 +39,10 @@ class Structure
      */
     public function getElements()
     {
+        if (in_array($this->signature, $this->types())) {
+            return $this->elements;
+        }
+
         return $this->elements[0];
     }
 
@@ -54,5 +58,10 @@ class Structure
     public function getValue()
     {
         return $this->elements;
+    }
+
+    private function types()
+    {
+        return ['NODE', 'RELATIONSHIP', 'PATH', 'UNBOUND_RELATIONSHIP'];
     }
 }

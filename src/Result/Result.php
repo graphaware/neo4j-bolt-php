@@ -12,12 +12,15 @@
 namespace GraphAware\Bolt\Result;
 
 use GraphAware\Bolt\PackStream\Structure\Structure;
+use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Record\RecordView;
+use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
 use GraphAware\Common\Result\RecordViewInterface;
 use GraphAware\Common\Result\RecordCursorInterface;
 use GraphAware\Common\Result\StatementStatistics;
+use GuzzleHttp\Tests\Psr7\Str;
 
 class Result extends AbstractRecordCursor
 {
@@ -46,7 +49,8 @@ class Result extends AbstractRecordCursor
      */
     public function pushRecord(Structure $structure)
     {
-        $this->records[] = new RecordView($this->fields, $structure->getElements());
+        $elts = $this->array_map_deep($structure->getElements());
+        $this->records[] = new RecordView($this->fields, $elts);
     }
 
     /**
@@ -111,5 +115,21 @@ class Result extends AbstractRecordCursor
         // TODO: Implement skip() method.
     }
 
+    private function array_map_deep(array $array)
+    {
+        foreach ($array as $k => $v) {
 
+            if ($v instanceof Structure && $v->getSignature() === 'NODE') {
+                $elts= $v->getElements();
+                $array[$k] = new Node($elts[0], $elts[1], $elts[2]);
+            } elseif ($v instanceof Structure) {
+                $array[$k] = $this->array_map_deep($v->getElements());
+            } elseif (is_array($v)) {
+                $array[$k] = $this->array_map_deep($v);
+            }
+        }
+
+
+        return $array;
+    }
 }
