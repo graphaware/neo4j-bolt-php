@@ -199,12 +199,16 @@ class ChunkingDechunkingContext implements Context, SnippetAcceptingContext
     {
         $startIdentifier = 'start ' . sha1(microtime(true) . rand(0, 10000));
         $endIdentifier = 'end' . sha1(microtime(true) . rand(0, 10000));
-        $statement = 'CREATE (n:Node {start: {start}})';
-        $statement .= str_repeat('-[:REL]->(:X)', $arg1-1);
-        $statement .= '-[:REL]->(end:Node {end: {end}})';
         $session = $this->driver->session();
-        $session->run($statement, ['start' => $startIdentifier, 'end' => $endIdentifier]);
-        $this->value = ['start' => $startIdentifier, 'end' => $endIdentifier];
+        $session->run("CREATE INDEX ON :Node(i)");
+        $session->run("MATCH (n) DETACH DELETE n");
+        $session->run("
+        UNWIND range(0, 1001) as i
+CREATE (z:Node) SET z.i = i
+WITH z, i
+MATCH (n:Node) WHERE n.i = i-1
+MERGE (n)-[:REL]->(z)");
+        $session->run("MATCH (n:Node {i:1001}), (z:Node {id:1002}) MERGE (n)-[:REL]->(z)");
     }
 
     /**
@@ -213,8 +217,8 @@ class ChunkingDechunkingContext implements Context, SnippetAcceptingContext
     public function theDriverAsksTheServerToEchoThisPathBack()
     {
         $session = $this->driver->session();
-        $this->result = $session->run("MATCH (n:Node {start: {start}}), (z:Node {end: {end}})
-        MATCH p=(n)-[*]->(z) RETURN p", ['start' => $this->value['start'], 'end' => $this->value['end']]);
+        $this->result = $session->run("MATCH (n:Node {i:0}), (z:Node {i: 1001})
+        MATCH p=(n)-[*]->(z) RETURN p");
     }
 
     /**
