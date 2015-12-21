@@ -30,7 +30,7 @@ CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix1)
 CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix2)
 CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix3)
 QUERY;
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         $session->run($q);
 
     }
@@ -39,7 +39,7 @@ QUERY;
     {
         $q = 'MATCH (m:Movie {title: {title}}) RETURN m;';
         $p = ['title' => 'The Matrix'];
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         $result = $session->run($q, $p);
         $this->assertCount(1, $result->getRecords());
         foreach ($result->getRecords() as $record) {

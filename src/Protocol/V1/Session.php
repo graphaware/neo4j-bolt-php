@@ -66,7 +66,6 @@ class Session extends AbstractSession
                 while ($hasMore) {
                     $responseMessage = $this->receiveMessage();
                     if ($responseMessage->getSignature() == "SUCCESS") {
-                        //print_r($responseMessage);
                         $hasMore = false;
                         if (array_key_exists('fields', $responseMessage->getElements())) {
                             $response->setFields($responseMessage->getElements()['fields']);
@@ -77,8 +76,8 @@ class Session extends AbstractSession
                         if (array_key_exists('type', $responseMessage->getElements())) {
                             $response->setType($responseMessage->getElements()['type']);
                         }
-                    } elseif ($responseMessage->getSignature() == "RECORD") {
-                        $response->addRecord($responseMessage);
+                    } elseif ($responseMessage->getSignature() === "RECORD") {
+                        $response->pushRecord($responseMessage);
                     } elseif ($responseMessage->isFailure()) {
                     }
                 }
@@ -116,7 +115,7 @@ class Session extends AbstractSession
     }
 
     /**
-     * @return \GraphAware\Bolt\Protocol\Message\AbstractMessage
+     * @return \GraphAware\Bolt\PackStream\Structure\Structure
      */
     public function receiveMessage()
     {

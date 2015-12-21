@@ -42,6 +42,12 @@ class ResultSummary implements ResultSummaryInterface
         return $this->updateStatistics;
     }
 
+    public function statementType()
+    {
+        return $this->statement->getType();
+    }
+
+
     /**
      * @param array $stats
      */

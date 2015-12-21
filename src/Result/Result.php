@@ -11,76 +11,55 @@
 
 namespace GraphAware\Bolt\Result;
 
-use GraphAware\Bolt\PackStream\Structure\AbstractElement;
-use GraphAware\Bolt\PackStream\Structure\ListCollection;
-use GraphAware\Bolt\PackStream\Structure\ListStructure;
+use GraphAware\Bolt\PackStream\Structure\Structure;
+use GraphAware\Bolt\Record\RecordView;
 use GraphAware\Common\Cypher\StatementInterface;
-use GraphAware\Common\Result\AbstractResultCursor;
+use GraphAware\Common\Result\AbstractRecordCursor;
 use GraphAware\Common\Result\RecordViewInterface;
-use GraphAware\Common\Result\ResultCursorInterface;
+use GraphAware\Common\Result\RecordCursorInterface;
 use GraphAware\Common\Result\StatementStatistics;
 
-class Result extends AbstractResultCursor
+class Result extends AbstractRecordCursor
 {
-    protected $records = [];
-
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\ListCollection|array
+     * @var \GraphAware\Common\Result\RecordViewInterface[]
      */
-    protected $fields;
+    protected $records = [];
 
     /**
      * @var array
      */
-    protected $statistics = [];
+    protected $fields;
 
-    protected $type;
-
-    protected $summary;
-
+    /**
+     * Result constructor.
+     * @param \GraphAware\Common\Cypher\StatementInterface $statement
+     */
     public function __construct(StatementInterface $statement)
     {
-        $this->summary = new ResultSummary($statement);
+        $this->resultSummary = new ResultSummary($statement);
         return parent::__construct($statement);
     }
 
-    public function addRecord($recordMessage)
+    /**
+     * @param \GraphAware\Bolt\PackStream\Structure\Structure $structure
+     */
+    public function pushRecord(Structure $structure)
     {
-        $this->records[] = $recordMessage->getElements();
+        $this->records[] = new RecordView($this->fields, $structure->getElements());
     }
 
     /**
-     * @param \GraphAware\Bolt\PackStream\Structure\ListCollection|array $fields
+     * @return \GraphAware\Common\Result\RecordViewInterface[]
      */
-    public function setFields($fields)
-    {
-        if (!is_array($fields) && !$fields instanceof ListStructure) {
-            throw new \InvalidArgumentException('fields should be an array or an instance of fields collection');
-        }
-        $this->fields = $fields;
-    }
-
-    public function setStatistics(array $stats)
-    {
-        $this->statistics = $stats;
-        $this->summary->setStatistics($stats);
-    }
-
-    public function getStatistics()
-    {
-        return $this->statistics;
-    }
-
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
     public function getRecords()
     {
         return $this->records;
     }
 
+    /**
+     * @return \GraphAware\Common\Result\RecordViewInterface
+     */
     public function getRecord()
     {
         if (count($this->records) < 1) {
@@ -90,32 +69,36 @@ class Result extends AbstractResultCursor
         return $this->records[0];
     }
 
+    /**
+     * @param array $fields
+     */
+    public function setFields(array $fields)
+    {
+        $this->fields = $fields;
+    }
+
+    /**
+     * @param array $stats
+     */
+    public function setStatistics(array $stats)
+    {
+        $this->resultSummary->setStatistics($stats);
+    }
+
+    /**
+     * @param $type
+     */
     public function setType($type)
     {
         $this->type = $type;
     }
 
+    /**
+     * @return \GraphAware\Bolt\Result\ResultSummary
+     */
     public function summarize()
     {
-        return $this->summary;
-    }
-
-    /**
-     * @return \GraphAware\Common\Result\StatementStatistics
-     */
-    public function updateStatistics()
-    {
-        return $this->statistics;
-    }
-
-    public function statementType()
-    {
-        return $this->type;
-    }
-
-    public function hasSummary()
-    {
-        //
+        return $this->resultSummary;
     }
 
     public function position()
@@ -127,4 +110,6 @@ class Result extends AbstractResultCursor
     {
         // TODO: Implement skip() method.
     }
+
+
 }

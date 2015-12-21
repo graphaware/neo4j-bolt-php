@@ -140,7 +140,7 @@ class Unpacker
 
             list(, $v) = unpack('d', strrev($walker->read(8)));
 
-            return new SimpleElement((float) $v);
+            return (float) $v;
         }
 
         // Checks Primitive Values NULL, TRUE, FALSE
