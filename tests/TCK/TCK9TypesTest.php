@@ -182,6 +182,12 @@ class TCK9TypesTest extends TCKTestCase
         $this->assertArrayHasKey('nodes', $result->getRecord()->value('x')[0]);
         $this->assertCount(3, $result->getRecord()->value('x')[0]['nodes']);
         $this->assertInstanceOf(NodeInterface::class, $result->getRecord()->value('x')[0]['nodes'][0]);
+
+        // relationship
+        $result = $session->run("CREATE (n:X)-[r:REL]->(z:X) RETURN r");
+        $this->assertInstanceOf(RelationshipInterface::class, $result->getRecord()->value('r'));
+        $this->assertEquals('REL', $result->getRecord()->value('r')->type());
+        $this->assertTrue($result->getRecord()->value('r')->hasType('REL'));
     }
 
     private function runValue($value)

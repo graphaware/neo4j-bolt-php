@@ -15,6 +15,7 @@ use GraphAware\Bolt\PackStream\Structure\Structure;
 use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Record\RecordView;
 use GraphAware\Bolt\Result\Type\Node;
+use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
 use GraphAware\Common\Result\RecordViewInterface;
@@ -122,7 +123,11 @@ class Result extends AbstractRecordCursor
             if ($v instanceof Structure && $v->getSignature() === 'NODE') {
                 $elts= $v->getElements();
                 $array[$k] = new Node($elts[0], $elts[1], $elts[2]);
-            } elseif ($v instanceof Structure) {
+            } elseif ($v instanceof Structure && $v->getSignature() === 'RELATIONSHIP') {
+                $elts = $v->getElements();
+                $array[$k] = new Relationship($elts[0], $elts[1], $elts[2], $elts[3], $elts[4]);
+            }
+            elseif ($v instanceof Structure) {
                 $array[$k] = $this->array_map_deep($v->getElements());
             } elseif (is_array($v)) {
                 $array[$k] = $this->array_map_deep($v);
