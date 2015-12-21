@@ -73,7 +73,7 @@ class PackingTextIntegrationTest extends IntegrationTestCase
             $q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value as x';
             $response = $this->session->run($q, ['value' => $txt]);
             $this->assertCount(1, $response->getRecords());
-            $this->assertEquals($txt, $response->getRecords()[0]['x']);
+            $this->assertEquals($txt, $response->getRecord()->value('x'));
 
             //$q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value';
             //$response = $this->session->run($q, array('value' => $txt));

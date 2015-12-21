@@ -45,9 +45,9 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         $session->run("FOREACH (x in range(1,3) | CREATE (n:Node {id: x}))");
         $result = $session->run("MATCH (n:Node) RETURN collect(n) as nodes");
 
-        $this->assertCount(3, $result->getRecord()['nodes']);
-        foreach ($result->getRecord()['nodes'] as $node) {
-            //$this->assertTrue(in_array('Node', $node->getLabels()));
+        $this->assertCount(3, $result->getRecord()->value('nodes'));
+        foreach ($result->getRecord()->value('nodes') as $node) {
+            $this->assertTrue(in_array('Node', $node->labels()));
         }
     }
 
