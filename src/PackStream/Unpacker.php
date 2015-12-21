@@ -13,14 +13,13 @@ namespace GraphAware\Bolt\PackStream;
 
 use GraphAware\Bolt\Exception\SerializationException;
 use GraphAware\Bolt\Misc\Helper;
-use GraphAware\Bolt\PackStream\Structure\IntegerElement;
-use GraphAware\Bolt\PackStream\Structure\ListCollection;
-use GraphAware\Bolt\PackStream\Structure\Map;
+use GraphAware\Bolt\PackStream\Structure\ListStructure;
+use GraphAware\Bolt\PackStream\Structure\MapStructure;
 use GraphAware\Bolt\PackStream\Structure\MessageStructure;
 use GraphAware\Bolt\PackStream\Structure\Node;
 use GraphAware\Bolt\PackStream\Structure\Relationship;
-use GraphAware\Bolt\PackStream\Structure\SimpleElement;
-use GraphAware\Bolt\PackStream\Structure\TextElement;
+use GraphAware\Bolt\PackStream\Structure\Structure;
+use GraphAware\Bolt\PackStream\Structure\StructureInterface;
 use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 
@@ -41,48 +40,46 @@ class Unpacker
         $this->is64bits = PHP_INT_SIZE == 8;
     }
 
+    /**
+     * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
+     * @return \GraphAware\Bolt\PackStream\Structure\Structure
+     */
     public function unpackRaw(RawMessage $message)
     {
         $walker = new BytesWalker($message);
-        $structSize = $this->getStructureSize($walker);
-        $signature = $this->getSignature($walker);
-        $structure = new MessageStructure($signature, $structSize);
-        for($i = 0; $i < $structSize; ++$i) {
-            $structure->addElement($this->unpackElement($walker));
-        }
 
-        return $structure;
+        return $this->unpackElement($walker);
     }
 
     /**
      * @param \GraphAware\Bolt\PackStream\BytesWalker $walker
-     * @return \GraphAware\Bolt\PackStream\Structure\AbstractElement
+     * @return \GraphAware\Bolt\PackStream\Structure\Structure
      */
     public function unpackElement(BytesWalker $walker)
     {
         $marker = $walker->read(1);
+
         //echo Helper::prettyHex($marker) . PHP_EOL;
 
         // Structures
         if ($this->isInRange(0xb0, 0xbf, $marker)) {
+            //echo 'new struct ' . PHP_EOL;
             $walker->rewind(1);
             $structureSize = $this->getStructureSize($walker);
-            $elts = [];
-            $signatureByte = ord($walker->read(1));
-            switch ($signatureByte) {
-                case Constants::SIGNATURE_NODE:
-                    return $this->unpackNode($walker);
-                case Constants::SIGNATURE_RELATIONSHIP:
-                    return $this->unpackRelationship($walker);
-                case Constants::SIGNATURE_PATH:
-                    $v = $this->unpackPath($walker);
-                    //print_r($v);
-                    return $v;
-                case Constants::SIGNATURE_UNBOUND_RELATIONSHIP:
-                    return $this->unpackElement($walker);
-                default:
-                    throw new SerializationException(sprintf('Unable to unpack structure from byte %s', Helper::prettyHex($marker)));
+            $sig = $this->getSignature($walker);
+            $str = new Structure($sig, $structureSize);
+            //echo $sig . ' - ' . $structureSize . PHP_EOL;
+            $done = 0;
+            while ($done < $structureSize) {
+                //echo '.';
+                $elt = $this->unpackElement($walker);
+                $str->addElement($elt);
+                ++$done;
             }
+            //print_r($str);
+            //echo count($str->getElements()) . PHP_EOL;
+
+            return $str;
         }
 
         if ($this->isMarkerHigh($marker, Constants::MAP_TINY)) {
@@ -204,21 +201,21 @@ class Unpacker
     {
         $textString = $walker->read($size);
 
-        return new SimpleElement($textString);
+        return $textString;
     }
 
     public function unpackInteger($value)
     {
-        return new SimpleElement($value);
+        return (int) $value;
     }
 
     public function unpackMap($size, BytesWalker $walker)
     {
-        $map = new Map($size);
+        $map = [];
         for ($i = 0; $i < $size; ++$i) {
-            $identifier = $this->unpackElement($walker);
+            $identifier = (string) $this->unpackElement($walker);
             $value = $this->unpackElement($walker);
-            $map->set($identifier->getValue(), $value);
+            $map[$identifier] =  $value;
         }
 
         return $map;
@@ -227,12 +224,9 @@ class Unpacker
     public function unpackList($size, BytesWalker $walker)
     {
         $size = (int) $size;
-        $list = new ListCollection();
+        $list = [];
         for ($i = 0; $i < $size; ++$i) {
-            $element = $this->unpackElement($walker);
-            if ($element) {
-                $list->add($element);
-            }
+            $list[] = $this->unpackElement($walker);
         }
 
         return $list;
@@ -264,6 +258,22 @@ class Unpacker
 
         if ($this->isSignature(Constants::SIGNATURE_IGNORE, $sigMarker)) {
             return self::IGNORED;
+        }
+
+        if ($this->isSignature(Constants::SIGNATURE_UNBOUND_RELATIONSHIP, $sigMarker)) {
+            return "UNBOUND_RELATIONSHIP";
+        }
+
+        if ($this->isSignature(Constants::SIGNATURE_NODE, $sigMarker)) {
+            return "NODE";
+        }
+
+        if ($this->isSignature(Constants::SIGNATURE_PATH, $sigMarker)) {
+            return "PATH";
+        }
+
+        if ($this->isSignature(Constants::SIGNATURE_RELATIONSHIP, $sigMarker)) {
+            return "RELATIONSHIP";
         }
 
         throw new SerializationException(sprintf('Unable to guess the signature for byte "%s"', Helper::prettyHex($sigMarker)));

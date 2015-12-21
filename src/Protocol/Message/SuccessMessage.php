@@ -20,7 +20,7 @@ class SuccessMessage extends AbstractMessage
 
     protected $map;
 
-    public function __construct(Map $map)
+    public function __construct($map)
     {
         parent::__construct(Constants::SIGNATURE_SUCCESS);
         $this->map = $map;
@@ -33,30 +33,30 @@ class SuccessMessage extends AbstractMessage
 
     public function getFields()
     {
-        return $this->map->get('fields');
+        return $this->map['fields'];
     }
 
     public function hasFields()
     {
-        return $this->map->hasKey('fields');
+        return array_key_exists('fields', $this->map);
     }
 
     public function hasStatistics()
     {
-        return $this->map->hasKey('stats');
+        return array_key_exists('stats', $this->map);
     }
 
     public function getStatistics()
     {
-        return $this->map->get('stats');
+        return $this->map['stats'];
     }
 
     public function hasType()
     {
-        return $this->map->hasKey('type');
+        return array_key_exists('type', $this->map);
     }
     public function getType()
     {
-        return $this->map->get('type');
+        return $this->map['type'];
     }
 }

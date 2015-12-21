@@ -65,18 +65,19 @@ class Session extends AbstractSession
                 $hasMore = true;
                 while ($hasMore) {
                     $responseMessage = $this->receiveMessage();
-                    if ($responseMessage->isSuccess()) {
+                    if ($responseMessage->getSignature() == "SUCCESS") {
+                        print_r($responseMessage);
                         $hasMore = false;
-                        if ($responseMessage->hasFields()) {
-                            $response->setFields($responseMessage->getFields());
+                        if (array_key_exists('fields', $responseMessage->getElements())) {
+                            $response->setFields($responseMessage->getElements()['fields']);
                         }
-                        if ($responseMessage->hasStatistics()) {
-                            $response->setStatistics($responseMessage->getStatistics()->toArray());
+                        if (array_key_exists('stats', $responseMessage->getElements())) {
+                            $response->setStatistics($responseMessage->getElements()['stats']);
                         }
-                        if ($responseMessage->hasType()) {
-                            $response->setType($responseMessage->getType());
+                        if (array_key_exists('type', $responseMessage->getElements())) {
+                            $response->setType($responseMessage->getElements()['type']);
                         }
-                    } elseif ($responseMessage->isRecord()) {
+                    } elseif ($responseMessage->getSignature() == "RECORD") {
                         $response->addRecord($responseMessage);
                     } elseif ($responseMessage->isFailure()) {
                     }
@@ -93,7 +94,7 @@ class Session extends AbstractSession
         $ua = Driver::getUserAgent();
         $this->sendMessage(new InitMessage($ua));
         $responseMessage = $this->receiveMessage();
-        if ($responseMessage->isSuccess()) {
+        if ($responseMessage->getSignature() == "SUCCESS") {
             $this->isInitialized = true;
         } else {
             throw new \Exception('Unable to INIT');
@@ -136,8 +137,8 @@ class Session extends AbstractSession
 
         $message = $this->serializer->deserialize($rawMessage);
 
-        if ($message->isFailure()) {
-            throw new MessageFailureException($message->getFullMessage());
+        if ($message->getSignature() === "FAILURE") {
+            throw new MessageFailureException($message->getElements()[0]['message']);
         }
 
         return $message;

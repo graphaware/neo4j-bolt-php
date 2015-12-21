@@ -52,13 +52,8 @@ class Serializer
     public function deserialize(RawMessage $message)
     {
         $structure = $this->unpacker->unpackRaw($message);
-        if ($structure->isSuccess()) {
-            return $this->convertStructureToSuccessMessage($structure, $message);
-        } elseif ($structure->isRecord()) {
-            return $this->convertStructureToRecordMessage($structure, $message);
-        } elseif ($structure->isFailure()) {
-            return $this->convertStructureToFailureMessage($structure, $message);
-        }
+
+        //print_r($structure);
 
         return $structure;
     }

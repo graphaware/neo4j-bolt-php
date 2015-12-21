@@ -9,14 +9,17 @@ $bolt = new Bolt('localhost', 7687);
 $stopwatch = new Stopwatch();
 
 $session = $bolt->getSession();
-//$session->run("MATCH (n) DETACH DELETE n");
+$session->run("MATCH (n) DETACH DELETE n");
 
-for ($i = 0; $i < 1000; ++$i) {
-    $session->run("FOREACH (x in range(1,1000) | CREATE (:Node {value:x}))");
-}
-$stopwatch->start('i');
-for ($i = 0; $i < 1000; ++$i) {
-    $session->run("MATCH (n:Node) WHERE NOT n:SecondLabel WITH n LIMIT 1000 SET n:SecondLabel");
-}
-$e = $stopwatch->stop('i');
-echo $e->getDuration() . PHP_EOL;
+$q = 'UNWIND {props} as prop MERGE (n:Person {login: prop.login}) SET n.name = prop.name';
+$session->run($q, ['props' => [
+    [
+        'login' => 'login1',
+        'name' => 'name1'
+    ],
+    [
+        'login' => 'login2',
+        'name' => 'name2'
+    ]
+]]);
+//print_r($result);

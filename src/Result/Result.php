@@ -13,12 +13,14 @@ namespace GraphAware\Bolt\Result;
 
 use GraphAware\Bolt\PackStream\Structure\AbstractElement;
 use GraphAware\Bolt\PackStream\Structure\ListCollection;
+use GraphAware\Bolt\PackStream\Structure\ListStructure;
 use GraphAware\Common\Cypher\StatementInterface;
-use GraphAware\Common\Result\AbstractResult;
-use GraphAware\Common\Result\RecordInterface;
+use GraphAware\Common\Result\AbstractResultCursor;
+use GraphAware\Common\Result\RecordViewInterface;
+use GraphAware\Common\Result\ResultCursorInterface;
 use GraphAware\Common\Result\StatementStatistics;
 
-class Result extends AbstractResult
+class Result extends AbstractResultCursor
 {
     protected $records = [];
 
@@ -42,21 +44,9 @@ class Result extends AbstractResult
         return parent::__construct($statement);
     }
 
-    public function addRecord(RecordInterface $recordMessage)
+    public function addRecord($recordMessage)
     {
-        $values = $recordMessage->getValues();
-        $fields = $this->fields->getList();
-        $rec = [];
-        foreach ($fields as $k => $field) {
-            $v = is_array($values[$k]->getValue()) ? array_map(function($n){
-                if ($n instanceof AbstractElement) {
-                    return $n->getValue();
-                }
-                return $n;
-            }, $values[$k]->getValue()) : $values[$k]->getValue();
-            $rec[$field->getValue()] = $v;
-        }
-        $this->records[] = $rec;
+        $this->records[] = $recordMessage;
     }
 
     /**
@@ -64,7 +54,7 @@ class Result extends AbstractResult
      */
     public function setFields($fields)
     {
-        if (!is_array($fields) && !$fields instanceof ListCollection) {
+        if (!is_array($fields) && !$fields instanceof ListStructure) {
             throw new \InvalidArgumentException('fields should be an array or an instance of fields collection');
         }
         $this->fields = $fields;
@@ -126,5 +116,15 @@ class Result extends AbstractResult
     public function hasSummary()
     {
         //
+    }
+
+    public function position()
+    {
+        // TODO: Implement position() method.
+    }
+
+    public function skip()
+    {
+        // TODO: Implement skip() method.
     }
 }

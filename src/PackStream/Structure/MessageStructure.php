@@ -21,7 +21,7 @@ class MessageStructure
     protected $size;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Structure\AbstractElement[]
+     * @var array
      */
     protected $elements;
 
@@ -29,12 +29,11 @@ class MessageStructure
     {
         $this->signature = $signature;
         $this->size = $size;
-        $this->elements = new ArrayCollection();
     }
 
-    public function addElement(AbstractElement $element)
+    public function addElement($element)
     {
-        $this->elements->add($element);
+        $this->elements[] = $element;
     }
 
     public function getElements()

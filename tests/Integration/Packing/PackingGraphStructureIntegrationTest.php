@@ -61,8 +61,20 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         // Reported bug
         //$this->markTestSkipped();
         $session = $this->getSession();
-        $session->run("CREATE (a:A)-[:KNOWS]->(b:B)-[:LIKES]->(c:C)<-[:KNOWS]-(a)");
-        $result = $session->run("MATCH p=(a:A)-[r*]->(b) RETURN p");
+        $session->run("MATCH (n) DETACH DELETE n");
+        $session->run("CREATE (a:A {k: 'v'})-[:KNOWS]->(b:B {k:'v2'})-[:LIKES]->(c:C {k:'v3'})<-[:KNOWS]-(a)");
+        $result = $session->run("MATCH p=(a:A)-[r*]->(b) RETURN p, length(p) as l");
         print_r($result);
+    }
+
+    /**
+     * @group single-elt
+     */
+    public function testSingleElt()
+    {
+        $session = $this->getSession();
+        $result = $session->run("CREATE (n:TestNode), (b:TestNode) RETURN n as new, b as new2");
+
+        //print_r($result);
     }
 }

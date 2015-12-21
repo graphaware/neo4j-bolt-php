@@ -4,9 +4,9 @@ namespace GraphAware\Bolt\Result;
 
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\StatementStatistics;
-use GraphAware\Common\Result\SummaryInterface;
+use GraphAware\Common\Result\ResultSummaryInterface;
 
-class ResultSummary implements SummaryInterface
+class ResultSummary implements ResultSummaryInterface
 {
     /**
      * @var \GraphAware\Common\Cypher\StatementInterface $statement
@@ -54,5 +54,10 @@ class ResultSummary implements SummaryInterface
             unset($stats[$k]);
         }
         $this->updateStatistics = new StatementStatistics($stats);
+    }
+
+    public function notifications()
+    {
+        // TODO: Implement notifications() method.
     }
 }
