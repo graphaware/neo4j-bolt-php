@@ -188,6 +188,19 @@ class TCK9TypesTest extends TCKTestCase
         $this->assertInstanceOf(RelationshipInterface::class, $result->getRecord()->value('r'));
         $this->assertEquals('REL', $result->getRecord()->value('r')->type());
         $this->assertTrue($result->getRecord()->value('r')->hasType('REL'));
+
+        // path
+        $result = $session->run("CREATE p=(n:X)-[:REL]->(o:Y)-[:REL]->(i:Z) RETURN p");
+        $this->assertInstanceOf(PathInterface::class, $result->getRecord()->value('p'));
+        $this->assertCount(3, $result->getRecord()->value('p')->nodes());
+        $this->assertCount(2, $result->getRecord()->value('p')->relationships());
+        $this->assertEquals(2, $result->getRecord()->value('p')->length());
+        foreach ($result->getRecord()->value('p')->nodes() as $node) {
+            $this->assertInstanceOf(NodeInterface::class, $node);
+        }
+        foreach ($result->getRecord()->value('p')->relationships() as $rel) {
+            $this->assertInstanceOf(RelationshipInterface::class, $rel);
+        }
     }
 
     private function runValue($value)
