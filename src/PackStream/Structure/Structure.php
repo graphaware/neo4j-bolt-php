@@ -39,7 +39,7 @@ class Structure
      */
     public function getElements()
     {
-        return $this->elements;
+        return $this->elements[0];
     }
 
     /**

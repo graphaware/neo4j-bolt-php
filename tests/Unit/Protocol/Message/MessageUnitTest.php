@@ -18,7 +18,7 @@ class MessageUnitTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessMessageWithoutFields()
     {
-        $message = new SuccessMessage(new Map(0));
+        $message = new SuccessMessage(array());
         $this->assertInstanceOf(AbstractMessage::class, $message);
     }
 }

@@ -22,89 +22,60 @@ This library will remain in 1.0.0-dev version until stable release of Neo4j's Bo
 
 ### Requirements:
 
-* PHP5.6+ (support for 5.5 soon)
+* PHP5.6+
 * Neo4j3.0
-* Raw sockets available
+* PHP Sockets extension available
 
 ### Installation
 
-#### Command line usage
-
-[![Imgur](http://i.imgur.com/25gnaVk.png)]
-
-Clone this repo and install the dependencies:
+Require the package in your dependencies :
 
 ```bash
-git clone git@github.com:graphaware/neo4j-bolt-php
-cd neo4j-bolt-php
-composer install
+composer require graphaware/neo4j-bolt
 ```
 
-Issue queries with the `.bolt` bash script :
-
-```bash
-./bolt "MATCH (n:Movie) RETURN count(n)
-
-cw@graphaware ~/d/g/neo4j-bolt-php> ./bolt "MATCH (n:Movie) RETURN count(n)"
-+----------+
-| count(n) |
-+----------+
-| 38       |
-+----------+
-```
-
-You can also pass parameters along with your query :
-
-```bash
-./bolt "MATCH (n:Person) WHERE n.born = {year} RETURN n.name" -p year:1967
-
-cw@graphaware ~/d/g/neo4j-bolt-php> ./bolt "MATCH (n:Person) WHERE n.born = {year} RETURN n.name" -p year:1967
-+------------------------+
-| n.name                 |
-+------------------------+
-| Carrie-Anne Moss       |
-| Philip Seymour Hoffman |
-| Julia Roberts          |
-| James Marshall         |
-| Andy Wachowski         |
-| Ben Miles              |
-| Steve Zahn             |
-+------------------------+
-```
-
-### Embed in your application (not yet recommended)
-
-Require the package in your composer dependencies :
-
-```bash
-composer require graphaware/neo4j-bolt-driver
-```
-
-Instantiate the driver by passing the host and the port to use, default port is `7687`.
+### Setting up a driver and creating a session
 
 ```php
-use GraphAware\Bolt\Driver;
 
-$bolt = new Driver('localhost', 7687);
+use GraphAware\Bolt\GraphDatabase;
+
+$driver = GraphDatabase::driver("bolt://localhost");
+$session = $driver->session();
 ```
 
-All statements need to be handled by a `Session`, getting a session is easy and will automatically trigger the
-version negotiation (also called `Handshake`) :
+### Sending a Cypher statement
 
 ```php
-$session = $bolt->getSession();
+$session = $driver->session();
+$session->run("CREATE (n)");
+$session->close();
+
+// with parameters :
+
+$session->run("CREATE (n) SET n += {props}", ['name' => 'Mike', 'age' => 27]);
 ```
 
-Send your statements :
+### License
 
-```php
-$results = $session->run('MATCH (n:User {id: {id}}) RETURN n', array('id' => 123));
-```
+Copyright (c) 2015 GraphAware Ltd
 
----
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
 
-License : `MIT`
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Author: `Christophe Willemsen`
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 ---

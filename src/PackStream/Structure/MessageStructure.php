@@ -38,7 +38,7 @@ class MessageStructure
 
     public function getElements()
     {
-        return $this->elements;
+        return $this->elements[0];
     }
 
     public function isSuccess()

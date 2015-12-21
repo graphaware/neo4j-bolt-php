@@ -24,7 +24,7 @@ class PackingTextIntegrationTest extends IntegrationTestCase
         parent::setUp();
         $this->emptyDB();
         $this->client->createIndex('Text', 'value');
-        $this->session = $this->driver->getSession();
+        $this->session = $this->driver->session();
     }
 
     public function testTinyTextPacking()

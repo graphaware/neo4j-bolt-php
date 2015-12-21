@@ -56,7 +56,7 @@ class TCK9TypesTest extends TCKTestCase
     private function runValue($value)
     {
         $driver = $this->getDriver();
-        $session = $driver->getSession();
+        $session = $driver->session();
         $result = $session->run("RETURN {x} as x", ['x' => $value]);
 
         return $result->getRecord()['x'];

@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "graphaware/neo4j-common",
-            "version": "1.10.0",
+            "version": "1.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/graphaware/neo4j-php-commons.git",
-                "reference": "642f8edafbaf11965f1e23bba8c4481c6266f570"
+                "reference": "a6659505417ead0edc56b45b3acde7fe8a82be2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/642f8edafbaf11965f1e23bba8c4481c6266f570",
-                "reference": "642f8edafbaf11965f1e23bba8c4481c6266f570",
+                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/a6659505417ead0edc56b45b3acde7fe8a82be2b",
+                "reference": "a6659505417ead0edc56b45b3acde7fe8a82be2b",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "neo4j",
                 "statement"
             ],
-            "time": "2015-11-07 02:32:34"
+            "time": "2015-12-21 00:56:28"
         },
         {
             "name": "myclabs/php-enum",

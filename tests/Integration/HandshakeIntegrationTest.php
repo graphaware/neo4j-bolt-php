@@ -15,7 +15,7 @@ class HandshakeIntegrationTest extends IntegrationTestCase
     public function testHandshakeAgreeVersion()
     {
         $driver = $this->getDriver();
-        $session = $driver->getSession();
+        $session = $driver->session();
         $this->assertInstanceOf(SessionInterface::class, $session);
         $this->assertEquals(1, $session::getProtocolVersion());
     }

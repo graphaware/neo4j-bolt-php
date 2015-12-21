@@ -66,7 +66,7 @@ class Session extends AbstractSession
                 while ($hasMore) {
                     $responseMessage = $this->receiveMessage();
                     if ($responseMessage->getSignature() == "SUCCESS") {
-                        print_r($responseMessage);
+                        //print_r($responseMessage);
                         $hasMore = false;
                         if (array_key_exists('fields', $responseMessage->getElements())) {
                             $response->setFields($responseMessage->getElements()['fields']);

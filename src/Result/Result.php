@@ -46,7 +46,7 @@ class Result extends AbstractResultCursor
 
     public function addRecord($recordMessage)
     {
-        $this->records[] = $recordMessage;
+        $this->records[] = $recordMessage->getElements();
     }
 
     /**

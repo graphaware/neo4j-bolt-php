@@ -15,11 +15,12 @@ use GraphAware\Bolt\Exception\IOException;
 use GraphAware\Bolt\IO\Socket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
+use GraphAware\Common\Driver\DriverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use GraphAware\Bolt\Exception\HandshakeException;
 use GraphAware\Bolt\Protocol\V1\Session as SessionV1;
 
-class Driver
+class Driver implements DriverInterface
 {
     const VERSION = '1.0.0-DEV';
 
@@ -32,6 +33,8 @@ class Driver
     const RELEASE_VERSION = '0';
 
     const EXTRA_VERSION = 'DEV';
+
+    const DEFAULT_TCP_PORT = 7687;
 
     protected $io;
 
@@ -48,9 +51,9 @@ class Driver
         return 'GraphAware-BoltPHP/' . self::VERSION;
     }
 
-    public function __construct($host, $port)
+    public function __construct($uri)
     {
-        $this->io = new Socket($host, $port);
+        $this->io = new Socket($uri, self::DEFAULT_TCP_PORT);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(SessionV1::class);
@@ -59,7 +62,7 @@ class Driver
     /**
      * @return \Graphaware\Bolt\Protocol\SessionInterface
      */
-    public function getSession()
+    public function session()
     {
         if (null !== $this->session) {
             return $this->session;

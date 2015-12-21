@@ -13,13 +13,7 @@ namespace GraphAware\Bolt\PackStream;
 
 use GraphAware\Bolt\Exception\SerializationException;
 use GraphAware\Bolt\Misc\Helper;
-use GraphAware\Bolt\PackStream\Structure\ListStructure;
-use GraphAware\Bolt\PackStream\Structure\MapStructure;
-use GraphAware\Bolt\PackStream\Structure\MessageStructure;
-use GraphAware\Bolt\PackStream\Structure\Node;
-use GraphAware\Bolt\PackStream\Structure\Relationship;
 use GraphAware\Bolt\PackStream\Structure\Structure;
-use GraphAware\Bolt\PackStream\Structure\StructureInterface;
 use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 
@@ -59,25 +53,18 @@ class Unpacker
     {
         $marker = $walker->read(1);
 
-        //echo Helper::prettyHex($marker) . PHP_EOL;
-
         // Structures
         if ($this->isInRange(0xb0, 0xbf, $marker)) {
-            //echo 'new struct ' . PHP_EOL;
             $walker->rewind(1);
             $structureSize = $this->getStructureSize($walker);
             $sig = $this->getSignature($walker);
             $str = new Structure($sig, $structureSize);
-            //echo $sig . ' - ' . $structureSize . PHP_EOL;
             $done = 0;
             while ($done < $structureSize) {
-                //echo '.';
                 $elt = $this->unpackElement($walker);
                 $str->addElement($elt);
                 ++$done;
             }
-            //print_r($str);
-            //echo count($str->getElements()) . PHP_EOL;
 
             return $str;
         }
@@ -158,15 +145,15 @@ class Unpacker
 
         // Checks Primitive Values NULL, TRUE, FALSE
         if ($this->isMarker($marker, Constants::MARKER_NULL)) {
-            return new SimpleElement(null);
+            return null;
         }
 
         if ($this->isMarker($marker, Constants::MARKER_TRUE)) {
-            return new SimpleElement((bool) true);
+            return true;
         }
 
         if ($this->isMarker($marker, Constants::MARKER_FALSE)) {
-            return new SimpleElement(false);
+            return false;
         }
 
         throw new SerializationException(sprintf('Unable to find serialization type for marker %s', Helper::prettyHex($marker)));

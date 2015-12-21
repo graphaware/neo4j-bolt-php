@@ -20,7 +20,7 @@ class PackingFloatsIntegrationTest extends IntegrationTestCase
     public function testPackingFloatsPositive()
     {
         $driver = $this->getDriver();
-        $session = $driver->getSession();
+        $session = $driver->session();
 
         for ($x = 1; $x < 1000; ++$x) {
             $result = $session->run("CREATE (n:Float) SET n.prop = {x} RETURN n.prop as x", ['x' => $x/100]);
@@ -31,7 +31,7 @@ class PackingFloatsIntegrationTest extends IntegrationTestCase
     public function testPackingFloatsNegative()
     {
         $driver = $this->getDriver();
-        $session = $driver->getSession();
+        $session = $driver->session();
 
         for ($x = -1; $x > -1000; --$x) {
             $result = $session->run("CREATE (n:Float) SET n.prop = {x} RETURN n.prop as x", ['x' => $x/100]);
@@ -42,7 +42,7 @@ class PackingFloatsIntegrationTest extends IntegrationTestCase
     public function testPi()
     {
         $driver = $this->getDriver();
-        $session = $driver->getSession();
+        $session = $driver->session();
 
         $result = $session->run("CREATE (n:Float) SET n.prop = {x} RETURN n.prop as x", ['x' => pi()]);
         $this->assertEquals(pi(), $result->getRecord()['x']);

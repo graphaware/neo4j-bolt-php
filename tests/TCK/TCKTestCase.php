@@ -3,6 +3,7 @@
 namespace GraphAware\Bolt\Tests\TCK;
 
 use GraphAware\Bolt\Driver;
+use GraphAware\Bolt\GraphDatabase;
 
 class TCKTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +14,7 @@ class TCKTestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->driver = new Driver('localhost', 7687);
+        $this->driver = GraphDatabase::driver("bolt://localhost");
     }
 
     /**

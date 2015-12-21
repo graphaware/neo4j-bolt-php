@@ -116,7 +116,7 @@ class PackingIntegrationTest extends IntegrationTestCase
     private function doRangeTest($min, $max)
     {
         $range = range($min, $max);
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         foreach ($range as $i) {
             $q = 'CREATE (n:Integer) SET n.value = {value}';
             $session->run($q, ['value' => $i]);

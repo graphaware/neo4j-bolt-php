@@ -14,7 +14,7 @@ class PipelineUseCaseTest extends IntegrationTestCase
     public function testPipelineWithMultipleStatements()
     {
         $driver = $this->getDriver();
-        $pipeline = $driver->getSession()->createPipeline();
+        $pipeline = $driver->session()->createPipeline();
         $pipeline->push("CREATE (n:PipelineTest)");
         $pipeline->push("CREATE (n:PipelineTest)");
         $results = $pipeline->flush();

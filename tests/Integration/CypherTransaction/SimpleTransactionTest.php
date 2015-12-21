@@ -13,7 +13,7 @@ class SimpleTransactionTest extends IntegrationTestCase
 {
     public function testTransactionCreatedWithCypher()
     {
-        $session = $this->driver->getSession();
+        $session = $this->driver->session();
         $tx = $session->run('BEGIN');
         $result = $session->run('CREATE (n:CypherTransactionTest) RETURN n');
         $summary = $result->summarize();

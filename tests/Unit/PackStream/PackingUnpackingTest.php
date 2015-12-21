@@ -38,7 +38,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
     public function testPackingNull()
     {
         $w = $this->getWalkerForBinary(chr(Constants::MARKER_NULL));
-        $nullElement = new SimpleElement(null);
+        $nullElement = null;
         $this->assertEquals($nullElement, $this->unpacker->unpackElement($w));
         $this->assertEquals(chr(Constants::MARKER_NULL), $this->packer->pack(null));
     }
@@ -46,7 +46,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
     public function testPackingTrue()
     {
         $w = $this->getWalkerForBinary(chr(Constants::MARKER_TRUE));
-        $trueElt = new SimpleElement(true);
+        $trueElt = true;
         $this->assertEquals($trueElt, $this->unpacker->unpackElement($w));
         $this->assertEquals(chr(Constants::MARKER_TRUE), $this->packer->pack(true));
     }
@@ -54,7 +54,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
     public function testPackingFalse()
     {
         $w = $this->getWalkerForBinary(chr(Constants::MARKER_FALSE));
-        $elt = new SimpleElement(false);
+        $elt = false;
         $this->assertEquals($elt, $this->unpacker->unpackElement($w));
         $this->assertEquals(chr(Constants::MARKER_FALSE), $this->packer->pack(false));
     }
@@ -65,7 +65,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
         $length = strlen($text);
         $binary = chr(Constants::TEXT_TINY + $length) . $text;
         $w = $this->getWalkerForBinary($binary);
-        $elt = new SimpleElement($text);
+        $elt = $text;
         $this->assertEquals($elt, $this->unpacker->unpackElement($w));
         $this->assertEquals($binary, $this->packer->pack($text));
     }
@@ -76,7 +76,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
         $length = strlen($text);
         $binary = chr(Constants::TEXT_8) . $this->packer->packUnsignedShortShort($length) . $text;
         $w = $this->getWalkerForBinary($binary);
-        $this->assertEquals(new SimpleElement($text), $this->unpacker->unpackElement($w));
+        $this->assertEquals($text, $this->unpacker->unpackElement($w));
         $this->assertEquals($binary, $this->packer->pack($text));
     }
 
@@ -86,7 +86,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
         $length = strlen($text);
         $bin = chr(Constants::TEXT_16) . $this->packer->packUnsignedShort($length) . $text;
         $w = $this->getWalkerForBinary($bin);
-        $this->assertEquals(new SimpleElement($text), $this->unpacker->unpackElement($w));
+        $this->assertEquals($text, $this->unpacker->unpackElement($w));
         $this->assertEquals($bin, $this->packer->pack($text));
     }
 
