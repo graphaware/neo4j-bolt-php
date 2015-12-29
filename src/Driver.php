@@ -13,6 +13,7 @@ namespace GraphAware\Bolt;
 
 use GraphAware\Bolt\Exception\IOException;
 use GraphAware\Bolt\IO\Socket;
+use GraphAware\Bolt\IO\StreamSocket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
 use GraphAware\Common\Driver\DriverInterface;
@@ -53,7 +54,21 @@ class Driver implements DriverInterface
 
     public function __construct($uri)
     {
-        $this->io = new Socket($uri, self::DEFAULT_TCP_PORT);
+        $ctx = stream_context_create(array());
+        define('CERTS_PATH',
+        '/Users/ikwattro/dev/_graphs/3.0-M02-NIGHTLY/conf');
+        $ssl_options = array(
+            'cafile' => CERTS_PATH . '/ssl/snakeoil.pem',
+            //'local_cert' => CERTS_PATH . '/ssl/snakeoil.pem',
+            'peer_name' => 'example.com',
+            'allow_self_signed' => true,
+            'verify_peer' => true,
+        );
+        foreach ($ssl_options as $k => $v) {
+            stream_context_set_option($ctx, 'ssl', $k, $v);
+        }
+
+        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT, $ctx);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(SessionV1::class);
