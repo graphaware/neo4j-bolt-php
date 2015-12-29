@@ -31,6 +31,11 @@ class BytesWalker
     protected $encoding;
 
     /**
+     * @var int
+     */
+    protected $length;
+
+    /**
      * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
      * @param int                                          $position
      * @param string                                       $encoding
@@ -40,6 +45,7 @@ class BytesWalker
         $this->bytes = $message->getBytes();
         $this->position = $position;
         $this->encoding = $encoding;
+        $this->getLength();
     }
 
     /**
@@ -51,7 +57,7 @@ class BytesWalker
     {
         $n = (int) $n;
 
-        if (($this->position + $n) > $this->getLength()) {
+        if (($this->position + $n) > $this->length) {
             throw new \OutOfBoundsException(sprintf('No more bytes to read'));
         }
 
@@ -99,7 +105,7 @@ class BytesWalker
 
     public function getLength()
     {
-        return mb_strlen($this->bytes, $this->encoding);
+        $this->length = mb_strlen($this->bytes, $this->encoding);
     }
 
     public function getPosition()

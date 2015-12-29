@@ -53,9 +53,10 @@ class Unpacker
     {
         $marker = $walker->read(1);
         $byte = hexdec(bin2hex($marker));
+        $ordMarker = ord($marker);
 
         // Structures
-        if ($this->isInRange(0xb0, 0xbf, $marker)) {
+        if (0xb0 <= $ordMarker && $ordMarker <= 0xbf) {
             $walker->rewind(1);
             $structureSize = $this->getStructureSize($walker);
             $sig = $this->getSignature($walker);
