@@ -54,6 +54,7 @@ class Unpacker
         $marker = $walker->read(1);
         $byte = hexdec(bin2hex($marker));
         $ordMarker = ord($marker);
+        $markerHigh = $ordMarker & 0xf0;
 
         // Structures
         if (0xb0 <= $ordMarker && $ordMarker <= 0xbf) {
@@ -71,7 +72,7 @@ class Unpacker
             return $str;
         }
 
-        if ($this->isMarkerHigh($marker, Constants::MAP_TINY)) {
+        if ($markerHigh === Constants::MAP_TINY) {
             $size = $this->getLowNibbleValue($marker);
             return $this->unpackMap($size, $walker);
         }
@@ -82,7 +83,7 @@ class Unpacker
             return $this->unpackMap($size, $walker);
         }
 
-        if ($this->isMarkerHigh($marker, Constants::TEXT_TINY)) {
+        if ($markerHigh === Constants::TEXT_TINY) {
             $textSize = $this->getLowNibbleValue($marker);
 
             return $this->unpackText($textSize, $walker);
@@ -130,7 +131,7 @@ class Unpacker
             return $this->unpackInteger($integer);
         }
 
-        if ($this->isMarkerHigh($marker, Constants::LIST_TINY)) {
+        if ($markerHigh === Constants::LIST_TINY) {
             $size = $this->getLowNibbleValue($marker);
             return $this->unpackList($size, $walker);
         }
@@ -249,8 +250,24 @@ class Unpacker
 
     public function getSignature(BytesWalker $walker)
     {
+        static $signatures = [
+            Constants::SIGNATURE_SUCCESS => self::SUCCESS,
+            Constants::SIGNATURE_FAILURE => self::FAILURE,
+            Constants::SIGNATURE_RECORD => self::RECORD,
+            Constants::SIGNATURE_IGNORE => self::IGNORED,
+            Constants::SIGNATURE_UNBOUND_RELATIONSHIP => 'UNBOUND_RELATIONSHIP',
+            Constants::SIGNATURE_NODE => 'NODE',
+            Constants::SIGNATURE_PATH => 'PATH',
+            Constants::SIGNATURE_RELATIONSHIP => 'RELATIONSHIP'
+        ];
+
         $sigMarker = $walker->read(1);
-        if ($this->isSignature(Constants::SIGNATURE_SUCCESS, $sigMarker)) {
+        $ordMarker = ord($sigMarker);
+        //var_dump($ordMarker);
+
+        return $signatures[$ordMarker];
+
+        if (Constants::SIGNATURE_SUCCESS === $ordMarker) {
             return self::SUCCESS;
         }
 
