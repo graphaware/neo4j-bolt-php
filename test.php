@@ -5,21 +5,30 @@ require_once(__DIR__.'/vendor/autoload.php');
 use GraphAware\Bolt\Driver as Bolt;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-$bolt = new Bolt('localhost', 7687);
+$driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
+$session = $driver->session();
+
 $stopwatch = new Stopwatch();
 
-$session = $bolt->getSession();
-$session->run("MATCH (n) DETACH DELETE n");
+$stopwatch->start("engine1");
+$result = $session->run("MATCH (n) WHERE id(n) = 19554 MATCH (n)-[:REL*1..100]->(o) RETURN collect(o) as reco");
+$e = $stopwatch->stop("engine1");
+echo $e->getDuration() . PHP_EOL;
+echo count($result->getRecord()->value('reco')) . PHP_EOL;
+//print_r($result->getRecord()->value('reco'));
 
-$q = 'UNWIND {props} as prop MERGE (n:Person {login: prop.login}) SET n.name = prop.name';
-$session->run($q, ['props' => [
-    [
-        'login' => 'login1',
-        'name' => 'name1'
-    ],
-    [
-        'login' => 'login2',
-        'name' => 'name2'
-    ]
-]]);
-//print_r($result);
+$stopwatch->start("test");
+$result = $session->run("MATCH (n) WHERE id(n) = 19554 MATCH (n)-[:REL]->(o) RETURN o");
+$e = $stopwatch->stop("test");
+echo $e->getDuration() . PHP_EOL;
+
+$pipeline = $session->createPipeline();
+$pipeline->push("MATCH (n) WHERE id(n) = 19554 MATCH (n)-[:REL*1..10]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 19554 MATCH (n)-[:REL]->(o) RETURN o");
+$stopwatch->start("pipeline");
+$results = $pipeline->run();
+$e = $stopwatch->stop("pipeline");
+echo $e->getDuration() . PHP_EOL;
+echo count($results);
+
+//print_r($results);

@@ -11,7 +11,9 @@
 
 namespace GraphAware\Bolt\Record;
 
+use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Common\Result\RecordViewInterface;
+use GraphAware\Common\Type\NodeInterface;
 
 class RecordView implements RecordViewInterface
 {
@@ -28,7 +30,7 @@ class RecordView implements RecordViewInterface
     /**
      * @var array
      */
-    protected $keyToIndexMap = [];
+    private $keyToIndexMap = [];
 
     /**
      * @return array
@@ -67,6 +69,19 @@ class RecordView implements RecordViewInterface
     public function value($key)
     {
         return $this->values[$this->keyToIndexMap[$key]];
+    }
+
+    /**
+     * @param $key
+     * @return \GraphAware\Bolt\Result\Type\Node
+     */
+    public function nodeValue($key)
+    {
+        if (!$this->values[$key] instanceof NodeInterface) {
+            throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'NODE'));
+        }
+
+        return $this->value($key);
     }
 
     /**

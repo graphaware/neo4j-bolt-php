@@ -17,11 +17,12 @@ use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Result\Result;
 use GraphAware\Common\Cypher\Statement;
+use GraphAware\Bolt\Protocol\V1\Session;
 
 class Pipeline
 {
     /**
-     * @var \GraphAware\Bolt\Protocol\SessionInterface
+     * @var \GraphAware\Bolt\Protocol\V1\Session
      */
     protected $session;
 
@@ -30,7 +31,7 @@ class Pipeline
      */
     protected $messages = [];
 
-    public function __construct(SessionInterface $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }
@@ -61,7 +62,7 @@ class Pipeline
         return empty($this->messages);
     }
 
-    public function flush()
+    public function run()
     {
         if (!$this->session->isInitialized) {
             $this->session->init();
@@ -83,13 +84,13 @@ class Pipeline
                         $result->setFields($responseMessage->getFields());
                     }
                     if ($responseMessage->hasStatistics()) {
-                        $result->setStatistics($responseMessage->getStatistics()->toArray());
+                        $result->setStatistics($responseMessage->getStatistics());
                     }
                     if ($responseMessage->hasType()) {
                         $result->setType($responseMessage->getType());
                     }
                 } elseif ($responseMessage->isRecord()) {
-                    $result->addRecord($responseMessage);
+                    $result->pushRecord($responseMessage);
                 } elseif ($responseMessage->isFailure()) {
                 }
             }

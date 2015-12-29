@@ -65,7 +65,7 @@ class Session extends AbstractSession
                 $hasMore = true;
                 while ($hasMore) {
                     $responseMessage = $this->receiveMessage();
-                    if ($responseMessage->getSignature() == "SUCCESS") {
+                    if ($responseMessage->getSignature() === "SUCCESS") {
                         $hasMore = false;
                         if (array_key_exists('fields', $responseMessage->getElements())) {
                             $response->setFields($responseMessage->getElements()['fields']);
@@ -137,7 +137,6 @@ class Session extends AbstractSession
         $message = $this->serializer->deserialize($rawMessage);
 
         if ($message->getSignature() === "FAILURE") {
-            print_r($message);
             throw new MessageFailureException($message->getElements()['message']);
         }
 

@@ -60,6 +60,56 @@ class Structure
         return $this->elements;
     }
 
+    public function isSuccess()
+    {
+        return "SUCCESS" === $this->signature;
+    }
+
+    public function isRecord()
+    {
+        return "RECORD" === $this->signature;
+    }
+
+    public function hasFields()
+    {
+        $elts = $this->getElements();
+
+        return array_key_exists('fields', $elts);
+    }
+
+    public function getFields()
+    {
+        return $this->getElements()['fields'];
+    }
+
+    public function hasStatistics()
+    {
+        $elts = $this->getElements();
+
+        return array_key_exists('statistics', $elts);
+    }
+
+    public function getStatistics()
+    {
+        $elts = $this->getElements();
+
+        return $elts['statistics'];
+    }
+
+    public function hasType()
+    {
+        $elts = $this->getElements();
+
+        return array_key_exists('type', $elts);
+    }
+
+    public function getType()
+    {
+        $elts = $this->getElements();
+
+        return $elts['type'];
+    }
+
     private function types()
     {
         return ['NODE', 'RELATIONSHIP', 'PATH', 'UNBOUND_RELATIONSHIP'];
