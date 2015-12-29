@@ -52,6 +52,7 @@ class Unpacker
     public function unpackElement(BytesWalker $walker)
     {
         $marker = $walker->read(1);
+        $byte = hexdec(bin2hex($marker));
 
         // Structures
         if ($this->isInRange(0xb0, 0xbf, $marker)) {
@@ -74,7 +75,7 @@ class Unpacker
             return $this->unpackMap($size, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::MAP_16)) {
+        if ($byte === Constants::MAP_16) {
             $size = $this->readUnsignedShort($walker);
 
             return $this->unpackMap($size, $walker);
@@ -86,43 +87,43 @@ class Unpacker
             return $this->unpackText($textSize, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::TEXT_8)) {
+        if ($byte === Constants::TEXT_8) {
             $textSize = $this->readUnsignedShortShort($walker);
 
             return $this->unpackText($textSize, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::TEXT_16)) {
+        if ($byte === Constants::TEXT_16) {
             $textSize = $this->readUnsignedShort($walker);
 
             return $this->unpackText($textSize, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::TEXT_32)) {
+        if ($byte === Constants::TEXT_32) {
             $textSize = $this->readUnsignedLong($walker);
 
             return $this->unpackText($textSize, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::INT_8)) {
+        if ($byte === Constants::INT_8) {
             $integer = $this->readSignedShortShort($walker);
 
             return $this->unpackInteger($integer);
         }
 
-        if ($this->isMarker($marker, Constants::INT_16)) {
+        if ($byte === Constants::INT_16) {
             $integer = $this->readSignedShort($walker);
 
             return $this->unpackInteger($integer);
         }
 
-        if ($this->isMarker($marker, Constants::INT_32)) {
+        if ($byte === Constants::INT_32) {
             $integer = $this->readSignedLong($walker);
 
             return $this->unpackInteger($integer);
         }
 
-        if ($this->isMarker($marker, Constants::INT_64)) {
+        if ($byte === Constants::INT_64) {
             $integer = $this->readSignedLongLong($walker);
 
             return $this->unpackInteger($integer);
@@ -133,13 +134,13 @@ class Unpacker
             return $this->unpackList($size, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::LIST_8)) {
+        if ($byte === Constants::LIST_8) {
             $size = $this->readUnsignedShortShort($walker);
 
             return $this->unpackList($size, $walker);
         }
 
-        if ($this->isMarker($marker, Constants::LIST_16)) {
+        if ($byte === Constants::LIST_16) {
             $size = $this->readUnsignedShort($walker);
             return $this->unpackList($size, $walker);
         }
@@ -153,7 +154,7 @@ class Unpacker
         }
 
         // Checks for floats
-        if ($this->isMarker($marker, Constants::MARKER_FLOAT)) {
+        if ($byte === Constants::MARKER_FLOAT) {
 
             list(, $v) = unpack('d', strrev($walker->read(8)));
 
@@ -161,15 +162,15 @@ class Unpacker
         }
 
         // Checks Primitive Values NULL, TRUE, FALSE
-        if ($this->isMarker($marker, Constants::MARKER_NULL)) {
+        if ($byte === Constants::MARKER_NULL) {
             return null;
         }
 
-        if ($this->isMarker($marker, Constants::MARKER_TRUE)) {
+        if ($byte === Constants::MARKER_TRUE) {
             return true;
         }
 
-        if ($this->isMarker($marker, Constants::MARKER_FALSE)) {
+        if ($byte === Constants::MARKER_FALSE) {
             return false;
         }
 
