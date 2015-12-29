@@ -14,6 +14,7 @@ namespace GraphAware\Bolt;
 use GraphAware\Bolt\Exception\IOException;
 use GraphAware\Bolt\IO\Socket;
 use GraphAware\Bolt\IO\StreamSocket;
+use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
 use GraphAware\Common\Driver\DriverInterface;
@@ -58,11 +59,16 @@ class Driver implements DriverInterface
         define('CERTS_PATH',
         '/Users/ikwattro/dev/_graphs/3.0-M02-NIGHTLY/conf');
         $ssl_options = array(
-            'cafile' => CERTS_PATH . '/ssl/snakeoil.pem',
-            //'local_cert' => CERTS_PATH . '/ssl/snakeoil.pem',
+            'cafile' => CERTS_PATH . '/cacert.pem',
+            'local_cert' => CERTS_PATH . '/ssl/snakeoil.pem',
             'peer_name' => 'example.com',
             'allow_self_signed' => true,
             'verify_peer' => true,
+            'capture_peer_cert' => true,
+            'capture_peer_cert_chain' => true,
+            'disable_compression' => true,
+            'SNI_enabled' => true,
+            'verify_depth' => 1
         );
         foreach ($ssl_options as $k => $v) {
             stream_context_set_option($ctx, 'ssl', $k, $v);

@@ -23,7 +23,17 @@ $e = $stopwatch->stop("test");
 echo $e->getDuration() . PHP_EOL;
 
 $pipeline = $session->createPipeline();
-$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..10]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
+$pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o) RETURN o as reco, id(o) as score");
 $pipeline->push("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL]->(o) RETURN o");
 $stopwatch->start("pipeline");
 $results = $pipeline->run();

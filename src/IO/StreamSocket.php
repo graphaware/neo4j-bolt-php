@@ -12,6 +12,7 @@
 namespace GraphAware\Bolt\IO;
 
 use GraphAware\Bolt\Exception\IOException;
+use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class StreamSocket extends AbstractIO
@@ -49,7 +50,22 @@ class StreamSocket extends AbstractIO
 
     public function write($data)
     {
-        fwrite($this->sock, $data);
+        $written = 0;
+        $len = mb_strlen($data, 'ASCII');
+
+        while ($written < $len) {
+            $buf = fwrite($this->sock, $data, 8192);
+
+            if ($buf === false) {
+                throw new IOException('Error writing data');
+            }
+
+            if ($buf === 0 && feof($this->sock)) {
+                throw new IOException('Broken pipe or closed connection');
+            }
+
+            $written += $buf;
+        }
     }
 
     public function read($n)
@@ -59,7 +75,9 @@ class StreamSocket extends AbstractIO
 
         while ($read < $n) {
             $buffer = fread($this->sock, ($n - $read));
-            if ($buffer === false) {
+            //var_dump(\GraphAware\Bolt\Misc\Helper::prettyHex($buffer));
+            // check '' later for non-blocking mode use case
+            if ($buffer === false || '' === $buffer) {
                 throw new IOException('Error receiving data');
             }
 
@@ -81,9 +99,6 @@ class StreamSocket extends AbstractIO
             $this->port
         );
 
-        //set_error_handler(array($this, 'error_handler'));
-        //print_r($this->context);
-
         $this->sock = stream_socket_client(
             $remote,
             $errno,
@@ -93,14 +108,11 @@ class StreamSocket extends AbstractIO
             $this->context
         );
 
-        //restore_error_handler();
-
         if (false === $this->sock) {
             throw new IOException(sprintf(
                 'Error to connect to the server(%s) :  "%s"', $errno, $errstr
             ));
         }
-        //var_dump($this->sock);
     }
 
     public function close()
