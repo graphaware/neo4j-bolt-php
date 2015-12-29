@@ -9,6 +9,7 @@ use GraphAware\Bolt\Protocol\SessionInterface;
  * @package GraphAware\Bolt\Tests\Integration
  *
  * @group integration
+ * @group handshake
  */
 class HandshakeIntegrationTest extends IntegrationTestCase
 {
