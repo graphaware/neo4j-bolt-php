@@ -128,8 +128,8 @@ class Socket extends AbstractIO
 
     public function read($n)
     {
-        $i = 'socket read ' . uniqid();
-        $this->stopwatch->start($i);
+        //$i = 'socket read ' . uniqid();
+        //$this->stopwatch->start($i);
         $res = '';
         $read = 0;
 
@@ -149,7 +149,7 @@ class Socket extends AbstractIO
         }
 
         //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
-        $e = $this->stopwatch->stop($i);
+        //$e = $this->stopwatch->stop($i);
         //echo $i . ' : ' . $e->getDuration() . PHP_EOL;
         return $res;
     }
