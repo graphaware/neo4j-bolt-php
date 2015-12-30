@@ -56,6 +56,7 @@ class Driver implements DriverInterface
     public function __construct($uri)
     {
         $ctx = stream_context_create(array());
+        /*
         define('CERTS_PATH',
         '/Users/ikwattro/dev/_graphs/3.0-M02-NIGHTLY/conf');
         $ssl_options = array(
@@ -73,8 +74,9 @@ class Driver implements DriverInterface
         foreach ($ssl_options as $k => $v) {
             stream_context_set_option($ctx, 'ssl', $k, $v);
         }
+        */
 
-        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT);
+        $this->io = new Socket($uri, self::DEFAULT_TCP_PORT);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(SessionV1::class);
