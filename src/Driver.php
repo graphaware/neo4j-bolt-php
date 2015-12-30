@@ -74,7 +74,7 @@ class Driver implements DriverInterface
             stream_context_set_option($ctx, 'ssl', $k, $v);
         }
 
-        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT, $ctx);
+        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(SessionV1::class);
