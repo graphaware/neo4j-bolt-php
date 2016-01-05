@@ -53,10 +53,11 @@ class PackingTextIntegrationTest extends IntegrationTestCase
     /**
      * @group text32
      * @group fail
+     * @group stringx
      */
     public function testText32Packing()
     {
-        $this->doRangeTest(65536, 65537);
+        //$this->doRangeTest(65537, 65537);
         $this->doRangeTest(500000, 500000);
     }
 
