@@ -65,7 +65,7 @@ class Result extends AbstractRecordCursor
     }
 
     /**
-     * @return \GraphAware\Common\Result\RecordViewInterface
+     * @return \GraphAware\Bolt\Record\RecordView
      */
     public function getRecord()
     {

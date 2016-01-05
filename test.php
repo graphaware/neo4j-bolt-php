@@ -15,6 +15,9 @@ $result = $session->run("MATCH (n) WHERE id(n) = 18 MATCH (n)-[:REL*1..100]->(o)
 $e = $stopwatch->stop("engine1");
 echo $e->getDuration() . PHP_EOL;
 echo count($result->getRecord()->value('reco')) . PHP_EOL;
+
+echo $result->getRecord()->value('n')->labels();
+
 //print_r($result->getRecord()->value('reco'));
 
 $stopwatch->start("test");
