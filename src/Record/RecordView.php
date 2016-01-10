@@ -13,6 +13,7 @@ namespace GraphAware\Bolt\Record;
 
 use GraphAware\Common\Result\RecordViewInterface;
 use GraphAware\Common\Type\NodeInterface;
+use GraphAware\Common\Type\PathInterface;
 use GraphAware\Common\Type\RelationshipInterface;
 
 class RecordView implements RecordViewInterface
@@ -98,6 +99,22 @@ class RecordView implements RecordViewInterface
         if ($this->values[$key] !== null && !$this->values[$key] instanceof RelationshipInterface) {
             throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'RELATIONSHIP'));
         }
+
+        return $this->value($key);
+    }
+
+    /**
+     * @param $key
+     * @return \GraphAware\Bolt\Result\Type\Path
+     *
+     * @throws \InvalidArgumentException When the value is not null or instance of Path
+     */
+    public function pathValue($key) {
+        if ($this->values[$key] !== null && !$this->values[$key] instanceof PathInterface) {
+            throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'PATH'));
+        }
+
+        return $this->value($key);
     }
 
     /**
