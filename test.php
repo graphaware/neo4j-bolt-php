@@ -13,5 +13,4 @@ $stopwatch = new Stopwatch();
 $stopwatch->start('e');
 $result = $session->run("UNWIND range(0, 1000) as i CREATE (x:Node) RETURN x");
 $e = $stopwatch->stop('e');
-print_r($result->summarize()->updateStatistics());
 echo $e->getDuration();
