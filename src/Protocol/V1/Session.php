@@ -137,7 +137,8 @@ class Session extends AbstractSession
         $message = $this->serializer->deserialize($rawMessage);
 
         if ($message->getSignature() === "FAILURE") {
-            throw new MessageFailureException($message->getElements()['message']);
+            $e = new MessageFailureException($message->getElements()['message']);
+            $e->setStatusCode($message->getElements()['code']);
         }
 
         return $message;

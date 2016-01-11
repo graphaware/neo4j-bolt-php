@@ -13,4 +13,15 @@ namespace GraphAware\Bolt\Exception;
 
 class MessageFailureException extends \RuntimeException implements BoltExceptionInterface
 {
+    protected $statusCode;
+
+    public function setStatusCode($code)
+    {
+        $this->statusCode = $code;
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
 }
