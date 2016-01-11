@@ -14,6 +14,7 @@ namespace GraphAware\Bolt\PackStream;
 use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
 use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
+use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Constants;
 
 class Packer
@@ -61,6 +62,7 @@ class Packer
     {
         $stream = '';
         $packedSig = chr($signature);
+        echo Helper::prettyHex($packedSig) . PHP_EOL;
         if ($length < Constants::SIZE_TINY) {
             $stream .= chr(Constants::STRUCTURE_TINY + $length);
             $stream .= $packedSig;

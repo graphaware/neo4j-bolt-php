@@ -50,6 +50,7 @@ class StreamSocket extends AbstractIO
 
     public function write($data)
     {
+        //echo 'C - DATA: ' . \GraphAware\Bolt\Misc\Helper::prettyHex($data) . PHP_EOL;
         $written = 0;
         $len = mb_strlen($data, 'ASCII');
 
@@ -75,17 +76,25 @@ class StreamSocket extends AbstractIO
 
         while ($read < $n) {
             $buffer = fread($this->sock, ($n - $read));
-            //var_dump(\GraphAware\Bolt\Misc\Helper::prettyHex($buffer));
             // check '' later for non-blocking mode use case
             if ($buffer === false || '' === $buffer) {
                 throw new IOException('Error receiving data');
             }
-
+            //echo 'S: ' . \GraphAware\Bolt\Misc\Helper::prettyHex($buffer) . PHP_EOL;
             $read += mb_strlen($buffer, 'ASCII');
             $data .= $buffer;
         }
 
         return $data;
+    }
+
+    public function readBlock()
+    {
+        $metadata = stream_get_meta_data($this->sock);
+        stream_set_blocking($this->sock, false);
+        $buffer = stream_get_contents($this->sock);
+        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($buffer);
+        return $buffer;
     }
 
     public function connect()

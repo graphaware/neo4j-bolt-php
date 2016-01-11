@@ -36,15 +36,13 @@ class BytesWalker
     protected $length;
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
-     * @param int                                          $position
-     * @param string                                       $encoding
+     * @param string $bytes
      */
-    public function __construct(RawMessage $message, $position = 0, $encoding = 'ASCII')
+    public function __construct($bytes)
     {
-        $this->bytes = $message->getBytes();
-        $this->position = $position;
-        $this->encoding = $encoding;
+        $this->bytes = $bytes;
+        $this->position = 0;
+        $this->encoding = 'ASCII';
         $this->getLength();
     }
 

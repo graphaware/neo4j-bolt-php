@@ -12,6 +12,7 @@
 namespace GraphAware\Bolt\PackStream;
 
 use GraphAware\Bolt\Exception\SerializationException;
+use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\PackStream\Structure\Structure;
 use GraphAware\Bolt\Protocol\Constants;
@@ -29,9 +30,21 @@ class Unpacker
 
     protected $is64bits;
 
-    public function __construct()
+    protected $stream;
+
+    public function unpack(AbstractIO $stream)
     {
-        $this->is64bits = PHP_INT_SIZE == 8;
+        $messages = [];
+        $bytes = '';
+        do {
+            list(, $chunkHeader) = unpack('n', $stream->read(2));
+            $bytes .= $stream->read($chunkHeader);
+
+            $messages[] = $this->unpackElement(new BytesWalker(new RawMessage($bytes)));
+            var_dump($chunkHeader);
+        } while ($chunkHeader !== 0);
+
+        return $messages;
     }
 
     /**

@@ -57,7 +57,7 @@ class Socket extends AbstractIO
         socket_set_block($this->socket);
         socket_set_option($this->socket, SOL_TCP, TCP_NODELAY, 1);
         //socket_set_option($this->socket, SOL_SOCKET, SO_PASSCRED
-        socket_set_option($this->socket, SOL_SOCKET, SO_KEEPALIVE, 1);
+        //socket_set_option($this->socket, SOL_SOCKET, SO_KEEPALIVE, 1);
         socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $this->timeout, 'usec' => 0));
         socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $this->timeout, 'usec' => 0));
 
@@ -128,12 +128,11 @@ class Socket extends AbstractIO
 
     public function read($n)
     {
-        //$i = 'socket read ' . uniqid();
-        //$this->stopwatch->start($i);
         $res = '';
         $read = 0;
 
         $buf = socket_read($this->socket, $n);
+        Helper::prettyHex($buf);
         while ($read < $n && $buf !== '' && $buf !== false) {
             $read += mb_strlen($buf, 'ASCII');
             $res .= $buf;
@@ -151,6 +150,20 @@ class Socket extends AbstractIO
         //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
         //$e = $this->stopwatch->stop($i);
         //echo $i . ' : ' . $e->getDuration() . PHP_EOL;
+        return $res;
+    }
+
+    public function readBlock()
+    {
+        $res = '';
+        $read = 0;
+
+        do {
+            $buf = socket_read($this->socket, 1024);
+            $l = mb_strlen($buf, 'ASCII');
+            $res .= $buf;
+        } while ($l < 1024);
+
         return $res;
     }
 

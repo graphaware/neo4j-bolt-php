@@ -11,29 +11,28 @@
 
 namespace GraphAware\Bolt\Protocol\V1;
 
-use GraphAware\Bolt\Driver;
 use GraphAware\Bolt\Protocol\AbstractSession;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
-use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
-use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
-use GraphAware\Bolt\Protocol\Message\InitMessage;
-use GraphAware\Bolt\Protocol\Message\PullAllMessage;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
-use GraphAware\Bolt\Protocol\Message\RunMessage;
+use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Protocol\Pipeline;
-use GraphAware\Bolt\Exception\MessageFailureException;
-use GraphAware\Bolt\Result\Result;
-use GraphAware\Common\Cypher\Statement;
+use GraphAware\Bolt\Driver;
 
 class Session extends AbstractSession
 {
     const PROTOCOL_VERSION = 1;
 
-    public $isInitialized = false;
+    protected $connection;
+
+    protected $isInitialized = false;
 
     public static function getProtocolVersion()
     {
         return self::PROTOCOL_VERSION;
+    }
+
+    public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
+    {
+        parent::__construct($io, $dispatcher);
+        $this->connection = new Connection($this->io);
     }
 
     /**
@@ -45,126 +44,33 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = array(), $discard = false, $autoReceive = true)
     {
-        $response = new Result(Statement::create($statement, $parameters));
-        $messages = array(
-            new RunMessage($statement, $parameters),
-            //new PullAllMessage()
-        );
-        if ($discard) {
-            $messages[] = new DiscardAllMessage();
-        } else {
-            $messages[] = new PullAllMessage();
-        }
+        $runResponse = new Response($this->connection);
+        $runResponse->registerCallback(Response::ON_SUCCESS, function($v) {
+            echo 'onSuccess';
+        });
 
-        if (!$this->isInitialized) {
-            $this->init();
-        }
+        $pullAllResponse = new Response($this->connection);
+        $pullAllResponse->registerCallback(Response::ON_RECORD, function($v) {
+            echo 'received record' . PHP_EOL;
+        });
 
-        $this->sendMessages($messages);
-        if ($autoReceive) {
-            foreach ($messages as $m) {
-                $hasMore = true;
-                while ($hasMore) {
-                    $responseMessage = $this->receiveMessage();
-                    if ($responseMessage->getSignature() === "SUCCESS") {
-                        $hasMore = false;
-                        if (array_key_exists('fields', $responseMessage->getElements())) {
-                            $response->setFields($responseMessage->getElements()['fields']);
-                        }
-                        if (array_key_exists('stats', $responseMessage->getElements())) {
-                            $response->setStatistics($responseMessage->getElements()['stats']);
-                        }
-                        if (array_key_exists('type', $responseMessage->getElements())) {
-                            $response->setType($responseMessage->getElements()['type']);
-                        }
-                    } elseif ($responseMessage->getSignature() === "RECORD") {
-                        $response->pushRecord($responseMessage);
-                    }
-                }
-            }
-            return $response;
-        }
+        $this->connection->add(Constants::SIGNATURE_RUN, array($statement, $parameters), $runResponse);
+        $this->connection->add(Constants::SIGNATURE_PULL_ALL, array(), $pullAllResponse);
+        $this->connection->send();
 
-        return null;
-    }
-
-    public function init()
-    {
-        $ua = Driver::getUserAgent();
-        $this->sendMessage(new InitMessage($ua));
-        $responseMessage = $this->receiveMessage();
-        if ($responseMessage->getSignature() == "SUCCESS") {
-            $this->isInitialized = true;
-        } else {
-            throw new \Exception('Unable to INIT');
+        while (!$pullAllResponse->isCompleted()) {
+            $this->connection->fetchNext();
         }
-        $this->isInitialized = true;
+        $this->connection->close();
     }
 
     public function runPipeline(Pipeline $pipeline)
     {
-
+        // TODO: Implement runPipeline() method.
     }
 
-    /**
-     * @return \GraphAware\Bolt\Protocol\Pipeline
-     */
     public function createPipeline()
     {
-        return new Pipeline($this);
-    }
-
-    /**
-     * @return \GraphAware\Bolt\PackStream\Structure\Structure
-     */
-    public function receiveMessage()
-    {
-        $bytes = '';
-
-        $chunkHeader = $this->io->read(2);
-        list(, $chunkSize) = unpack('n', $chunkHeader);
-        $nextChunkLength = $chunkSize;
-        do {
-            if ($nextChunkLength) {
-                $bytes .= $this->io->read($nextChunkLength);
-            }
-            list(, $next) = unpack('n', $this->io->read(2));
-            $nextChunkLength = $next;
-        } while($nextChunkLength > 0);
-
-        $rawMessage = new RawMessage($bytes);
-
-        $message = $this->serializer->deserialize($rawMessage);
-
-        if ($message->getSignature() === "FAILURE") {
-            $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
-            $e = new MessageFailureException($msg);
-            $e->setStatusCode($message->getElements()['code']);
-            $this->sendMessage(new AckFailureMessage());
-
-            throw $e;
-        }
-
-        return $message;
-    }
-
-    /**
-     * @param \GraphAware\Bolt\Protocol\Message\AbstractMessage $message
-     */
-    public function sendMessage(AbstractMessage $message)
-    {
-        $this->sendMessages(array($message));
-    }
-
-    /**
-     * @param \GraphAware\Bolt\Protocol\Message\AbstractMessage[] $messages
-     */
-    public function sendMessages(array $messages)
-    {
-        foreach ($messages as $message) {
-            $this->serializer->serialize($message);
-        }
-
-        $this->writer->writeMessages($messages);
+        // TODO: Implement createPipeline() method.
     }
 }
