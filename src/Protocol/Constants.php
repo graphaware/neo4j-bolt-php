@@ -27,6 +27,8 @@ class Constants
 
     const SIGNATURE_FAILURE = 0x7f;
 
+    const SIGNATURE_ACK_FAILURE = 0x0f;
+
     const SIGNATURE_IGNORE = 0x7E;
 
     const SIGNATURE_RECORD = 0x71;

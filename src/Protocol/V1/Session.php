@@ -14,6 +14,7 @@ namespace GraphAware\Bolt\Protocol\V1;
 use GraphAware\Bolt\Driver;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
 use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
 use GraphAware\Bolt\Protocol\Message\InitMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
@@ -78,7 +79,6 @@ class Session extends AbstractSession
                         }
                     } elseif ($responseMessage->getSignature() === "RECORD") {
                         $response->pushRecord($responseMessage);
-                    } elseif ($responseMessage->isFailure()) {
                     }
                 }
             }
@@ -137,8 +137,12 @@ class Session extends AbstractSession
         $message = $this->serializer->deserialize($rawMessage);
 
         if ($message->getSignature() === "FAILURE") {
-            $e = new MessageFailureException($message->getElements()['message']);
+            $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
+            $e = new MessageFailureException($msg);
             $e->setStatusCode($message->getElements()['code']);
+            $this->sendMessage(new AckFailureMessage());
+
+            throw $e;
         }
 
         return $message;
