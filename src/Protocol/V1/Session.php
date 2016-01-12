@@ -43,49 +43,41 @@ class Session extends AbstractSession
      * @return \GraphAware\Bolt\Result\Result
      * @throws \Exception
      */
-    public function run($statement, array $parameters = array(), $discard = false, $autoReceive = true)
+    public function run($statement, array $parameters = array(), $tag = null)
     {
         $response = new Result(Statement::create($statement, $parameters));
         $messages = array(
             new RunMessage($statement, $parameters),
-            //new PullAllMessage()
         );
-        if ($discard) {
-            $messages[] = new DiscardAllMessage();
-        } else {
-            $messages[] = new PullAllMessage();
-        }
+        $messages[] = new PullAllMessage();
 
         if (!$this->isInitialized) {
             $this->init();
         }
 
         $this->sendMessages($messages);
-        if ($autoReceive) {
-            foreach ($messages as $m) {
-                $hasMore = true;
-                while ($hasMore) {
-                    $responseMessage = $this->receiveMessage();
-                    if ($responseMessage->getSignature() === "SUCCESS") {
-                        $hasMore = false;
-                        if (array_key_exists('fields', $responseMessage->getElements())) {
-                            $response->setFields($responseMessage->getElements()['fields']);
-                        }
-                        if (array_key_exists('stats', $responseMessage->getElements())) {
-                            $response->setStatistics($responseMessage->getElements()['stats']);
-                        }
-                        if (array_key_exists('type', $responseMessage->getElements())) {
-                            $response->setType($responseMessage->getElements()['type']);
-                        }
-                    } elseif ($responseMessage->getSignature() === "RECORD") {
-                        $response->pushRecord($responseMessage);
+        foreach ($messages as $m) {
+            $hasMore = true;
+            while ($hasMore) {
+                $responseMessage = $this->receiveMessage();
+                if ($responseMessage->getSignature() === "SUCCESS") {
+                    $hasMore = false;
+                    if (array_key_exists('fields', $responseMessage->getElements())) {
+                        $response->setFields($responseMessage->getElements()['fields']);
                     }
+                    if (array_key_exists('stats', $responseMessage->getElements())) {
+                        $response->setStatistics($responseMessage->getElements()['stats']);
+                    }
+                    if (array_key_exists('type', $responseMessage->getElements())) {
+                        $response->setType($responseMessage->getElements()['type']);
+                    }
+                } elseif ($responseMessage->getSignature() === "RECORD") {
+                    $response->pushRecord($responseMessage);
                 }
             }
-            return $response;
         }
 
-        return null;
+        return $response;
     }
 
     public function init()

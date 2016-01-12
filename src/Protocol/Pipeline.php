@@ -11,13 +11,12 @@
 
 namespace GraphAware\Bolt\Protocol;
 
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
-use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Result\Result;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Common\Result\ResultCollection;
 
 class Pipeline
 {
@@ -40,9 +39,9 @@ class Pipeline
      * @param string $query
      * @param array $parameters
      */
-    public function push($query, array $parameters = array())
+    public function push($query, array $parameters = array(), $tag = null)
     {
-        $this->messages[] = new RunMessage($query, $parameters);
+        $this->messages[] = new RunMessage($query, $parameters, $tag);
         $this->messages[] = new PullAllMessage();
     }
 
@@ -62,18 +61,23 @@ class Pipeline
         return empty($this->messages);
     }
 
+    /**
+     * @return \GraphAware\Common\Result\ResultCollection
+     *
+     * @throws \Exception
+     */
     public function run()
     {
         if (!$this->session->isInitialized) {
             $this->session->init();
         }
 
-        $resultCursor = array();
+        $resultCollection = new ResultCollection();
 
         $this->session->sendMessages($this->messages);
         foreach ($this->messages as $k => $message) {
             if ($message instanceof RunMessage) {
-                $result = new Result(Statement::create($message->getStatement(), $message->getParams()));
+                $result = new Result(Statement::create($message->getStatement(), $message->getParams(), $message->getTag()));
             }
             $hasMore = true;
             while ($hasMore) {
@@ -96,11 +100,11 @@ class Pipeline
             }
 
             if ($message instanceof RunMessage) {
-                $resultCursor[] = $result;
+                $resultCollection->add($result);
             }
 
         }
 
-        return $resultCursor;
+        return $resultCollection;
     }
 }
