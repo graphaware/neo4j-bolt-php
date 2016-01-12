@@ -158,4 +158,11 @@ class Socket extends AbstractIO
     {
         return is_resource($this->socket);
     }
+
+    public function assertConnected()
+    {
+        if (!$this->isConnected()) {
+            $this->connect();
+        }
+    }
 }

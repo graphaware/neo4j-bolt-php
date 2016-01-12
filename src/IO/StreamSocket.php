@@ -50,6 +50,7 @@ class StreamSocket extends AbstractIO
 
     public function write($data)
     {
+        $this->assertConnected();
         $written = 0;
         $len = mb_strlen($data, 'ASCII');
 
@@ -70,6 +71,7 @@ class StreamSocket extends AbstractIO
 
     public function read($n)
     {
+        $this->assertConnected();
         $read = 0;
         $data = '';
 
@@ -127,6 +129,13 @@ class StreamSocket extends AbstractIO
     {
         $this->close();
         $this->connect();
+    }
+
+    public function assertConnected()
+    {
+        if (!$this->isConnected()) {
+            $this->connect();
+        }
     }
 
     public function isConnected()

@@ -31,6 +31,8 @@ class Session extends AbstractSession
 
     public $isInitialized = false;
 
+    public $transaction;
+
     public static function getProtocolVersion()
     {
         return self::PROTOCOL_VERSION;
@@ -82,6 +84,7 @@ class Session extends AbstractSession
 
     public function init()
     {
+        $this->io->assertConnected();
         $ua = Driver::getUserAgent();
         $this->sendMessage(new InitMessage($ua));
         $responseMessage = $this->receiveMessage();
@@ -158,5 +161,23 @@ class Session extends AbstractSession
         }
 
         $this->writer->writeMessages($messages);
+    }
+
+    /**
+     * Closes this session and the corresponding connection to the socket
+     */
+    public function close()
+    {
+        //$this->io->close();
+        //$this->isInitialized = false;
+    }
+
+    public function transaction()
+    {
+        if ($this->transaction instanceof Transaction) {
+            throw new \RuntimeException('A transaction is already bound to this session');
+        }
+
+        return new Transaction($this);
     }
 }

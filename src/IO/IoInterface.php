@@ -22,4 +22,6 @@ interface IoInterface
     public function reconnect();
 
     public function isConnected();
+
+    public function close();
 }

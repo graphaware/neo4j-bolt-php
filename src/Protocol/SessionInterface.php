@@ -28,4 +28,11 @@ interface SessionInterface
      * @return \GraphAware\Bolt\Protocol\Pipeline
      */
     public function createPipeline();
+
+    public function close();
+
+    /**
+     * @return \GraphAware\Bolt\Protocol\V1\Transaction
+     */
+    public function transaction();
 }
