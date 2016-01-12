@@ -86,14 +86,14 @@ class Structure
     {
         $elts = $this->getElements();
 
-        return array_key_exists('statistics', $elts);
+        return array_key_exists('stats', $elts);
     }
 
     public function getStatistics()
     {
         $elts = $this->getElements();
 
-        return $elts['statistics'];
+        return array_key_exists('stats', $elts) ? $elts['stats'] : [];
     }
 
     public function hasType()

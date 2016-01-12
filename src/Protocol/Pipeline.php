@@ -86,8 +86,6 @@ class Pipeline
                     $hasMore = false;
                     if ($responseMessage->hasFields()) {
                         $result->setFields($responseMessage->getFields());
-                    }
-                    if ($responseMessage->hasStatistics()) {
                         $result->setStatistics($responseMessage->getStatistics());
                     }
                     if ($responseMessage->hasType()) {
