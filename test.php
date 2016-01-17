@@ -6,23 +6,12 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 $driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
 $session = $driver->session();
-
 $stopwatch = new Stopwatch();
-
-$pipeline = $session->createPipeline();
-$pipeline->push("MATCH (n) RETURN count(n)", array(), 'engine1');
-
-$results = $pipeline->run();
-$session->close();
-
-
-$transaction = $session->transaction();
-$transaction->begin();
-$transaction->run(\GraphAware\Common\Cypher\Statement::create("MATCH (n:Chris) DELETE n"));
-$transaction->run(\GraphAware\Common\Cypher\Statement::create("CREATE (n:Chris)"));
-$transaction->commit();
-
-$transaction = $session->transaction();
-$transaction->begin();
-$transaction->run(\GraphAware\Common\Cypher\Statement::create("CREATE (n:Chris)"));
-$transaction->rollback();
+$p = $session->createPipeline();
+foreach (range(0, 100) as $i) {
+    $p->push("MATCH (n:User {login: {login} })-[:FOLLOWS]->(f)-[:FOLLOWS]->(fof) RETURN count(*)", ['login' => 'ikwattro']);
+}
+$stopwatch->start("e");
+$result = $p->run();
+$e = $stopwatch->stop("e");
+var_dump($e->getDuration());
