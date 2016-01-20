@@ -41,6 +41,13 @@ class Session extends AbstractSession
      */
     private $bw;
 
+    public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
+    {
+        parent::__construct($io, $dispatcher);
+        $this->init();
+        $this->bw = new BytesWalker($io);
+    }
+
     public static function getProtocolVersion()
     {
         return self::PROTOCOL_VERSION;
@@ -60,11 +67,6 @@ class Session extends AbstractSession
             new RunMessage($statement, $parameters),
         );
         $messages[] = new PullAllMessage();
-
-        if (!$this->isInitialized) {
-            $this->init();
-        }
-
         $this->sendMessages($messages);
 
         $bw = new BytesWalker($this->io);
@@ -92,6 +94,39 @@ class Session extends AbstractSession
         foreach ($pullResponse->getRecords() as $record) {
             $cypherResult->pushRecord($record);
         }
+
+        return $cypherResult;
+    }
+
+    public function recv($statement, array $parameters = array(), $tag = null)
+    {
+        $bw = $this->bw;
+        $unpacker = new Unpacker($bw);
+
+        $runResponse = new Response();
+        $r = $unpacker->unpack();
+        if ($r->isSuccess()) {
+            $runResponse->onSuccess($r);
+        }
+
+        $pullResponse = new Response();
+        while (!$pullResponse->isCompleted()) {
+            $r = $unpacker->unpack();
+            if ($r->isRecord()) {
+                $pullResponse->onRecord($r);
+            }
+            if ($r->isSuccess()) {
+                $pullResponse->onSuccess($r);
+            }
+        }
+
+        $cypherResult = new CypherResult(Statement::create($statement, $parameters, $tag));
+        $cypherResult->setFields($runResponse->getMetadata()[0]->getElements());
+        foreach ($pullResponse->getRecords() as $record) {
+            $cypherResult->pushRecord($record);
+        }
+
+        print_r($cypherResult);
 
         return $cypherResult;
     }

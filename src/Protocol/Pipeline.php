@@ -13,8 +13,6 @@ namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
-use GraphAware\Bolt\Result\Result;
-use GraphAware\Common\Cypher\Statement;
 use GraphAware\Bolt\Protocol\V1\Session;
 use GraphAware\Common\Result\ResultCollection;
 
@@ -42,7 +40,6 @@ class Pipeline
     public function push($query, array $parameters = array(), $tag = null)
     {
         $this->messages[] = new RunMessage($query, $parameters, $tag);
-        $this->messages[] = new PullAllMessage();
     }
 
     /**
@@ -68,39 +65,17 @@ class Pipeline
      */
     public function run()
     {
-        if (!$this->session->isInitialized) {
-            $this->session->init();
-        }
-
+        $pullAllMessage = new PullAllMessage();
+        $batch = [];
         $resultCollection = new ResultCollection();
+        foreach ($this->messages as $message) {
+            $batch[] = $message;
+            $batch[] = $pullAllMessage;
+        }
+        $this->session->sendMessages($batch);
 
-        $this->session->sendMessages($this->messages);
-        foreach ($this->messages as $k => $message) {
-            if ($message instanceof RunMessage) {
-                $result = new Result(Statement::create($message->getStatement(), $message->getParams(), $message->getTag()));
-            }
-            $hasMore = true;
-            while ($hasMore) {
-                $responseMessage = $this->session->receiveMessage();
-                if ($responseMessage->isSuccess()) {
-                    $hasMore = false;
-                    if ($responseMessage->hasFields()) {
-                        $result->setFields($responseMessage->getFields());
-                        $result->setStatistics($responseMessage->getStatistics());
-                    }
-                    if ($responseMessage->hasType()) {
-                        $result->setType($responseMessage->getType());
-                    }
-                } elseif ($responseMessage->isRecord()) {
-                    $result->pushRecord($responseMessage);
-                } elseif ($responseMessage->isFailure()) {
-                }
-            }
-
-            if ($message instanceof RunMessage) {
-                $resultCollection->add($result);
-            }
-
+        foreach ($this->messages as $message) {
+            $resultCollection->add($this->session->recv($message->getStatement(), $message->getParams(), $message->getTag()));
         }
 
         return $resultCollection;
