@@ -24,6 +24,7 @@ use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Bolt\Result\Result;
 use GraphAware\Common\Cypher\Statement;
+use GraphAware\Bolt\PackStream\BytesWalker;
 
 class Session extends AbstractSession
 {
@@ -32,6 +33,11 @@ class Session extends AbstractSession
     public $isInitialized = false;
 
     public $transaction;
+
+    /**
+     * @var \GraphAware\Bolt\PackStream\BytesWalker
+     */
+    private $bw;
 
     public static function getProtocolVersion()
     {
@@ -58,6 +64,10 @@ class Session extends AbstractSession
         }
 
         $this->sendMessages($messages);
+        $raw = $this->io->read();
+        $this->bw = new BytesWalker(new RawMessage($raw));
+        $unpack = $this->unpacker->unpackRaw(new RawMessage($raw));
+
         foreach ($messages as $m) {
             $hasMore = true;
             while ($hasMore) {
@@ -87,7 +97,7 @@ class Session extends AbstractSession
         $this->io->assertConnected();
         $ua = Driver::getUserAgent();
         $this->sendMessage(new InitMessage($ua));
-        $responseMessage = $this->receiveMessage();
+        $responseMessage = $this->receiveMessageInit();
         if ($responseMessage->getSignature() == "SUCCESS") {
             $this->isInitialized = true;
         } else {
@@ -112,7 +122,7 @@ class Session extends AbstractSession
     /**
      * @return \GraphAware\Bolt\PackStream\Structure\Structure
      */
-    public function receiveMessage()
+    public function receiveMessageInit()
     {
         $bytes = '';
 
@@ -124,6 +134,40 @@ class Session extends AbstractSession
                 $bytes .= $this->io->read($nextChunkLength);
             }
             list(, $next) = unpack('n', $this->io->read(2));
+            $nextChunkLength = $next;
+        } while($nextChunkLength > 0);
+
+        $rawMessage = new RawMessage($bytes);
+
+        $message = $this->serializer->deserialize($rawMessage);
+
+        if ($message->getSignature() === "FAILURE") {
+            $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
+            $e = new MessageFailureException($msg);
+            $e->setStatusCode($message->getElements()['code']);
+            $this->sendMessage(new AckFailureMessage());
+
+            throw $e;
+        }
+
+        return $message;
+    }
+
+    /**
+     * @return \GraphAware\Bolt\PackStream\Structure\Structure
+     */
+    public function receiveMessage()
+    {
+        $bytes = '';
+
+        $chunkHeader = $this->bw->read(2);
+        list(, $chunkSize) = unpack('n', $chunkHeader);
+        $nextChunkLength = $chunkSize;
+        do {
+            if ($nextChunkLength) {
+                $bytes .= $this->bw->read($nextChunkLength);
+            }
+            list(, $next) = unpack('n', $this->bw->read(2));
             $nextChunkLength = $next;
         } while($nextChunkLength > 0);
 

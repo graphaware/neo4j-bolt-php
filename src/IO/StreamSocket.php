@@ -46,6 +46,7 @@ class StreamSocket extends AbstractIO
         } else {
             $this->protocol = 'ssl';
         }
+        //stream_set_blocking($this->sock, false);
     }
 
     public function write($data)
@@ -69,8 +70,11 @@ class StreamSocket extends AbstractIO
         }
     }
 
-    public function read($n)
+    public function read($n = null)
     {
+        if (null === $n) {
+            return $this->readAll();
+        }
         $this->assertConnected();
         $read = 0;
         $data = '';
@@ -88,6 +92,45 @@ class StreamSocket extends AbstractIO
         }
 
         return $data;
+    }
+
+    public function readAll()
+    {
+        stream_set_blocking($this->sock, false);
+        $r = array($this->sock);
+        $w = $e = [];
+        $data = '';
+        $continue = true;
+
+        while ($continue) {
+            $select = stream_select($r, $w, $e, 0, 20000);
+            if (0 === $select) {
+                stream_set_blocking($this->sock, true);
+                return $data;
+            }
+            $buffer = stream_get_contents($this->sock, 8192);
+            if ($buffer === '') {
+                stream_select($r, $w, $e, null, null);
+            }
+            $r = array($this->sock);
+            $data .= $buffer;
+        }
+    }
+
+    public function wait()
+    {
+        do {
+            $result = $this->select(0,0);
+        } while ($result === 0);
+    }
+
+    public function select($sec, $usec)
+    {
+        $r = array($this->sock);
+        $w = $e = null;
+        $result = stream_select($r, $w, $e, $sec, $usec);
+
+        return $result;
     }
 
     public function connect()
@@ -115,6 +158,8 @@ class StreamSocket extends AbstractIO
                 'Error to connect to the server(%s) :  "%s"', $errno, $errstr
             ));
         }
+
+        stream_set_read_buffer($this->sock, 0);
     }
 
     public function close()

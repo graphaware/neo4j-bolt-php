@@ -76,7 +76,7 @@ class Driver implements DriverInterface
         }
         */
 
-        $this->io = new Socket($uri, self::DEFAULT_TCP_PORT);
+        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(SessionV1::class);

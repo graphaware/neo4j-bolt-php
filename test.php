@@ -6,12 +6,16 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 $driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
 $session = $driver->session();
-$stopwatch = new Stopwatch();
-$p = $session->createPipeline();
-foreach (range(0, 100) as $i) {
-    $p->push("MATCH (n:User {login: {login} })-[:FOLLOWS]->(f)-[:FOLLOWS]->(fof) RETURN count(*)", ['login' => 'ikwattro']);
+$i = 0;
+while ($i < 10) {
+    $stopwatch = new Stopwatch();
+
+    $stopwatch->start("e");
+    $result = $session->run("MATCH (n:Person {name: {name} }) RETURN n LIMIT 1000", ['name' => 'chris']);
+    $e = $stopwatch->stop("e");
+    var_dump($e->getDuration());
+    ++$i;
 }
-$stopwatch->start("e");
-$result = $p->run();
-$e = $stopwatch->stop("e");
-var_dump($e->getDuration());
+
+
+//print_r($result);
