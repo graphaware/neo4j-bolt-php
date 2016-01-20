@@ -17,6 +17,8 @@ interface IoInterface
 
     public function read($n);
 
+    public function select($sec, $usec);
+
     public function connect();
 
     public function reconnect();

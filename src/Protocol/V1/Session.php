@@ -64,7 +64,7 @@ class Session extends AbstractSession
         }
 
         $this->sendMessages($messages);
-        $raw = $this->io->read();
+        $raw = $this->io->read(8192);
         $this->bw = new BytesWalker(new RawMessage($raw));
         $unpack = $this->unpacker->unpackRaw(new RawMessage($raw));
 

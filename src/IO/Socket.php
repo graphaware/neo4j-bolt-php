@@ -12,10 +12,7 @@
 namespace GraphAware\Bolt\IO;
 
 use GraphAware\Bolt\Exception\IOException;
-use GraphAware\Bolt\IO\AbstractIO;
-use GraphAware\Bolt\Misc\Helper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 class Socket extends AbstractIO
 {
@@ -29,15 +26,12 @@ class Socket extends AbstractIO
 
     protected $dispatcher;
 
-    protected $stopwatch;
-
     public function __construct($host, $port, $timeout = 5, EventDispatcherInterface $dispatcher = null)
     {
         $this->host = $host;
         $this->port = $port;
         $this->timeout = $timeout;
         $this->dispatcher = $dispatcher;
-        $this->stopwatch = new Stopwatch();
     }
 
     public function connect()
@@ -88,9 +82,6 @@ class Socket extends AbstractIO
 
     public function write($data)
     {
-        //echo 'C: ' . Helper::prettyHex($data) . PHP_EOL;
-        $i = 'socket write ' . uniqid();
-        $this->stopwatch->start($i);
         $len = mb_strlen($data, 'ASCII');
 
         while (true) {
@@ -119,17 +110,18 @@ class Socket extends AbstractIO
                 // Get the length of the not sent part
                 $len -= $sent;
             } else {
-                $e = $this->stopwatch->stop($i);
-                //echo 'socket write : ' . $e->getDuration() . PHP_EOL;
                 break;
             }
         }
     }
 
+    public function select($sec, $usec)
+    {
+        // not implemented yet
+    }
+
     public function read($n)
     {
-        //$i = 'socket read ' . uniqid();
-        //$this->stopwatch->start($i);
         $res = '';
         $read = 0;
 
@@ -147,10 +139,6 @@ class Socket extends AbstractIO
                 $n
             ));
         }
-
-        //echo 'S: ' . Helper::prettyHex($res) . PHP_EOL;
-        //$e = $this->stopwatch->stop($i);
-        //echo $i . ' : ' . $e->getDuration() . PHP_EOL;
         return $res;
     }
 

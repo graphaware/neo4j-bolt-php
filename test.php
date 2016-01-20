@@ -11,7 +11,7 @@ while ($i < 10) {
     $stopwatch = new Stopwatch();
 
     $stopwatch->start("e");
-    $result = $session->run("MATCH (n:Person {name: {name} }) RETURN n LIMIT 1000", ['name' => 'chris']);
+    $result = $session->run("MATCH (n:Person {name: {name} }) RETURN n LIMIT 10", ['name' => 'Chris']);
     $e = $stopwatch->stop("e");
     var_dump($e->getDuration());
     ++$i;
