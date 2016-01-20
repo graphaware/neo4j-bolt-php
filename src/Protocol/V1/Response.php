@@ -30,6 +30,16 @@ class Response
         $this->records[] = $metadata;
     }
 
+    public function getRecords()
+    {
+        return $this->records;
+    }
+
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
     public function isCompleted()
     {
         return $this->completed;

@@ -81,7 +81,7 @@ class Result extends AbstractRecordCursor
      */
     public function setFields(array $fields)
     {
-        $this->fields = $fields;
+        $this->fields = $fields['fields'];
     }
 
     /**

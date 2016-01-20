@@ -24,6 +24,7 @@ use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Bolt\Result\Result;
+use GraphAware\Bolt\Result\Result as CypherResult;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Bolt\PackStream\BytesWalker;
 
@@ -54,7 +55,7 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = array(), $tag = null)
     {
-        $response = new Result(Statement::create($statement, $parameters));
+        //$response = new Result(Statement::create($statement, $parameters));
         $messages = array(
             new RunMessage($statement, $parameters),
         );
@@ -86,7 +87,13 @@ class Session extends AbstractSession
             }
         }
 
-        return $pullResponse;
+        $cypherResult = new CypherResult(Statement::create($statement, $parameters, $tag));
+        $cypherResult->setFields($runResponse->getMetadata()[0]->getElements());
+        foreach ($pullResponse->getRecords() as $record) {
+            $cypherResult->pushRecord($record);
+        }
+
+        return $cypherResult;
     }
 
     public function init()
