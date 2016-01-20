@@ -71,31 +71,20 @@ class Session extends AbstractSession
 
         $runResponse = new Response();
         $r = $unpacker->unpack();
-        if (is_array($r)) {
-            print_r($r);
-        }
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         }
 
         $pullResponse = new Response();
-        $i = 1;
         while (!$pullResponse->isCompleted()) {
             $r = $unpacker->unpack();
-            if(!is_object($r)) {
-                print_r($r);
-            }
             if ($r->isRecord()) {
-                //echo 'record' . $i . PHP_EOL;
-                ++$i;
                 $pullResponse->onRecord($r);
             }
             if ($r->isSuccess()) {
                 $pullResponse->onSuccess($r);
             }
         }
-
-        //print_r($pullResponse);
 
         return $pullResponse;
     }

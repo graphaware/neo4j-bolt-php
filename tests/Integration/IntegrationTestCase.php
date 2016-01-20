@@ -13,19 +13,9 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $driver;
 
-    /**
-     * @var \Neoxygen\NeoClient\Client
-     */
-    protected $client;
-
     public function setUp()
     {
         $this->driver = GraphDatabase::driver("bolt://localhost");
-        $this->client = ClientBuilder::create()
-            ->addConnection('default', 'http', 'localhost', 7474)
-            ->setAutoFormatResponse(true)
-            ->setDefaultTimeout(20)
-            ->build();
     }
 
     /**
@@ -44,24 +34,9 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
         return $this->driver->session();
     }
 
-    /**
-     * @return \Neoxygen\NeoClient\Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
     public function emptyDB()
     {
         $q = 'MATCH (n) DETACH DELETE n';
-        $this->client->sendCypherQuery($q);
-    }
-
-    public function emptyDBWithBolt()
-    {
-        $q = 'MATCH (n) DETACH DELETE n';
-        $session = $this->driver->session();
-        $session->run($q);
+        $this->driver->session()->run($q);
     }
 }

@@ -120,14 +120,12 @@ class StreamSocket extends AbstractIO
     public function readChunk($l = 8192)
     {
         $buffer = fread($this->sock, $l);
-        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($buffer) . PHP_EOL;
 
         return $buffer;
     }
 
     public function assumeNonBlocking()
     {
-        //stream_set_read_buffer($this->sock, 0);
         stream_set_blocking($this->sock, false);
     }
 

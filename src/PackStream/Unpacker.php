@@ -52,21 +52,17 @@ class Unpacker
     {
         $bytesWalker = $this->bw;
         $chunkHeader = $bytesWalker->read(2);
-        //echo 'chunk header : ' . Helper::prettyHex($chunkHeader);
         list(, $size) = unpack('n', $chunkHeader);
-        //var_dump($size);
-        $elts = null;
         do {
             $e = $this->unpackElement($bytesWalker);
-            //var_dump($e);
-            $elts = $e;
             $chunkHeader = $bytesWalker->read(2);
             list(, $size) = unpack('n', $chunkHeader);
         } while ($size > 0);
 
-        //var_dump(count($elts));
-        return $elts;
+        return $e;
     }
+
+
 
     /**
      * @param \GraphAware\Bolt\PackStream\BytesWalker $walker

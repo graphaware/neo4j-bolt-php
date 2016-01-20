@@ -11,8 +11,6 @@
 
 namespace GraphAware\Bolt\PackStream;
 
-use GraphAware\Bolt\IO\AbstractIO;
-use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 
 class BytesWalker
@@ -32,7 +30,7 @@ class BytesWalker
     /**
      * @var int
      */
-    protected $length;
+    protected $length = 0;
 
     /**
      * @var \GraphAware\Bolt\IO\AbstractIO
@@ -49,6 +47,7 @@ class BytesWalker
     {
         if ($io instanceof RawMessage) {
             $this->bytes = $io->getBytes();
+            $this->length = strlen($this->bytes);
         } else {
             $this->io = $io;
             $this->io->assumeNonBlocking();
@@ -62,39 +61,20 @@ class BytesWalker
      */
     public function read($n)
     {
-        //echo 'asked : ' . $n . PHP_EOL;
-        $remaining = ($n - (strlen($this->bytes)) + $this->position);
-        //echo 'pos' . $this->position  .PHP_EOL;
-        //echo 'l ' . strlen($this->bytes) . PHP_EOL;
-        //echo 'remaining : ' . $remaining . PHP_EOL;
-        //echo "p1" . $this->position . PHP_EOL;
-        //echo 'asked' . $n . PHP_EOL;
+        $remaining = ($n - $this->length) + $this->position;
         while ($remaining > 0) {
-            //echo strlen($this->bytes) . PHP_EOL;
-            //echo 'waiting ' . PHP_EOL;
             $this->io->wait();
             $new = $this->io->readChunk();
-            $new2 = substr($new, 2);
-            //echo PHP_EOL;
-            //echo Helper::prettyHex($new) . PHP_EOL;
-            //echo strlen($new) . PHP_EOL;
-            //echo Helper::prettyHex($this->bytes) . PHP_EOL;
-            //echo 'new chunk of ' . mb_strlen($new, self::ENCODING) . PHP_EOL;
-            //echo Helper::prettyHex($new);
             if ($this->t > 0) {
-                $this->bytes .= substr($new, 2);
-                $remaining -= strlen($new) - 2;
-            } else {
-                $this->bytes .= $new;
-                $remaining -= strlen($new) - 2;
+                $new = substr($new, 2);
             }
+
+            $this->bytes .= $new;
+            $remaining -= strlen($new);
             ++$this->t;
-            //echo 'new length is' . strlen($this->bytes) . PHP_EOL;
-
         }
-
+        $this->length = strlen($this->bytes);
         $data = substr($this->bytes, $this->position, $n);
-        //echo Helper::prettyHex($data) . PHP_EOL;
         $this->position += $n;
 
         return $data;
@@ -134,11 +114,6 @@ class BytesWalker
         }
 
         $this->position -= $n;
-    }
-
-    public function getLength()
-    {
-        $this->length = strlen($this->bytes, $this->encoding);
     }
 
     public function getPosition()
