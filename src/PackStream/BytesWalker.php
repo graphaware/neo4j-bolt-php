@@ -39,6 +39,8 @@ class BytesWalker
      */
     protected $io;
 
+    protected $t = 0;
+
     /**
      * BytesWalker constructor.
      * @param \GraphAware\Bolt\IO\AbstractIO $io
@@ -72,13 +74,23 @@ class BytesWalker
             //echo 'waiting ' . PHP_EOL;
             $this->io->wait();
             $new = $this->io->readChunk();
+            $new2 = substr($new, 2);
+            //echo PHP_EOL;
+            //echo Helper::prettyHex($new) . PHP_EOL;
             //echo strlen($new) . PHP_EOL;
             //echo Helper::prettyHex($this->bytes) . PHP_EOL;
             //echo 'new chunk of ' . mb_strlen($new, self::ENCODING) . PHP_EOL;
             //echo Helper::prettyHex($new);
-            $this->bytes .= $new;
+            if ($this->t > 0) {
+                $this->bytes .= substr($new, 2);
+                $remaining -= strlen($new) - 2;
+            } else {
+                $this->bytes .= $new;
+                $remaining -= strlen($new) - 2;
+            }
+            ++$this->t;
             //echo 'new length is' . strlen($this->bytes) . PHP_EOL;
-            $remaining -= strlen($new);
+
         }
 
         $data = substr($this->bytes, $this->position, $n);
