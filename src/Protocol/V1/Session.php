@@ -12,6 +12,7 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
+use GraphAware\Bolt\PackStream\Unpacker;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
@@ -64,32 +65,39 @@ class Session extends AbstractSession
         }
 
         $this->sendMessages($messages);
-        $raw = $this->io->read(8192);
-        $this->bw = new BytesWalker(new RawMessage($raw));
-        $unpack = $this->unpacker->unpackRaw(new RawMessage($raw));
 
-        foreach ($messages as $m) {
-            $hasMore = true;
-            while ($hasMore) {
-                $responseMessage = $this->receiveMessage();
-                if ($responseMessage->getSignature() === "SUCCESS") {
-                    $hasMore = false;
-                    if (array_key_exists('fields', $responseMessage->getElements())) {
-                        $response->setFields($responseMessage->getElements()['fields']);
-                    }
-                    if (array_key_exists('stats', $responseMessage->getElements())) {
-                        $response->setStatistics($responseMessage->getElements()['stats']);
-                    }
-                    if (array_key_exists('type', $responseMessage->getElements())) {
-                        $response->setType($responseMessage->getElements()['type']);
-                    }
-                } elseif ($responseMessage->getSignature() === "RECORD") {
-                    $response->pushRecord($responseMessage);
-                }
+        $bw = new BytesWalker($this->io);
+        $unpacker = new Unpacker($bw);
+
+        $runResponse = new Response();
+        $r = $unpacker->unpack();
+        if (is_array($r)) {
+            print_r($r);
+        }
+        if ($r->isSuccess()) {
+            $runResponse->onSuccess($r);
+        }
+
+        $pullResponse = new Response();
+        $i = 1;
+        while (!$pullResponse->isCompleted()) {
+            $r = $unpacker->unpack();
+            if(!is_object($r)) {
+                print_r($r);
+            }
+            if ($r->isRecord()) {
+                //echo 'record' . $i . PHP_EOL;
+                ++$i;
+                $pullResponse->onRecord($r);
+            }
+            if ($r->isSuccess()) {
+                $pullResponse->onSuccess($r);
             }
         }
 
-        return $response;
+        //print_r($pullResponse);
+
+        return $pullResponse;
     }
 
     public function init()

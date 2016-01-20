@@ -70,7 +70,7 @@ class StreamSocket extends AbstractIO
         }
     }
 
-    public function read($n = null)
+    public function read($n)
     {
         if (null === $n) {
             return $this->readAll();
@@ -103,7 +103,7 @@ class StreamSocket extends AbstractIO
         $continue = true;
 
         while ($continue) {
-            $select = stream_select($r, $w, $e, 0, 20000);
+            $select = stream_select($r, $w, $e, 0, 10000);
             if (0 === $select) {
                 stream_set_blocking($this->sock, true);
                 return $data;
@@ -115,6 +115,18 @@ class StreamSocket extends AbstractIO
             $r = array($this->sock);
             $data .= $buffer;
         }
+    }
+
+    public function readChunk($l = 8192)
+    {
+        $buffer = fread($this->sock, $l);
+
+        return $buffer;
+    }
+
+    public function assumeNonBlocking()
+    {
+        stream_set_blocking($this->sock, false);
     }
 
     public function wait()

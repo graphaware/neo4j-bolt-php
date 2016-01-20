@@ -29,9 +29,12 @@ class Unpacker
 
     protected $is64bits;
 
-    public function __construct()
+    protected $bw;
+
+    public function __construct(BytesWalker $bytesWalker = null)
     {
         $this->is64bits = PHP_INT_SIZE == 8;
+        $this->bw = $bytesWalker;
     }
 
     /**
@@ -43,6 +46,26 @@ class Unpacker
         $walker = new BytesWalker($message);
 
         return $this->unpackElement($walker);
+    }
+
+    public function unpack()
+    {
+        $bytesWalker = $this->bw;
+        $chunkHeader = $bytesWalker->read(2);
+        //echo 'chunk header : ' . Helper::prettyHex($chunkHeader);
+        list(, $size) = unpack('n', $chunkHeader);
+        //var_dump($size);
+        $elts = null;
+        do {
+            $e = $this->unpackElement($bytesWalker);
+            //var_dump($e);
+            $elts = $e;
+            $chunkHeader = $bytesWalker->read(2);
+            list(, $size) = unpack('n', $chunkHeader);
+        } while ($size > 0);
+
+        //var_dump(count($elts));
+        return $elts;
     }
 
     /**

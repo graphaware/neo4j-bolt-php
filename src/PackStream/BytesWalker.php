@@ -11,14 +11,18 @@
 
 namespace GraphAware\Bolt\PackStream;
 
+use GraphAware\Bolt\IO\AbstractIO;
+use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 
 class BytesWalker
 {
+    const ENCODING = 'ASCII';
+
     /**
      * @var int
      */
-    protected $position;
+    protected $position = 0;
 
     /**
      * @var string
@@ -26,26 +30,27 @@ class BytesWalker
     protected $bytes;
 
     /**
-     * @var string
-     */
-    protected $encoding;
-
-    /**
      * @var int
      */
     protected $length;
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
-     * @param int                                          $position
-     * @param string                                       $encoding
+     * @var \GraphAware\Bolt\IO\AbstractIO
      */
-    public function __construct(RawMessage $message, $position = 0, $encoding = 'ASCII')
+    protected $io;
+
+    /**
+     * BytesWalker constructor.
+     * @param \GraphAware\Bolt\IO\AbstractIO $io
+     */
+    public function __construct($io)
     {
-        $this->bytes = $message->getBytes();
-        $this->position = $position;
-        $this->encoding = $encoding;
-        $this->getLength();
+        if ($io instanceof RawMessage) {
+            $this->bytes = $io->getBytes();
+        } else {
+            $this->io = $io;
+            $this->io->assumeNonBlocking();
+        }
     }
 
     /**
@@ -55,16 +60,32 @@ class BytesWalker
      */
     public function read($n)
     {
-        $n = (int) $n;
-
-        if (($this->position + $n) > $this->length) {
-            throw new \OutOfBoundsException(sprintf('No more bytes to read'));
+        //echo 'asked : ' . $n . PHP_EOL;
+        $remaining = ($n - (strlen($this->bytes)) + $this->position);
+        //echo 'pos' . $this->position  .PHP_EOL;
+        //echo 'l ' . strlen($this->bytes) . PHP_EOL;
+        //echo 'remaining : ' . $remaining . PHP_EOL;
+        //echo "p1" . $this->position . PHP_EOL;
+        //echo 'asked' . $n . PHP_EOL;
+        while ($remaining > 0) {
+            //echo strlen($this->bytes) . PHP_EOL;
+            //echo 'waiting ' . PHP_EOL;
+            $this->io->wait();
+            $new = $this->io->readChunk();
+            //echo strlen($new) . PHP_EOL;
+            //echo Helper::prettyHex($this->bytes) . PHP_EOL;
+            //echo 'new chunk of ' . mb_strlen($new, self::ENCODING) . PHP_EOL;
+            //echo Helper::prettyHex($new);
+            $this->bytes .= $new;
+            //echo 'new length is' . strlen($this->bytes) . PHP_EOL;
+            $remaining -= strlen($new);
         }
 
-        $raw = mb_substr($this->bytes, $this->position, $n, $this->encoding);
+        $data = substr($this->bytes, $this->position, $n);
+        //echo Helper::prettyHex($data) . PHP_EOL;
         $this->position += $n;
 
-        return $raw;
+        return $data;
     }
 
     public function forward($n)
@@ -105,7 +126,7 @@ class BytesWalker
 
     public function getLength()
     {
-        $this->length = mb_strlen($this->bytes, $this->encoding);
+        $this->length = strlen($this->bytes, $this->encoding);
     }
 
     public function getPosition()
