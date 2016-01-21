@@ -12,6 +12,7 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
+use GraphAware\Bolt\PackStream\StreamChannel;
 use GraphAware\Bolt\PackStream\Unpacker;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
@@ -36,16 +37,10 @@ class Session extends AbstractSession
 
     public $transaction;
 
-    /**
-     * @var \GraphAware\Bolt\PackStream\BytesWalker
-     */
-    private $bw;
-
     public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
     {
         parent::__construct($io, $dispatcher);
         $this->init();
-        $this->bw = new BytesWalker($io);
     }
 
     public static function getProtocolVersion()
@@ -62,18 +57,14 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = array(), $tag = null)
     {
-        //$response = new Result(Statement::create($statement, $parameters));
         $messages = array(
             new RunMessage($statement, $parameters),
         );
         $messages[] = new PullAllMessage();
         $this->sendMessages($messages);
 
-        $bw = new BytesWalker($this->io);
-        $unpacker = new Unpacker($bw);
-
         $runResponse = new Response();
-        $r = $unpacker->unpack();
+        $r = $this->unpacker->unpack();
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         } elseif ($r->isFailure()) {
@@ -82,7 +73,7 @@ class Session extends AbstractSession
 
         $pullResponse = new Response();
         while (!$pullResponse->isCompleted()) {
-            $r = $unpacker->unpack();
+            $r = $this->unpacker->unpack();
             if ($r->isRecord()) {
                 $pullResponse->onRecord($r);
             }
@@ -105,18 +96,15 @@ class Session extends AbstractSession
 
     public function recv($statement, array $parameters = array(), $tag = null)
     {
-        $bw = $this->bw;
-        $unpacker = new Unpacker($bw);
-
         $runResponse = new Response();
-        $r = $unpacker->unpack();
+        $r = $this->unpacker->unpack();
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         }
 
         $pullResponse = new Response();
         while (!$pullResponse->isCompleted()) {
-            $r = $unpacker->unpack();
+            $r = $this->unpacker->unpack();
             if ($r->isRecord()) {
                 $pullResponse->onRecord($r);
             }
@@ -130,8 +118,6 @@ class Session extends AbstractSession
         foreach ($pullResponse->getRecords() as $record) {
             $cypherResult->pushRecord($record);
         }
-
-        print_r($cypherResult);
 
         return $cypherResult;
     }
@@ -256,8 +242,8 @@ class Session extends AbstractSession
      */
     public function close()
     {
-        //$this->io->close();
-        //$this->isInitialized = false;
+        $this->io->close();
+        $this->isInitialized = false;
     }
 
     public function transaction()

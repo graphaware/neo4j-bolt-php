@@ -2,7 +2,9 @@
 
 namespace GraphAware\Bolt\Tests\Unit\PackSream;
 
+use GraphAware\Bolt\IO\StreamSocket;
 use GraphAware\Bolt\PackStream\BytesWalker;
+use GraphAware\Bolt\PackStream\StreamChannel;
 use GraphAware\Bolt\PackStream\Structure\SimpleElement;
 use GraphAware\Bolt\PackStream\Structure\TextElement;
 use GraphAware\Bolt\PackStream\Unpacker;
@@ -31,7 +33,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->unpacker = new Unpacker();
+        $this->unpacker = new Unpacker(new StreamChannel(new StreamSocket("bolt://localhost", 7687)));
         $this->packer = new Packer();
     }
 

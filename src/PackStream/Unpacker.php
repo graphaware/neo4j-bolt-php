@@ -29,12 +29,12 @@ class Unpacker
 
     protected $is64bits;
 
-    protected $bw;
+    protected $streamChannel;
 
-    public function __construct(BytesWalker $bytesWalker = null)
+    public function __construct(StreamChannel $streamChannel)
     {
         $this->is64bits = PHP_INT_SIZE == 8;
-        $this->bw = $bytesWalker;
+        $this->streamChannel = $streamChannel;
     }
 
     /**
@@ -50,16 +50,14 @@ class Unpacker
 
     public function unpack()
     {
-        $bytesWalker = $this->bw;
-        $chunkHeader = $bytesWalker->read(2);
-        list(, $size) = unpack('n', $chunkHeader);
+        $b = '';
         do {
-            $e = $this->unpackElement($bytesWalker);
-            $chunkHeader = $bytesWalker->read(2);
+            $chunkHeader = $this->streamChannel->read(2);
             list(, $size) = unpack('n', $chunkHeader);
+            $b .= $this->streamChannel->read($size);
         } while ($size > 0);
 
-        return $e;
+        return $this->unpackElement(new BytesWalker(new RawMessage($b)));
     }
 
 
@@ -239,7 +237,7 @@ class Unpacker
     {
         $map = [];
         for ($i = 0; $i < $size; ++$i) {
-            $identifier = (string) $this->unpackElement($walker);
+            $identifier = $this->unpackElement($walker);
             $value = $this->unpackElement($walker);
             $map[$identifier] =  $value;
         }
@@ -282,7 +280,6 @@ class Unpacker
 
         $sigMarker = $walker->read(1);
         $ordMarker = ord($sigMarker);
-        //var_dump($ordMarker);
 
         return $signatures[$ordMarker];
 
