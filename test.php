@@ -23,10 +23,12 @@ $results = $p->run();
 $e = $stopwatch->stop("p");
 var_dump($e->getDuration());
 */
-$stopwatch->start("p");
+$p = $session->createPipeline();
 for ($i = 0; $i < 500; ++$i) {
-    $session->run("MATCH (n:User {login: {login} }), (b:User {login: {login2} }) MATCH (n)-[r:FOLLOWS]->(b) RETURN r", ['login' => 'ikwattro', 'login2' => 'jakzal']);
+    $p->push("MATCH (n:User {login: {login} }), (b:User {login: {login2} }) MATCH (n)-[r:FOLLOWS]->(b) RETURN r", ['login' => 'ikwattro', 'login2' => 'jakzal']);
 }
+$stopwatch->start("p");
+$results = $p->run();
 $e = $stopwatch->stop("p");
 var_dump($e->getDuration());
 //print_r($results->results()[0]);

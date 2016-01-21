@@ -67,7 +67,7 @@ class StreamChannel
         }
         $remaining = ($n - $this->length) + $this->position;
         while ($remaining > 0) {
-            $this->io->wait();
+            //$this->io->wait();
             $new = $this->io->readChunk();
             $this->bytes .= $new;
             $remaining -= strlen($new);
