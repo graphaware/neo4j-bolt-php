@@ -70,6 +70,11 @@ class Structure
         return "RECORD" === $this->signature;
     }
 
+    public function isFailure()
+    {
+        return "FAILURE" === $this->signature;
+    }
+
     public function hasFields()
     {
         $elts = $this->getElements();

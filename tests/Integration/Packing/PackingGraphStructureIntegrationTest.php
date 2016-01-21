@@ -3,6 +3,9 @@
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
 use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Result\Type\Node;
+use GraphAware\Bolt\Result\Type\Relationship;
+use GraphAware\Bolt\Result\Type\Path;
 
 /**
  * @group packstream
@@ -25,8 +28,8 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         $session = $this->getSession();
         $result = $session->run("CREATE (n:Node) SET n.time = {t}, n.desc = {d} RETURN n", ['t' => time(), 'd' => 'GraphAware is awesome !']);
 
-        //$this->assertTrue($result->getRecord()['n'] instanceof Node);
-        //$this->assertEquals('GraphAware is awesome !', $result->getRecord()['n']->getProperty('desc'));
+        $this->assertTrue($result->getRecord()->value('n') instanceof Node);
+        $this->assertEquals('GraphAware is awesome !', $result->getRecord()->value('n')->value('desc'));
     }
 
     public function testUnpackingUnboundRelationship()
@@ -35,8 +38,8 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         $result = $session->run("CREATE (n:Node)-[r:RELATES_TO {since: 1992}]->(b:Node) RETURN r");
         $record = $result->getRecord();
 
-        //$this->assertTrue($record['r'] instanceof Relationship);
-        //$this->assertEquals(1992, $record['r']->getProperty('since'));
+        $this->assertTrue($record->value('r') instanceof Relationship);
+        $this->assertEquals(1992, $record->value('r')->value('since'));
     }
 
     public function testUnpackingNodesCollection()
@@ -47,6 +50,7 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
 
         $this->assertCount(3, $result->getRecord()->value('nodes'));
         foreach ($result->getRecord()->value('nodes') as $node) {
+            /** @var \GraphAware\Bolt\Result\Type\Node $node */
             $this->assertTrue(in_array('Node', $node->labels()));
         }
     }
@@ -60,16 +64,8 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
         $session->run("MATCH (n) DETACH DELETE n");
         $session->run("CREATE (a:A {k: 'v'})-[:KNOWS]->(b:B {k:'v2'})-[:LIKES]->(c:C {k:'v3'})<-[:KNOWS]-(a)");
         $result = $session->run("MATCH p=(a:A)-[r*]->(b) RETURN p, length(p) as l");
-    }
 
-    /**
-     * @group single-elt
-     */
-    public function testSingleElt()
-    {
-        $session = $this->getSession();
-        $result = $session->run("CREATE (n:TestNode), (b:TestNode) RETURN n as new, b as new2");
-
-        //print_r($result);
+        $this->assertInstanceOf(Path::class, $result->getRecord()->value('p'));
+        $this->assertInternalType('integer', $result->getRecord()->value('l'));
     }
 }

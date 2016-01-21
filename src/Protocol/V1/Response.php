@@ -11,6 +11,8 @@
 
 namespace GraphAware\Bolt\Protocol\V1;
 
+use GraphAware\Bolt\Exception\MessageFailureException;
+
 class Response
 {
     protected $completed = false;
@@ -33,6 +35,15 @@ class Response
     public function getRecords()
     {
         return $this->records;
+    }
+
+    public function onFailure($metadata)
+    {
+        $this->completed = true;
+        $e = new MessageFailureException($metadata->getElements()['message']);
+        $e->setStatusCode($metadata->getElements()['code']);
+
+        throw $e;
     }
 
     public function getMetadata()

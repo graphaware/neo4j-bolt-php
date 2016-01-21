@@ -34,6 +34,9 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
         return $this->driver->session();
     }
 
+    /**
+     * Empty the database
+     */
     public function emptyDB()
     {
         $q = 'MATCH (n) DETACH DELETE n';

@@ -50,7 +50,7 @@ class BytesWalker
             $this->length = strlen($this->bytes);
         } else {
             $this->io = $io;
-            $this->io->assumeNonBlocking();
+            //$this->io->assumeNonBlocking();
         }
     }
 

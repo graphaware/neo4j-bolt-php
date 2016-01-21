@@ -11,15 +11,16 @@ $i = 0;
 $stopwatch = new Stopwatch();
 
 $stopwatch->start("e");
-/*
-$result = $session->run("MATCH (b:Person {name: {name} }) RETURN b LIMIT 1000", ['name' => 'Chris']);
-*/
+$v = str_repeat('x', 1630);
+$result = $session->run("CREATE (n:Text {value: {value} }) RETURN n", ['value' => $v]);
+print_r($result);
 
+/*
 $pipeline = $session->createPipeline();
 $pipeline->push("MATCH (n:Person) RETURN n LIMIT 10");
 $pipeline->push("MATCH (n:Person) RETURN n.name LIMIT 5");
 $results = $pipeline->run();
-
+*/
 
 $e = $stopwatch->stop("e");
 var_dump($e->getDuration());

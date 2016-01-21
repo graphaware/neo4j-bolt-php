@@ -99,4 +99,13 @@ class Relationship implements RelationshipInterface
         return $this->type === $type;
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function value($key)
+    {
+        return $this->properties[$key];
+    }
+
 }

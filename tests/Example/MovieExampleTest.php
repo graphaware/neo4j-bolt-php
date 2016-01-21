@@ -12,7 +12,7 @@ class MovieExampleTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->emptyDBWithBolt();
+        $this->emptyDB();
         $q = <<<QUERY
 CREATE (matrix1:Movie { title : 'The Matrix', year : '1999-03-31' })
 CREATE (matrix2:Movie { title : 'The Matrix Reloaded', year : '2003-05-07' })

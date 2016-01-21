@@ -18,7 +18,7 @@ class PackingIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
         $this->emptyDB();
-        $this->client->createIndex('Integer', 'value');
+        $this->driver->session()->run("CREATE INDEX ON :Integer(value)");
     }
 
     /**
@@ -104,7 +104,6 @@ class PackingIntegrationTest extends IntegrationTestCase
 
     /**
      * @group 64
-     * @group fail
      */
     public function test64IntegersEnd()
     {

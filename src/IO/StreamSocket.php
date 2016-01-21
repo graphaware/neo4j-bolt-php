@@ -119,7 +119,7 @@ class StreamSocket extends AbstractIO
 
     public function readChunk($l = 8192)
     {
-        $buffer = fread($this->sock, $l);
+        $buffer = stream_socket_recvfrom($this->sock, $l);
 
         return $buffer;
     }

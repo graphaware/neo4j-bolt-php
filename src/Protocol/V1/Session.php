@@ -76,6 +76,8 @@ class Session extends AbstractSession
         $r = $unpacker->unpack();
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
+        } elseif ($r->isFailure()) {
+            $runResponse->onFailure($r);
         }
 
         $pullResponse = new Response();
@@ -86,6 +88,9 @@ class Session extends AbstractSession
             }
             if ($r->isSuccess()) {
                 $pullResponse->onSuccess($r);
+            }
+            if ($r->isFailure()) {
+                $pullResponse->onFailure($r);
             }
         }
 
