@@ -50,12 +50,7 @@ class BytesWalker
     public function read($n)
     {
         $n = (int) $n;
-
-        if (($this->position + $n) > $this->getLength()) {
-            throw new \OutOfBoundsException(sprintf('No more bytes to read'));
-        }
-
-        $raw = mb_substr($this->bytes, $this->position, $n, $this->encoding);
+        $raw = substr($this->bytes, $this->position, $n);
         $this->position += $n;
 
         return $raw;
