@@ -73,7 +73,6 @@ class Pipeline
             $batch[] = $pullAllMessage;
         }
         $this->session->sendMessages($batch);
-
         foreach ($this->messages as $message) {
             $resultCollection->add($this->session->recv($message->getStatement(), $message->getParams(), $message->getTag()));
         }

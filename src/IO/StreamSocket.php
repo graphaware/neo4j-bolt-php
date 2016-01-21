@@ -51,12 +51,13 @@ class StreamSocket extends AbstractIO
 
     public function write($data)
     {
+        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($data);
         $this->assertConnected();
         $written = 0;
         $len = mb_strlen($data, 'ASCII');
 
         while ($written < $len) {
-            $buf = fwrite($this->sock, $data, 8192);
+            $buf = fwrite($this->sock, $data);
 
             if ($buf === false) {
                 throw new IOException('Error writing data');
@@ -119,7 +120,7 @@ class StreamSocket extends AbstractIO
 
     public function readChunk($l = 8192)
     {
-        $buffer = stream_socket_recvfrom($this->sock, $l);
+        $buffer = fread($this->sock, $l);
 
         return $buffer;
     }

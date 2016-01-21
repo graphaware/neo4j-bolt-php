@@ -9,6 +9,7 @@ $driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
 $session = $driver->session();
 $i = 0;
 $stopwatch = new Stopwatch();
+/*
 $stopwatch->start("e");
 $result = $session->run("MATCH (n:Person {name: {name} }) RETURN n", ['name' => 'Chris']);
 $e = $stopwatch->stop("e");
@@ -21,3 +22,11 @@ $stopwatch->start("p");
 $results = $p->run();
 $e = $stopwatch->stop("p");
 var_dump($e->getDuration());
+*/
+$stopwatch->start("p");
+for ($i = 0; $i < 500; ++$i) {
+    $session->run("MATCH (n:User {login: {login} }), (b:User {login: {login2} }) MATCH (n)-[r:FOLLOWS]->(b) RETURN r", ['login' => 'ikwattro', 'login2' => 'jakzal']);
+}
+$e = $stopwatch->stop("p");
+var_dump($e->getDuration());
+//print_r($results->results()[0]);

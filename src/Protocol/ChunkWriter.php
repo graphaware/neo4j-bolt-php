@@ -13,7 +13,6 @@ namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\PackStream\Packer;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 class ChunkWriter
 {
@@ -29,8 +28,6 @@ class ChunkWriter
      */
     protected $packer;
 
-    protected $stopwatch;
-
     /**
      * @param \GraphAware\Bolt\IO\AbstractIO $io
      */
@@ -38,7 +35,6 @@ class ChunkWriter
     {
         $this->io = $io;
         $this->packer = $packer;
-        $this->stopwatch = new Stopwatch();
     }
 
     /**
@@ -56,11 +52,7 @@ class ChunkWriter
             }
             $raw .= $this->packer->getEndSignature();
         }
-        $i = 'write' . uniqid();
-        $this->stopwatch->start($i);
         $this->io->write($raw);
-        $e = $this->stopwatch->stop($i);
-        //echo 'Write duration : ' . $e->getDuration() . PHP_EOL;
     }
 
     public function splitChunk($data)
