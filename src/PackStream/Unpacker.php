@@ -72,6 +72,7 @@ class Unpacker
         $byte = hexdec(bin2hex($marker));
         $ordMarker = ord($marker);
         $markerHigh = $ordMarker & 0xf0;
+        $markerLow = $ordMarker & 0x0f;
 
         // Structures
         if (0xb0 <= $ordMarker && $ordMarker <= 0xbf) {
@@ -90,8 +91,15 @@ class Unpacker
         }
 
         if ($markerHigh === Constants::MAP_TINY) {
-            $size = $this->getLowNibbleValue($marker);
-            return $this->unpackMap($size, $walker);
+            $size = $markerLow;
+            $map = [];
+            for ($i = 0; $i < $size; ++$i) {
+                $identifier = $this->unpackElement($walker);
+                $value = $this->unpackElement($walker);
+                $map[$identifier] =  $value;
+            }
+
+            return $map;
         }
 
         if ($byte === Constants::MAP_16) {
