@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "symfony/event-dispatcher": "^2.7",
+        "symfony/event-dispatcher": "^2.7|^3.0",
         "graphaware/neo4j-common": "^1.7",
         "myclabs/php-enum": "^1.4"
     },
