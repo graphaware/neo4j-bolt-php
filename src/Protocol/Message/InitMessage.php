@@ -19,7 +19,7 @@ class InitMessage extends AbstractMessage
 
     public function __construct($userAgent)
     {
-        parent::__construct(Constants::SIGNATURE_INIT, array($userAgent));
+        parent::__construct(Constants::SIGNATURE_INIT, array($userAgent, array()));
     }
 
     public function getMessageType()

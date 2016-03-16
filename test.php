@@ -10,6 +10,7 @@ $session = $driver->session();
 $i = 0;
 $stopwatch = new Stopwatch();
 $stopwatch->start("e");
-$result = $session->run("MATCH (n:User) RETURN n LIMIT 100000");
+$result = $session->run("CREATE (n:User) RETURN n LIMIT 1");
 $e = $stopwatch->stop("e");
-var_dump($e->getDuration());
+
+print_r($result->records());

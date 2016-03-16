@@ -51,7 +51,7 @@ class StreamSocket extends AbstractIO
 
     public function write($data)
     {
-        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($data);
+        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($data) . PHP_EOL;
         $this->assertConnected();
         $written = 0;
         $len = mb_strlen($data, 'ASCII');
