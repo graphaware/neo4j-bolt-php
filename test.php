@@ -13,4 +13,4 @@ $stopwatch->start("e");
 $result = $session->run("CREATE (n:User)-[r:KNOWS]->(x) RETURN n, r, x");
 $e = $stopwatch->stop("e");
 
-print_r($result->records());
+print_r($result);

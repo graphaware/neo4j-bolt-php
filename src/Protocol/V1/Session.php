@@ -12,8 +12,6 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\PackStream\StreamChannel;
-use GraphAware\Bolt\PackStream\Unpacker;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
@@ -24,10 +22,8 @@ use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
-use GraphAware\Bolt\Result\Result;
 use GraphAware\Bolt\Result\Result as CypherResult;
 use GraphAware\Common\Cypher\Statement;
-use GraphAware\Bolt\PackStream\BytesWalker;
 
 class Session extends AbstractSession
 {
@@ -89,6 +85,12 @@ class Session extends AbstractSession
         $cypherResult->setFields($runResponse->getMetadata()[0]->getElements());
         foreach ($pullResponse->getRecords() as $record) {
             $cypherResult->pushRecord($record);
+        }
+        $pullMeta = $pullResponse->getMetadata();
+        if (isset($pullMeta[0])) {
+            if (isset($pullMeta[0]->getElements()['stats'])) {
+                $cypherResult->setStatistics($pullResponse->getMetadata()[0]->getElements()['stats']);
+            }
         }
 
         return $cypherResult;
