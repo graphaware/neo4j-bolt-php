@@ -73,6 +73,15 @@ class RecordView implements RecordViewInterface
     }
 
     /**
+     * @param $key
+     * @return \GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Path|\GraphAware\Bolt\Result\Type\Relationship|mixed
+     */
+    public function get($key)
+    {
+        return $this->value($key);
+    }
+
+    /**
      * Returns the Node for value <code>$key</code>. Ease IDE integration
      *
      * @param $key
@@ -141,6 +150,15 @@ class RecordView implements RecordViewInterface
     public function valueByIndex($index)
     {
         return $this->values[$index];
+    }
+
+    /**
+     * @param $index
+     * @return mixed
+     */
+    public function getByIndex($index)
+    {
+        return $this->valueByIndex($index);
     }
 
     /**

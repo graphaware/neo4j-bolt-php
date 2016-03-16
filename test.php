@@ -10,7 +10,7 @@ $session = $driver->session();
 $i = 0;
 $stopwatch = new Stopwatch();
 $stopwatch->start("e");
-$result = $session->run("CREATE (n:User) RETURN n LIMIT 1");
+$result = $session->run("CREATE (n:User)-[r:KNOWS]->(x) RETURN n, r, x");
 $e = $stopwatch->stop("e");
 
 print_r($result->records());
