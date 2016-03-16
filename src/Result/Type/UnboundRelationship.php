@@ -46,7 +46,7 @@ class UnboundRelationship implements RelationshipInterface
     /**
      * @return string
      */
-    function identity()
+    public function identity()
     {
         return $this->identity;
     }
@@ -54,7 +54,7 @@ class UnboundRelationship implements RelationshipInterface
     /**
      * @return string
      */
-    function type()
+    public function type()
     {
         return $this->type;
     }
@@ -63,9 +63,58 @@ class UnboundRelationship implements RelationshipInterface
      * @param string $type
      * @return bool
      */
-    function hasType($type)
+    public function hasType($type)
     {
         return $this->type === $type;
+    }
+
+    public function value($key)
+    {
+        return $this->properties[$key];
+    }
+
+    /**
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->properties);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->value($key);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function containsKey($key)
+    {
+        return array_key_exists($key, $this->properties);
+    }
+
+    /**
+     * @return array
+     */
+    public function values()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @return array
+     */
+    public function asArray()
+    {
+        return $this->properties;
     }
 
 }

@@ -108,8 +108,8 @@ class PackingIntegrationTest extends IntegrationTestCase
     public function test64IntegersEnd()
     {
         $this->emptyDB();
-        $max = (int) bcpow(2, 63);
-        $this->doRangeTest($max-100, $max);
+        $max = (int) pow(2, 63);
+        $this->doRangeTest($max-1000, $max);
     }
 
     private function doRangeTest($min, $max)
