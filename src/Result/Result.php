@@ -12,7 +12,6 @@
 namespace GraphAware\Bolt\Result;
 
 use GraphAware\Bolt\PackStream\Structure\Structure;
-use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Record\RecordView;
 use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Bolt\Result\Type\Path;
@@ -20,10 +19,6 @@ use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\UnboundRelationship;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
-use GraphAware\Common\Result\RecordViewInterface;
-use GraphAware\Common\Result\RecordCursorInterface;
-use GraphAware\Common\Result\StatementStatistics;
-use GuzzleHttp\Tests\Psr7\Str;
 
 class Result extends AbstractRecordCursor
 {
@@ -143,5 +138,19 @@ class Result extends AbstractRecordCursor
 
 
         return $array;
+    }
+
+    public function size()
+    {
+        return count($this->records);
+    }
+
+    public function firstRecord()
+    {
+        if (!empty($this->records)) {
+            return $this->records[0];
+        }
+
+        return null;
     }
 }
