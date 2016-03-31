@@ -3,9 +3,12 @@
 namespace GraphAware\Bolt\Tests\Example;
 
 use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use \InvalidArgumentException;
+use GraphAware\Bolt\Result\Type\Node;
 
 /**
  * @group example
+ * @group movies
  */
 class MovieExampleTest extends IntegrationTestCase
 {
@@ -45,5 +48,25 @@ QUERY;
         foreach ($result->getRecords() as $record) {
             $this->assertTrue(in_array('Movie', $record->value('m')->labels()));
         }
+    }
+
+    /**
+     * Fix issue #2
+     *
+     * @link https://github.com/graphaware/neo4j-bolt-php/issues/2
+     */
+    public function testRecordViewThrowsExceptionWhenKeyDoesntExist()
+    {
+        $query = 'MATCH (m:Movie {title: {title} }) RETURN m';
+        $session = $this->driver->session();
+        $result = $session->run($query, ['title' => 'The Matrix']);
+        $record = $result->firstRecord();
+
+        $movieNode = $record->nodeValue('m');
+        $this->assertInstanceOf(Node::class, $movieNode);
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $record->nodeValue('z');
+
     }
 }

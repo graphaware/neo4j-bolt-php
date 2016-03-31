@@ -12,7 +12,7 @@
 namespace GraphAware\Bolt\Record;
 
 use GraphAware\Common\Result\RecordViewInterface;
-use GraphAware\Common\Type\NodeInterface;
+use GraphAware\Common\Type\Node;
 use GraphAware\Common\Type\PathInterface;
 use GraphAware\Common\Type\RelationshipInterface;
 
@@ -91,7 +91,7 @@ class RecordView implements RecordViewInterface
      */
     public function nodeValue($key)
     {
-        if ($this->values[$key] !== null && !$this->values[$key] instanceof NodeInterface) {
+        if (!isset($this->keyToIndexMap[$key]) || !$this->values[$this->keyToIndexMap[$key]] instanceof Node) {
             throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'NODE'));
         }
 
@@ -104,8 +104,9 @@ class RecordView implements RecordViewInterface
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Relationship
      */
-    public function relationshipValue($key) {
-        if ($this->values[$key] !== null && !$this->values[$key] instanceof RelationshipInterface) {
+    public function relationshipValue($key)
+    {
+        if (!isset($this->keyToIndexMap[$key]) || !$this->values[$this->keyToIndexMap[$key]] instanceof RelationshipInterface) {
             throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'RELATIONSHIP'));
         }
 
@@ -118,8 +119,9 @@ class RecordView implements RecordViewInterface
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Path
      */
-    public function pathValue($key) {
-        if ($this->values[$key] !== null && !$this->values[$key] instanceof PathInterface) {
+    public function pathValue($key)
+    {
+        if (!isset($this->keyToIndexMap[$key]) || !$this->values[$this->keyToIndexMap[$key]] instanceof PathInterface) {
             throw new \InvalidArgumentException(sprintf('value for %s is not of type %s', $key, 'PATH'));
         }
 
