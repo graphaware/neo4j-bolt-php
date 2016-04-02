@@ -55,9 +55,9 @@ class Driver implements DriverInterface
         return 'GraphAware-BoltPHP/' . self::VERSION;
     }
 
-    public function __construct($uri, Configuration $configuration)
+    public function __construct($uri, Configuration $configuration = null)
     {
-        $this->credentials = null !== $configuration->getCredentials() ? $configuration->getCredentials() : array();
+        $this->credentials = (null !== $configuration && null !== $configuration->getCredentials()) ? $configuration->getCredentials() : array();
         $ctx = stream_context_create(array());
         /*
         define('CERTS_PATH',
