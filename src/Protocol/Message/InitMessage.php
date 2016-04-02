@@ -20,7 +20,7 @@ class InitMessage extends AbstractMessage
     public function __construct($userAgent, array $credentials)
     {
         $authToken = array();
-        if (null !== $credentials[1]) {
+        if (isset($credentials[1]) && null !== $credentials[1]) {
             $authToken = [
                 'scheme' => 'basic',
                 'principal' => $credentials[0],
