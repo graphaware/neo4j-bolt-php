@@ -48,13 +48,16 @@ class Driver implements DriverInterface
 
     protected $session;
 
+    protected $credentials;
+
     public static function getUserAgent()
     {
         return 'GraphAware-BoltPHP/' . self::VERSION;
     }
 
-    public function __construct($uri)
+    public function __construct($uri, Configuration $configuration)
     {
+        $this->credentials = null !== $configuration->getCredentials() ? $configuration->getCredentials() : array();
         $ctx = stream_context_create(array());
         /*
         define('CERTS_PATH',
@@ -95,7 +98,7 @@ class Driver implements DriverInterface
             $this->versionAgreed = $this->handshake();
         }
 
-        $this->session = $this->sessionRegistry->getSession($this->versionAgreed);
+        $this->session = $this->sessionRegistry->getSession($this->versionAgreed, $this->credentials);
 
         return $this->session;
     }

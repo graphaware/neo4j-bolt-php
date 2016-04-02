@@ -33,9 +33,12 @@ class Session extends AbstractSession
 
     public $transaction;
 
-    public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
+    protected $credentials;
+
+    public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher, array $credentials)
     {
         parent::__construct($io, $dispatcher);
+        $this->credentials = $credentials;
         $this->init();
     }
 
@@ -128,7 +131,7 @@ class Session extends AbstractSession
     {
         $this->io->assertConnected();
         $ua = Driver::getUserAgent();
-        $this->sendMessage(new InitMessage($ua));
+        $this->sendMessage(new InitMessage($ua, $this->credentials));
         $responseMessage = $this->receiveMessageInit();
         if ($responseMessage->getSignature() == "SUCCESS") {
             $this->isInitialized = true;

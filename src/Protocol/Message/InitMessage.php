@@ -17,9 +17,17 @@ class InitMessage extends AbstractMessage
 {
     const MESSAGE_TYPE = 'INIT';
 
-    public function __construct($userAgent)
+    public function __construct($userAgent, array $credentials)
     {
-        parent::__construct(Constants::SIGNATURE_INIT, array($userAgent, array()));
+        $authToken = array();
+        if (null !== $credentials[1]) {
+            $authToken = [
+                'scheme' => 'basic',
+                'principal' => $credentials[0],
+                'credentials' => $credentials[1]
+            ];
+        }
+        parent::__construct(Constants::SIGNATURE_INIT, array($userAgent, $authToken));
     }
 
     public function getMessageType()

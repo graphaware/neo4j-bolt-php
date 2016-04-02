@@ -50,7 +50,7 @@ class SessionRegistry
         return array_key_exists($v, $this->sessions);
     }
 
-    public function getSession($version)
+    public function getSession($version, array $credentials)
     {
         $v = (int) $version;
 
@@ -59,6 +59,6 @@ class SessionRegistry
         }
         $class = $this->sessions[$v];
 
-        return new $class($this->io, $this->dispatcher);
+        return new $class($this->io, $this->dispatcher, $credentials);
     }
 }

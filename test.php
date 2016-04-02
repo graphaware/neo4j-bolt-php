@@ -5,7 +5,7 @@ require_once(__DIR__.'/vendor/autoload.php');
 use Symfony\Component\Stopwatch\Stopwatch;
 
 
-$driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
+$driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost", \GraphAware\Bolt\Configuration::withCredentials('neo4j', 'password'));
 $session = $driver->session();
 $i = 0;
 $stopwatch = new Stopwatch();

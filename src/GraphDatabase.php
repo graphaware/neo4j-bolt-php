@@ -18,7 +18,7 @@ class GraphDatabase implements GraphDatabaseInterface
 {
     public static function driver($uri, ConfigInterface $config = null)
     {
-        return new Driver(self::formatUri($uri));
+        return new Driver(self::formatUri($uri), $config);
     }
 
     private static function formatUri($uri)
