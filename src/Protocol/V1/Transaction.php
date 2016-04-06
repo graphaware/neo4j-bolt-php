@@ -67,6 +67,16 @@ class Transaction implements TransactionInterface
         return $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
     }
 
+    public function runMultiple(array $statements)
+    {
+        $pipeline = $this->session->createPipeline();
+        foreach ($statements as $statement) {
+            $pipeline->push($statement->text(), $statement->parameters());
+        }
+
+        return $pipeline->run();
+    }
+
     public function success()
     {
         $this->assertNotClosed();
