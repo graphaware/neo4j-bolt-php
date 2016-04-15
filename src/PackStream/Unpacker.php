@@ -102,6 +102,12 @@ class Unpacker
             return $map;
         }
 
+        if (Constants::MAP_8 === $byte) {
+            $size = $this->readUnsignedShortShort($walker);
+
+            return $this->unpackMap($size, $walker);
+        }
+
         if ($byte === Constants::MAP_16) {
             $size = $this->readUnsignedShort($walker);
 
