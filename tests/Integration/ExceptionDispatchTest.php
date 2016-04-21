@@ -25,7 +25,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         try {
             $session->run("CR");
         } catch (MessageFailureException $e) {
-            $this->assertEquals('eo.ClientError.Statement.InvalidSyntax', $e->getStatusCode());
+            $this->assertEquals('Neo.ClientError.Statement.SyntaxError', $e->getStatusCode());
         }
     }
 
@@ -37,7 +37,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         try {
             $session->run("CR");
         } catch (MessageFailureException $e) {
-            $this->assertEquals('Neo.ClientError.Statement.InvalidSyntax', $e->getStatusCode());
+            $this->assertEquals('Neo.ClientError.Statement.SyntaxError', $e->getStatusCode());
         }
     }
 }

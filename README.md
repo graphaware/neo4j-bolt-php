@@ -18,7 +18,7 @@ This library will remain in 1.0.0-dev version until stable release of Neo4j's Bo
 * Python driver : https://github.com/neo4j/neo4j-python-driver
 * Bolt How-To : https://github.com/nigelsmall/bolt-howto
 * Java Driver : https://github.com/neo4j/neo4j-java-driver
-* Neo4j 3.0 alpha : http://alpha.neotechnology.com.s3-website-eu-west-1.amazonaws.com/
+* Neo4j 3.0-RC1 : http://neo4j.com
 
 ### Requirements:
 
@@ -58,7 +58,7 @@ $session->run("CREATE (n) SET n += {props}", ['name' => 'Mike', 'age' => 27]);
 
 ### License
 
-Copyright (c) 2015 GraphAware Ltd
+Copyright (c) 2015-2016 GraphAware Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

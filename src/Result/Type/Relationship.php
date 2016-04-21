@@ -13,7 +13,7 @@ namespace GraphAware\Bolt\Result\Type;
 
 use GraphAware\Common\Type\RelationshipInterface;
 
-class Relationship implements RelationshipInterface
+class Relationship extends MapAccess implements RelationshipInterface
 {
     /**
      * @var int
@@ -34,11 +34,6 @@ class Relationship implements RelationshipInterface
      * @var string
      */
     protected $type;
-
-    /**
-     * @var array
-     */
-    protected $properties;
 
     /**
      * Relationship constructor.
@@ -98,58 +93,4 @@ class Relationship implements RelationshipInterface
     {
         return $this->type === $type;
     }
-
-    /**
-     * @param string $key
-     * @return mixed
-     */
-    public function value($key)
-    {
-        return $this->properties[$key];
-    }
-
-    /**
-     * @return array
-     */
-    public function keys()
-    {
-        return array_keys($this->properties);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return $this->value($key);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function containsKey($key)
-    {
-        return array_key_exists($key, $this->properties);
-    }
-
-    /**
-     * @return array
-     */
-    public function values()
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return array
-     */
-    public function asArray()
-    {
-        return $this->properties;
-    }
-
 }

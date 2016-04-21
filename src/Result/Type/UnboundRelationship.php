@@ -13,7 +13,7 @@ namespace GraphAware\Bolt\Result\Type;
 
 use GraphAware\Common\Type\RelationshipInterface;
 
-class UnboundRelationship implements RelationshipInterface
+class UnboundRelationship extends MapAccess implements RelationshipInterface
 {
     /**
      * @var string
@@ -24,11 +24,6 @@ class UnboundRelationship implements RelationshipInterface
      * @var string
      */
     protected $type;
-
-    /**
-     * @var array
-     */
-    protected $properties;
 
     /**
      * UnboundRelationship constructor.
@@ -66,55 +61,6 @@ class UnboundRelationship implements RelationshipInterface
     public function hasType($type)
     {
         return $this->type === $type;
-    }
-
-    public function value($key)
-    {
-        return $this->properties[$key];
-    }
-
-    /**
-     * @return array
-     */
-    public function keys()
-    {
-        return array_keys($this->properties);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return $this->value($key);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function containsKey($key)
-    {
-        return array_key_exists($key, $this->properties);
-    }
-
-    /**
-     * @return array
-     */
-    public function values()
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return array
-     */
-    public function asArray()
-    {
-        return $this->properties;
     }
 
 }

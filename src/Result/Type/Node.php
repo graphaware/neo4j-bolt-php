@@ -13,7 +13,7 @@ namespace GraphAware\Bolt\Result\Type;
 
 use GraphAware\Common\Type\NodeInterface;
 
-class Node implements NodeInterface
+class Node extends MapAccess implements NodeInterface
 {
     /**
      * @var int
@@ -24,11 +24,6 @@ class Node implements NodeInterface
      * @var array
      */
     protected $labels;
-
-    /**
-     * @var array
-     */
-    protected $properties;
 
     /**
      * Node constructor.
@@ -67,58 +62,4 @@ class Node implements NodeInterface
     {
         return in_array($label, $this->labels);
     }
-
-    /**
-     * @param string $key
-     * @return mixed
-     */
-    public function value($key)
-    {
-        return $this->properties[$key];
-    }
-
-    /**
-     * @return array
-     */
-    public function values()
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return array
-     */
-    public function keys()
-    {
-        return array_keys($this->properties);
-    }
-
-    /**
-     * @param $key
-     *
-     * @return bool
-     */
-    public function containsKey($key)
-    {
-        return array_key_exists($key, $this->properties);
-    }
-
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return $this->value($key);
-    }
-
-    /**
-     * @return array
-     */
-    public function asArray()
-    {
-        return $this->properties;
-    }
-
 }
