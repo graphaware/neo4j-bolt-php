@@ -124,6 +124,12 @@ class Session extends AbstractSession
             $cypherResult->pushRecord($record);
         }
 
+        if (null !== $pullResponse && array_key_exists(0, $pullResponse->getMetadata())) {
+            $metadata = $pullResponse->getMetadata()[0]->getElements();
+            $stats = array_key_exists('stats', $metadata) ? $metadata['stats'] : array();
+            $cypherResult->setStatistics($stats);
+        }
+
         return $cypherResult;
     }
 
