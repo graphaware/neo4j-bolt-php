@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f690288f88d6d48640dbbfdacc8f2b2",
-    "content-hash": "490e6540e507a4c0336d67a4263b3c39",
+    "hash": "09102f573e348254bae8fa5767525920",
+    "content-hash": "f9bbb22710f72321f7b1ece6c110058b",
     "packages": [
         {
             "name": "graphaware/neo4j-common",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/graphaware/neo4j-php-commons.git",
-                "reference": "4e6c74bb1cb157c91f3b047aa9f63283bf07822c"
+                "reference": "33abc8647ee01f0ba58fb1aca28db6f61809354b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/4e6c74bb1cb157c91f3b047aa9f63283bf07822c",
-                "reference": "4e6c74bb1cb157c91f3b047aa9f63283bf07822c",
+                "url": "https://api.github.com/repos/graphaware/neo4j-php-commons/zipball/33abc8647ee01f0ba58fb1aca28db6f61809354b",
+                "reference": "33abc8647ee01f0ba58fb1aca28db6f61809354b",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "neo4j",
                 "statement"
             ],
-            "time": "2016-04-21 11:10:03"
+            "time": "2016-05-03 13:27:58"
         },
         {
             "name": "myclabs/php-enum",
@@ -1799,6 +1799,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">= 5.6",
+        "ext-bcmath": "*"
+    },
     "platform-dev": []
 }
