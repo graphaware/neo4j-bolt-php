@@ -11,13 +11,14 @@
 
 namespace GraphAware\Bolt\Result\Type;
 
-use GraphAware\Common\Type\Node;
+use GraphAware\Common\Type\Node as NodeInterface;
 use GraphAware\Common\Type\Path as BasePathInterface;
+use GraphAware\Common\Type\Relationship as RelationshipInterface;
 
 class Path implements BasePathInterface
 {
     /**
-     * @var Node[]
+     * @var NodeInterface[]
      */
     protected $nodes;
 
@@ -32,7 +33,7 @@ class Path implements BasePathInterface
     protected $sequence;
 
     /**
-     * @param Node[]                $nodes
+     * @param NodeInterface[]       $nodes
      * @param UnboundRelationship[] $relationships
      * @param int[]                 $sequence
      */
@@ -44,7 +45,7 @@ class Path implements BasePathInterface
     }
 
     /**
-     * @return Node
+     * @return NodeInterface
      */
     public function start()
     {
@@ -70,7 +71,7 @@ class Path implements BasePathInterface
     /**
      * {@inheritdoc}
      */
-    public function containsNode(Node $node)
+    public function containsNode(NodeInterface $node)
     {
         return in_array($node, $this->nodes);
     }
@@ -78,7 +79,7 @@ class Path implements BasePathInterface
     /**
      * {@inheritdoc}
      */
-    public function containsRelationship(Relationship $relationship)
+    public function containsRelationship(RelationshipInterface $relationship)
     {
         return in_array($relationship, $this->relationships);
     }
