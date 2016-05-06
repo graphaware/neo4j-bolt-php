@@ -11,4 +11,21 @@
 
 namespace GraphAware\Bolt\IO;
 
-abstract class AbstractIO implements IoInterface{}
+use GraphAware\Bolt\Exception\IOException;
+
+abstract class AbstractIO implements IoInterface
+{
+    /**
+     * @return bool
+     *
+     * @throws IOException
+     */
+    public function assertConnected()
+    {
+        if (!$this->isConnected()) {
+            return $this->connect();
+        }
+
+        return true;
+    }
+}

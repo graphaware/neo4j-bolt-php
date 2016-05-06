@@ -36,12 +36,11 @@ class Relationship extends MapAccess implements RelationshipInterface
     protected $type;
 
     /**
-     * Relationship constructor.
-     * @param int $identity
-     * @param int $startNodeIdentity
-     * @param int $endNodeIdentity
+     * @param int    $identity
+     * @param int    $startNodeIdentity
+     * @param int    $endNodeIdentity
      * @param string $type
-     * @param array $properties
+     * @param array  $properties
      */
     public function __construct($identity, $startNodeIdentity, $endNodeIdentity, $type, array $properties = array())
     {
@@ -53,7 +52,7 @@ class Relationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function identity()
     {
@@ -77,7 +76,7 @@ class Relationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function type()
     {
@@ -85,9 +84,7 @@ class Relationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @param string $type
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasType($type)
     {

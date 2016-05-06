@@ -17,12 +17,26 @@ class RunMessage extends AbstractMessage
 {
     const MESSAGE_TYPE = 'RUN';
 
+    /**
+     * @var string
+     */
     protected $statement;
 
+    /**
+     * @var array
+     */
     protected $params;
 
+    /**
+     * @var null|string
+     */
     protected $tag;
 
+    /**
+     * @param string      $statement
+     * @param array       $params
+     * @param null|string $tag
+     */
     public function __construct($statement, array $params = array(), $tag = null)
     {
         parent::__construct(Constants::SIGNATURE_RUN);
@@ -32,26 +46,41 @@ class RunMessage extends AbstractMessage
         $this->tag = $tag;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFields()
     {
         return array($this->statement, $this->params);
     }
 
+    /**
+     * @return string
+     */
     public function getStatement()
     {
         return $this->statement;
     }
 
+    /**
+     * @return array
+     */
     public function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * @return null|string
+     */
     public function getTag()
     {
         return $this->tag;

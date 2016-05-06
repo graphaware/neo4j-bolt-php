@@ -12,42 +12,60 @@
 namespace GraphAware\Bolt\Protocol\Message;
 
 use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\PackStream\Structure\Map;
 
 class FailureMessage extends AbstractMessage
 {
     const MESSAGE_TYPE = 'FAILURE';
 
+    /**
+     * @var string
+     */
     protected $code;
 
+    /**
+     * @var string
+     */
     protected $message;
 
-    public function __construct(Map $map)
+    /**
+     * @param $map
+     */
+    public function __construct($map)
     {
         parent::__construct(Constants::SIGNATURE_FAILURE);
         $this->code = $map->get('code')->__toString();
         $this->message = $map->get('message')->__toString();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;
     }
 
+    /**
+     * @return string
+     */
     public function getCode()
     {
         return $this->code;
     }
 
+    /**
+     * @return string
+     */
     public function getMessage()
     {
-        return $this->getMessage();
+        return $this->message;
     }
 
+    /**
+     * @return string
+     */
     public function getFullMessage()
     {
-        return $this->code . ' : ' . $this->message;
+        return $this->code.' : '.$this->message;
     }
-
-
 }

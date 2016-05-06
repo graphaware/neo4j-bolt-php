@@ -19,17 +19,18 @@ class ChunkWriter
     const MAX_CHUNK_SIZE = 8192;
 
     /**
-     * @var \GraphAware\Bolt\IO\AbstractIO
+     * @var AbstractIO
      */
     protected $io;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Packer
+     * @var Packer
      */
     protected $packer;
 
     /**
-     * @param \GraphAware\Bolt\IO\AbstractIO $io
+     * @param AbstractIO $io
+     * @param Packer     $packer
      */
     public function __construct(AbstractIO $io, Packer $packer)
     {
@@ -43,6 +44,7 @@ class ChunkWriter
     public function writeMessages(array $messages)
     {
         $raw = '';
+
         foreach ($messages as $msg) {
             $chunkData = $msg->getSerialization();
             $chunks = $this->splitChunk($chunkData);
@@ -52,13 +54,17 @@ class ChunkWriter
             }
             $raw .= $this->packer->getEndSignature();
         }
+
         $this->io->write($raw);
     }
 
+    /**
+     * @param string $data
+     *
+     * @return array
+     */
     public function splitChunk($data)
     {
-        $chunks = str_split($data, self::MAX_CHUNK_SIZE);
-
-        return $chunks;
+        return str_split($data, self::MAX_CHUNK_SIZE);
     }
 }

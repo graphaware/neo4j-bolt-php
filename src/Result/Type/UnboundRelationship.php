@@ -26,9 +26,8 @@ class UnboundRelationship extends MapAccess implements RelationshipInterface
     protected $type;
 
     /**
-     * UnboundRelationship constructor.
-     * @param string $identity
-     * @param string $type
+     * @param string       $identity
+     * @param string       $type
      * @param string array $properties
      */
     public function __construct($identity, $type, array $properties)
@@ -39,7 +38,7 @@ class UnboundRelationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function identity()
     {
@@ -47,7 +46,7 @@ class UnboundRelationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function type()
     {
@@ -55,12 +54,10 @@ class UnboundRelationship extends MapAccess implements RelationshipInterface
     }
 
     /**
-     * @param string $type
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasType($type)
     {
         return $this->type === $type;
     }
-
 }

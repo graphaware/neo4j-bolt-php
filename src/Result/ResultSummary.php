@@ -2,6 +2,7 @@
 
 namespace GraphAware\Bolt\Result;
 
+use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\StatementStatistics;
 use GraphAware\Common\Result\ResultSummaryInterface;
@@ -9,17 +10,17 @@ use GraphAware\Common\Result\ResultSummaryInterface;
 class ResultSummary implements ResultSummaryInterface
 {
     /**
-     * @var \GraphAware\Common\Cypher\StatementInterface $statement
+     * @var Statement
      */
     protected $statement;
 
     /**
-     * @var |GraphAware\Common\Result\StatementStatistics|null
+     * @var StatementStatistics|null
      */
     protected $updateStatistics;
 
     /**
-     * @param \GraphAware\Common\Cypher\StatementInterface $statement
+     * @param StatementInterface $statement
      */
     public function __construct(StatementInterface $statement)
     {
@@ -27,7 +28,7 @@ class ResultSummary implements ResultSummaryInterface
     }
 
     /**
-     * @return \GraphAware\Common\Cypher\StatementInterface $statement
+     * @return StatementInterface
      */
     public function statement()
     {
@@ -35,18 +36,20 @@ class ResultSummary implements ResultSummaryInterface
     }
 
     /**
-     * @return |GraphAware\Common\Result\StatementStatistics|null
+     * @return StatementStatistics|null
      */
     public function updateStatistics()
     {
         return $this->updateStatistics;
     }
 
+    /**
+     * @return \GraphAware\Common\Cypher\StatementType
+     */
     public function statementType()
     {
-        return $this->statement->getType();
+        return $this->statement->getStatementType();
     }
-
 
     /**
      * @param array $stats
@@ -59,6 +62,7 @@ class ResultSummary implements ResultSummaryInterface
             $stats[$nk] = $v;
             unset($stats[$k]);
         }
+
         $this->updateStatistics = new StatementStatistics($stats);
     }
 

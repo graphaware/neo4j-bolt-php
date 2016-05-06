@@ -13,6 +13,11 @@ namespace GraphAware\Bolt\Misc;
 
 class Helper
 {
+    /**
+     * @param string $raw Binary content
+     *
+     * @return string
+     */
     public static function prettyHex($raw)
     {
         $split = str_split(bin2hex($raw), 2);

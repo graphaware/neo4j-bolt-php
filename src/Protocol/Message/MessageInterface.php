@@ -13,14 +13,29 @@ namespace GraphAware\Bolt\Protocol\Message;
 
 interface MessageInterface
 {
+    /**
+     * @return string
+     */
     public function getSignature();
 
+    /**
+     * @return string
+     */
     public function getMessageType();
 
+    /**
+     * @return array
+     */
     public function getFields();
 
+    /**
+     * @return bool
+     */
     public function isSuccess();
 
+    /**
+     * @return bool
+     */
     public function isFailure();
 
     /*

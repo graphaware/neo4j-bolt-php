@@ -11,7 +11,6 @@
 
 namespace GraphAware\Bolt\Protocol\Message;
 
-use GraphAware\Bolt\PackStream\Structure\Map;
 use GraphAware\Bolt\Protocol\Constants;
 
 class DiscardAllMessage extends AbstractMessage
@@ -23,6 +22,9 @@ class DiscardAllMessage extends AbstractMessage
         parent::__construct(Constants::SIGNATURE_DISCARD_ALL);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;

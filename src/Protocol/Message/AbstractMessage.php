@@ -11,29 +11,49 @@
 
 namespace GraphAware\Bolt\Protocol\Message;
 
-use GraphAware\Bolt\Protocol\Constants;
-
 abstract class AbstractMessage implements MessageInterface
 {
+    /**
+     * @var string
+     */
     protected $signature;
 
+    /**
+     * @var array
+     */
     protected $fields = [];
 
+    /**
+     * @var bool
+     */
     protected $isSerialized = false;
 
+    /**
+     * @var null
+     */
     protected $serialization = null;
 
+    /**
+     * @param string $signature
+     * @param array  $fields
+     */
     public function __construct($signature, array $fields = array())
     {
         $this->signature = $signature;
         $this->fields = $fields;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSignature()
     {
         return $this->signature;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFields()
     {
         return $this->fields;
@@ -55,21 +75,33 @@ abstract class AbstractMessage implements MessageInterface
         return $this->serialization;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isSuccess()
     {
         return $this->getMessageType() === 'SUCCESS';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isFailure()
     {
         return $this->getMessageType() === 'FAILURE';
     }
 
+    /**
+     * @return bool
+     */
     public function isRecord()
     {
         return $this->getMessageType() === 'RECORD';
     }
 
+    /**
+     * @return bool
+     */
     public function hasFields()
     {
         return !empty($this->fields);

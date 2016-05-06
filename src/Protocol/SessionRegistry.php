@@ -12,25 +12,43 @@
 namespace GraphAware\Bolt\Protocol;
 
 use GraphAware\Bolt\IO\AbstractIO;
+use GraphAware\Common\Driver\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SessionRegistry
 {
+    /**
+     * @var AbstractIO
+     */
     protected $io;
 
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
 
+    /**
+     * @var array
+     */
     protected $sessions = [];
 
+    /**
+     * @param AbstractIO               $io
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function __construct(AbstractIO $io, EventDispatcherInterface $dispatcher)
     {
         $this->io = $io;
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * @param string $sessionClass
+     */
     public function registerSession($sessionClass)
     {
         $v = (int) $sessionClass::getProtocolVersion();
+
         if (array_key_exists($v, $this->sessions)) {
             throw new \RuntimeException(sprintf('There is already a Session registered for supporting Version#%d', $v));
         }
@@ -38,18 +56,30 @@ class SessionRegistry
         $this->sessions[$v] = $sessionClass;
     }
 
+    /**
+     * @return array
+     */
     public function getSupportedVersions()
     {
         return array_keys($this->sessions);
     }
 
+    /**
+     * @param int $version
+     *
+     * @return bool
+     */
     public function supportsVersion($version)
     {
-        $v = (int) $version;
-
-        return array_key_exists($v, $this->sessions);
+        return array_key_exists((int) $version, $this->sessions);
     }
 
+    /**
+     * @param int   $version
+     * @param array $credentials
+     *
+     * @return SessionInterface
+     */
     public function getSession($version, array $credentials)
     {
         $v = (int) $version;

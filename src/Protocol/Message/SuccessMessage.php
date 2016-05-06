@@ -18,43 +18,71 @@ class SuccessMessage extends AbstractMessage
 {
     const MESSAGE_TYPE = 'SUCCESS';
 
+    /**
+     * @var array
+     */
     protected $map;
 
+    /**
+     * @param array $map
+     */
     public function __construct($map)
     {
         parent::__construct(Constants::SIGNATURE_SUCCESS);
         $this->map = $map;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFields()
     {
         return $this->map['fields'];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasFields()
     {
         return array_key_exists('fields', $this->map);
     }
 
+    /**
+     * @return bool
+     */
     public function hasStatistics()
     {
         return array_key_exists('stats', $this->map);
     }
 
+    /**
+     * @return array
+     */
     public function getStatistics()
     {
         return $this->map['stats'];
     }
 
+    /**
+     * @return bool
+     */
     public function hasType()
     {
         return array_key_exists('type', $this->map);
     }
+
+    /**
+     * @return mixed
+     */
     public function getType()
     {
         return $this->map['type'];

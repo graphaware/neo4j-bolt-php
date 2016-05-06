@@ -16,15 +16,24 @@ use GraphAware\Common\GraphDatabaseInterface;
 
 class GraphDatabase implements GraphDatabaseInterface
 {
+    /**
+     * @param string               $uri
+     * @param ConfigInterface|null $config
+     *
+     * @return Driver
+     */
     public static function driver($uri, ConfigInterface $config = null)
     {
         return new Driver(self::formatUri($uri), $config);
     }
 
+    /**
+     * @param string $uri
+     *
+     * @return string
+     */
     private static function formatUri($uri)
     {
-        $i = str_replace("bolt://", "", $uri);
-
-        return $i;
+        return str_replace('bolt://', '', $uri);
     }
 }
