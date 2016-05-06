@@ -12,15 +12,13 @@
 namespace GraphAware\Bolt;
 
 use GraphAware\Bolt\Exception\IOException;
-use GraphAware\Bolt\IO\Socket;
 use GraphAware\Bolt\IO\StreamSocket;
-use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
+use GraphAware\Bolt\Protocol\V1\Session;
 use GraphAware\Common\Driver\DriverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use GraphAware\Bolt\Exception\HandshakeException;
-use GraphAware\Bolt\Protocol\V1\Session as SessionV1;
 
 class Driver implements DriverInterface
 {
@@ -38,28 +36,53 @@ class Driver implements DriverInterface
 
     const DEFAULT_TCP_PORT = 7687;
 
+    /**
+     * @var StreamSocket
+     */
     protected $io;
 
+    /**
+     * @var EventDispatcher
+     */
     protected $dispatcher;
 
+    /**
+     * @var SessionRegistry
+     */
     protected $sessionRegistry;
 
+    /**
+     * @var bool
+     */
     protected $versionAgreed = false;
 
+    /**
+     * @var Session
+     */
     protected $session;
 
+    /**
+     * @var array
+     */
     protected $credentials;
 
+    /**
+     * @return string
+     */
     public static function getUserAgent()
     {
-        return 'GraphAware-BoltPHP/' . self::VERSION;
+        return 'GraphAware-BoltPHP/'.self::VERSION;
     }
 
+    /**
+     * @param string             $uri
+     * @param Configuration|null $configuration
+     */
     public function __construct($uri, Configuration $configuration = null)
     {
         $this->credentials = (null !== $configuration && null !== $configuration->getCredentials()) ? $configuration->getCredentials() : array();
-        $ctx = stream_context_create(array());
         /*
+        $ctx = stream_context_create(array());
         define('CERTS_PATH',
         '/Users/ikwattro/dev/_graphs/3.0-M02-NIGHTLY/conf');
         $ssl_options = array(
@@ -82,11 +105,11 @@ class Driver implements DriverInterface
         $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT);
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
-        $this->sessionRegistry->registerSession(SessionV1::class);
+        $this->sessionRegistry->registerSession(Session::class);
     }
 
     /**
-     * @return \Graphaware\Bolt\Protocol\SessionInterface
+     * @return Session
      */
     public function session()
     {
@@ -104,20 +127,25 @@ class Driver implements DriverInterface
     }
 
     /**
-     * @return mixed
-     * @throws \GraphAware\Bolt\Exception\HandshakeException
+     * @return int
+     *
+     * @throws HandshakeException
      */
     public function handshake()
     {
         $packer = new Packer();
+
         if (!$this->io->isConnected()) {
             $this->io->reconnect();
         }
+
         $msg = '';
-        $msg .= chr(0x60) . chr(0x60) . chr(0xb0) . chr(0x17);
-        foreach (array(1,0,0,0) as $v) {
+        $msg .= chr(0x60).chr(0x60).chr(0xb0).chr(0x17);
+
+        foreach (array(1, 0, 0, 0) as $v) {
             $msg .= $packer->packBigEndian($v, 4);
         }
+
         try {
             $this->io->write($msg);
             $rawHandshakeResponse = $this->io->read(4);
@@ -126,7 +154,7 @@ class Driver implements DriverInterface
 
             if (0 === $version) {
                 $this->throwHandshakeException(sprintf('Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
-                    json_encode(array(1,0,0,0))));
+                    json_encode(array(1, 0, 0, 0))));
             }
 
             return $version;

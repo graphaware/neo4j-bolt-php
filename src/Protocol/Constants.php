@@ -41,7 +41,6 @@ class Constants
 
     const SIGNATURE_UNBOUND_RELATIONSHIP = 0x72;
 
-
     // STRUCTURES
 
     const STRUCTURE_TINY = 0xb0;
@@ -49,7 +48,6 @@ class Constants
     const STRUCTURE_MEDIUM = 0xdc;
 
     const STRUCTURE_LARGE = 0xdd;
-
 
     // TEXTS
 
@@ -61,7 +59,6 @@ class Constants
 
     const TEXT_32 = 0xd2;
 
-
     // INTEGERS
 
     const INT_8 = 0xc8;
@@ -71,7 +68,6 @@ class Constants
     const INT_32 = 0xca;
 
     const INT_64 = 0xcb;
-
 
     // MAPS
 
@@ -83,7 +79,6 @@ class Constants
 
     const MAP_32 = 0xda;
 
-
     // LISTS
 
     const LIST_TINY = 0x90;
@@ -93,7 +88,6 @@ class Constants
     const LIST_16 = 0xd5;
 
     const LIST_32 = 0xd6;
-
 
     // SIZES
 
@@ -113,11 +107,9 @@ class Constants
 
     const MARKER_FLOAT = 0xc1;
 
-
     // MISC
 
     const MISC_ZERO = 0x00;
-
 
     const MARKER_NULL = 0xc0;
 

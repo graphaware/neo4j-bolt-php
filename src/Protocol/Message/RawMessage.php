@@ -15,16 +15,25 @@ class RawMessage
 {
     protected $bytes = '';
 
+    /**
+     * @param string $bytes
+     */
     public function __construct($bytes)
     {
         $this->bytes = $bytes;
     }
 
+    /**
+     * @return int
+     */
     public function getLength()
     {
         return mb_strlen($this->bytes, 'ASCII');
     }
 
+    /**
+     * @return string
+     */
     public function getBytes()
     {
         return $this->bytes;

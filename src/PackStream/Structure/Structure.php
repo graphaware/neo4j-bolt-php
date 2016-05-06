@@ -4,10 +4,19 @@ namespace GraphAware\Bolt\PackStream\Structure;
 
 class Structure
 {
+    /**
+     * @var string
+     */
     private $signature;
 
+    /**
+     * @var array
+     */
     private $elements = [];
 
+    /**
+     * @var int
+     */
     private $size = 0;
 
     public function __construct($signature, $size)
@@ -16,18 +25,24 @@ class Structure
         $this->size = (int) $size;
     }
 
+    /**
+     * @param $elt
+     */
     public function addElement($elt)
     {
         $this->elements[] = $elt;
     }
 
+    /**
+     * @param array $elts
+     */
     public function setElements($elts)
     {
         $this->elements = $elts;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSignature()
     {
@@ -54,67 +69,89 @@ class Structure
         return $this->size;
     }
 
-
+    /**
+     * @return array
+     */
     public function getValue()
     {
         return $this->elements;
     }
 
+    /**
+     * @return bool
+     */
     public function isSuccess()
     {
-        return "SUCCESS" === $this->signature;
+        return 'SUCCESS' === $this->signature;
     }
 
+    /**
+     * @return bool
+     */
     public function isRecord()
     {
-        return "RECORD" === $this->signature;
+        return 'RECORD' === $this->signature;
     }
 
+    /**
+     * @return bool
+     */
     public function isFailure()
     {
-        return "FAILURE" === $this->signature;
+        return 'FAILURE' === $this->signature;
     }
 
+    /**
+     * @return bool
+     */
     public function hasFields()
     {
-        $elts = $this->getElements();
-
-        return array_key_exists('fields', $elts);
+        return array_key_exists('fields', $this->getElements());
     }
 
+    /**
+     * @return array
+     */
     public function getFields()
     {
-        return $this->getElements()['fields'];
+        return $this->hasFields() ? $this->getElements()['fields'] : [];
     }
 
+    /**
+     * @return bool
+     */
     public function hasStatistics()
     {
-        $elts = $this->getElements();
-
-        return array_key_exists('stats', $elts);
+        return array_key_exists('stats', $this->getElements());
     }
 
+    /**
+     * @return array
+     */
     public function getStatistics()
     {
-        $elts = $this->getElements();
-
-        return array_key_exists('stats', $elts) ? $elts['stats'] : [];
+        return $this->hasStatistics() ? $this->getElements()['stats'] : [];
     }
 
+    /**
+     * @return bool
+     */
     public function hasType()
     {
-        $elts = $this->getElements();
-
-        return array_key_exists('type', $elts);
+        return array_key_exists('type', $this->getElements());
     }
 
+    /**
+     * @return array
+     */
     public function getType()
     {
-        $elts = $this->getElements();
-
-        return $elts['type'];
+        return $this->hasType() ? $this->getElements()['type'] : [];
     }
 
+    /**
+     * @return array
+     */
     private function types()
     {
         return ['NODE', 'RELATIONSHIP', 'PATH', 'UNBOUND_RELATIONSHIP'];

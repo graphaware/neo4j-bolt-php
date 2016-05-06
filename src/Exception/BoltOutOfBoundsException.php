@@ -11,4 +11,6 @@
 
 namespace GraphAware\Bolt\Exception;
 
-class BoltOutOfBoundsException extends \OutOfBoundsException implements BoltExceptionInterface{}
+class BoltOutOfBoundsException extends \OutOfBoundsException implements BoltExceptionInterface
+{
+}

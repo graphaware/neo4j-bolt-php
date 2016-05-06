@@ -11,9 +11,7 @@
 
 namespace GraphAware\Bolt\Protocol\Message;
 
-use GraphAware\Bolt\PackStream\Structure\ListCollection;
 use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Common\Result\RecordInterface;
 use GraphAware\Common\Result\RecordViewInterface;
 
 class RecordMessage extends AbstractMessage implements RecordViewInterface
@@ -28,6 +26,9 @@ class RecordMessage extends AbstractMessage implements RecordViewInterface
         $this->values = $list;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;
@@ -66,5 +67,53 @@ class RecordMessage extends AbstractMessage implements RecordViewInterface
     public function record()
     {
         // TODO: Implement record() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($key)
+    {
+        // TODO: Implement get() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasValue($key)
+    {
+        // TODO: Implement hasValue() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function nodeValue($key)
+    {
+        // TODO: Implement nodeValue() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function relationshipValue($key)
+    {
+        // TODO: Implement relationshipValue() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pathValue($key)
+    {
+        // TODO: Implement pathValue() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByIndex($index)
+    {
+        // TODO: Implement getByIndex() method.
     }
 }

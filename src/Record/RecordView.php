@@ -34,15 +34,6 @@ class RecordView implements RecordViewInterface
     private $keyToIndexMap = [];
 
     /**
-     * @return array
-     */
-    public function keys()
-    {
-        return $this->keys;
-    }
-
-    /**
-     * RecordView constructor.
      * @param array $keys
      * @param array $values
      */
@@ -50,13 +41,22 @@ class RecordView implements RecordViewInterface
     {
         $this->keys = $keys;
         $this->values = $values;
+
         foreach ($this->keys as $i => $k) {
             $this->keyToIndexMap[$k] = $i;
         }
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     */
+    public function keys()
+    {
+        return $this->keys;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function hasValues()
     {
@@ -65,6 +65,7 @@ class RecordView implements RecordViewInterface
 
     /**
      * @param $key
+     *
      * @return mixed|\GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Relationship|\GraphAware\Bolt\Result\Type\Path
      */
     public function value($key)
@@ -74,6 +75,7 @@ class RecordView implements RecordViewInterface
 
     /**
      * @param $key
+     *
      * @return \GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Path|\GraphAware\Bolt\Result\Type\Relationship|mixed
      */
     public function get($key)
@@ -82,9 +84,10 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * Returns the Node for value <code>$key</code>. Ease IDE integration
+     * Returns the Node for value <code>$key</code>. Ease IDE integration.
      *
      * @param $key
+     *
      * @return \GraphAware\Bolt\Result\Type\Node
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Node
@@ -100,6 +103,7 @@ class RecordView implements RecordViewInterface
 
     /**
      * @param $key
+     *
      * @return \GraphAware\Bolt\Result\Type\Relationship
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Relationship
@@ -115,6 +119,7 @@ class RecordView implements RecordViewInterface
 
     /**
      * @param $key
+     *
      * @return \GraphAware\Bolt\Result\Type\Path
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Path
@@ -129,7 +134,7 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function values()
     {
@@ -137,8 +142,7 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @param string $key
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasValue($key)
     {
@@ -146,8 +150,7 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @param $index
-     * @return mixed
+     * {@inheritdoc}
      */
     public function valueByIndex($index)
     {
@@ -155,8 +158,7 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @param $index
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getByIndex($index)
     {
@@ -164,11 +166,10 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @return \GraphAware\Bolt\Record\RecordView
+     * @return RecordView
      */
     public function record()
     {
-        return clone($this);
+        return clone $this;
     }
-
 }

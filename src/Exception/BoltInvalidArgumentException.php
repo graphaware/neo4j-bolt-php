@@ -11,4 +11,6 @@
 
 namespace GraphAware\Bolt\Exception;
 
-class BoltInvalidArgumentException extends \InvalidArgumentException implements BoltExceptionInterface{}
+class BoltInvalidArgumentException extends \InvalidArgumentException implements BoltExceptionInterface
+{
+}

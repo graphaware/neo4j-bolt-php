@@ -18,25 +18,24 @@ use GraphAware\Common\Type\RelationshipInterface;
 class Path implements PathInterface
 {
     /**
-     * @var array|\GraphAware\Bolt\Result\Type\Node[]
+     * @var Node[]
      */
     protected $nodes;
 
     /**
-     * @var array|\GraphAware\Bolt\Result\Type\UnboundRelationship[]
+     * @var UnboundRelationship[]
      */
     protected $relationships;
 
     /**
-     * @var array|\int[]
+     * @var \int[]
      */
     protected $sequence;
 
     /**
-     * Path constructor.
-     * @param \GraphAware\Bolt\Result\Type\Node[] $nodes
-     * @param \GraphAware\Bolt\Result\Type\UnboundRelationship[] $relationships
-     * @param int[] $sequence
+     * @param Node[]                $nodes
+     * @param UnboundRelationship[] $relationships
+     * @param int[]                 $sequence
      */
     public function __construct(array $nodes, array $relationships, array $sequence)
     {
@@ -46,63 +45,58 @@ class Path implements PathInterface
     }
 
     /**
-     * @return \GraphAware\Bolt\Result\Type\Node
+     * @return Node
      */
-    function start()
+    public function start()
     {
         return $this->nodes[0];
     }
 
     /**
-     * @return \GraphAware\Bolt\Result\Type\Node
+     * @return Node
      */
-    function end()
+    public function end()
     {
-        return $this->nodes[count($this->nodes)-1];
+        return $this->nodes[count($this->nodes) - 1];
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    function length()
+    public function length()
     {
         return count($this->relationships);
     }
 
     /**
-     * @param \GraphAware\Common\Type\NodeInterface $node
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    function containsNode(NodeInterface $node)
+    public function containsNode(NodeInterface $node)
     {
         return in_array($node, $this->nodes);
     }
 
     /**
-     * @param \GraphAware\Common\Type\RelationshipInterface $relationship
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    function containsRelationship(RelationshipInterface $relationship)
+    public function containsRelationship(RelationshipInterface $relationship)
     {
         return in_array($relationship, $this->relationships);
     }
 
     /**
-     * @return array|\GraphAware\Bolt\Result\Type\Node[]
+     * @return Node[]
      */
-    function nodes()
+    public function nodes()
     {
         return $this->nodes;
     }
 
     /**
-     * @return array|\GraphAware\Bolt\Result\Type\UnboundRelationship[]
+     * @return UnboundRelationship[]
      */
-    function relationships()
+    public function relationships()
     {
         return $this->relationships;
     }
-
 }

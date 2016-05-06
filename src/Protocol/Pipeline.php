@@ -19,15 +19,18 @@ use GraphAware\Common\Result\ResultCollection;
 class Pipeline
 {
     /**
-     * @var \GraphAware\Bolt\Protocol\V1\Session
+     * @var Session
      */
     protected $session;
 
     /**
-     * @var \GraphAware\Bolt\Protocol\Message\AbstractMessage[]
+     * @var RunMessage[]
      */
     protected $messages = [];
 
+    /**
+     * @param Session $session
+     */
     public function __construct(Session $session)
     {
         $this->session = $session;
@@ -35,7 +38,8 @@ class Pipeline
 
     /**
      * @param string $query
-     * @param array $parameters
+     * @param array  $parameters
+     * @param null   $tag
      */
     public function push($query, array $parameters = array(), $tag = null)
     {
@@ -43,7 +47,7 @@ class Pipeline
     }
 
     /**
-     * @return \GraphAware\Bolt\Protocol\Message\AbstractMessage[]
+     * @return RunMessage[]
      */
     public function getMessages()
     {
@@ -59,20 +63,21 @@ class Pipeline
     }
 
     /**
-     * @return \GraphAware\Common\Result\ResultCollection
-     *
-     * @throws \Exception
+     * @return ResultCollection
      */
     public function run()
     {
         $pullAllMessage = new PullAllMessage();
         $batch = [];
         $resultCollection = new ResultCollection();
+
         foreach ($this->messages as $message) {
             $batch[] = $message;
             $batch[] = $pullAllMessage;
         }
+
         $this->session->sendMessages($batch);
+
         foreach ($this->messages as $message) {
             $resultCollection->add($this->session->recv($message->getStatement(), $message->getParams(), $message->getTag()), $message->getTag());
         }

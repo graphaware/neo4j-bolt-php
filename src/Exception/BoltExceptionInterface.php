@@ -11,4 +11,6 @@
 
 namespace GraphAware\Bolt\Exception;
 
-interface BoltExceptionInterface{}
+interface BoltExceptionInterface
+{
+}

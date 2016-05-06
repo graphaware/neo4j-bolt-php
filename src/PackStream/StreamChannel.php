@@ -11,7 +11,6 @@
 
 namespace GraphAware\Bolt\PackStream;
 
-use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 
 class StreamChannel
@@ -38,10 +37,7 @@ class StreamChannel
      */
     protected $io;
 
-    protected $t = 0;
-
     /**
-     * BytesWalker constructor.
      * @param \GraphAware\Bolt\IO\AbstractIO $io
      */
     public function __construct($io)
@@ -65,14 +61,16 @@ class StreamChannel
         if (0 === $n) {
             return '';
         }
+
         $remaining = ($n - $this->length) + $this->position;
+
         while ($remaining > 0) {
             //$this->io->wait();
             $new = $this->io->readChunk();
             $this->bytes .= $new;
             $remaining -= strlen($new);
-            ++$this->t;
         }
+
         $this->length = strlen($this->bytes);
         $data = substr($this->bytes, $this->position, $n);
         $this->position += $n;
@@ -80,20 +78,28 @@ class StreamChannel
         return $data;
     }
 
+    /**
+     * @param int $n
+     */
     public function forward($n)
     {
         $n = (int) $n;
-        if (($this->position + $n) > $this->getLength()) {
+
+        if (($this->position + $n) > $this->length) {
             throw new \OutOfBoundsException(sprintf('No more bytes to read'));
         }
 
         $this->position += $n;
     }
 
+    /**
+     * @param int $n
+     */
     public function setPosition($n)
     {
         $n = (int) $n;
-        if ($n > $this->getLength()) {
+
+        if ($n > $this->length) {
             throw new \OutOfBoundsException(sprintf('Require position out of bound'));
         }
 
@@ -116,6 +122,9 @@ class StreamChannel
         $this->position -= $n;
     }
 
+    /**
+     * @return int
+     */
     public function getPosition()
     {
         return $this->position;

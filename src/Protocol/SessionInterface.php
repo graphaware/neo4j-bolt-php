@@ -13,15 +13,25 @@ namespace GraphAware\Bolt\Protocol;
 
 interface SessionInterface
 {
+    /**
+     * @return string
+     */
     public static function getProtocolVersion();
 
     /**
-     * @param $statement
-     * @param array $parameters
+     * @param string      $statement
+     * @param array       $parameters
+     * @param null|string $tag
+     *
      * @return \GraphAware\Bolt\Result\Result
      */
-    public function run($statement, array $parameters = array());
+    public function run($statement, array $parameters = array(), $tag = null);
 
+    /**
+     * @param Pipeline $pipeline
+     *
+     * @return mixed
+     */
     public function runPipeline(Pipeline $pipeline);
 
     /**
@@ -29,6 +39,9 @@ interface SessionInterface
      */
     public function createPipeline();
 
+    /**
+     * Closes this session and the corresponding connection to the socket.
+     */
     public function close();
 
     /**

@@ -12,10 +12,10 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
+use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
-use GraphAware\Bolt\Protocol\Message\DiscardAllMessage;
 use GraphAware\Bolt\Protocol\Message\InitMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
@@ -24,46 +24,63 @@ use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Bolt\Result\Result as CypherResult;
 use GraphAware\Common\Cypher\Statement;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Session extends AbstractSession
 {
     const PROTOCOL_VERSION = 1;
 
+    /**
+     * @var bool
+     */
     public $isInitialized = false;
 
+    /**
+     * @var Transaction|null
+     */
     public $transaction;
 
+    /**
+     * @var array
+     */
     protected $credentials;
 
-    public function __construct(\GraphAware\Bolt\IO\AbstractIO $io, \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher, array $credentials)
+    /**
+     * @param AbstractIO               $io
+     * @param EventDispatcherInterface $dispatcher
+     * @param array                    $credentials
+     */
+    public function __construct(AbstractIO $io, EventDispatcherInterface $dispatcher, array $credentials)
     {
         parent::__construct($io, $dispatcher);
+
         $this->credentials = $credentials;
         $this->init();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getProtocolVersion()
     {
         return self::PROTOCOL_VERSION;
     }
 
     /**
-     * @param $statement
-     * @param array $parameters
-     * @param bool|true $autoReceive
-     * @return \GraphAware\Bolt\Result\Result
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function run($statement, array $parameters = array(), $tag = null)
     {
         $messages = array(
             new RunMessage($statement, $parameters),
         );
+
         $messages[] = new PullAllMessage();
         $this->sendMessages($messages);
 
         $runResponse = new Response();
         $r = $this->unpacker->unpack();
+
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         } elseif ($r->isFailure()) {
@@ -71,14 +88,18 @@ class Session extends AbstractSession
         }
 
         $pullResponse = new Response();
+
         while (!$pullResponse->isCompleted()) {
             $r = $this->unpacker->unpack();
+
             if ($r->isRecord()) {
                 $pullResponse->onRecord($r);
             }
+
             if ($r->isSuccess()) {
                 $pullResponse->onSuccess($r);
             }
+
             if ($r->isFailure()) {
                 $pullResponse->onFailure($r);
             }
@@ -86,10 +107,13 @@ class Session extends AbstractSession
 
         $cypherResult = new CypherResult(Statement::create($statement, $parameters, $tag));
         $cypherResult->setFields($runResponse->getMetadata()[0]->getElements());
+
         foreach ($pullResponse->getRecords() as $record) {
             $cypherResult->pushRecord($record);
         }
+
         $pullMeta = $pullResponse->getMetadata();
+
         if (isset($pullMeta[0])) {
             if (isset($pullMeta[0]->getElements()['stats'])) {
                 $cypherResult->setStatistics($pullResponse->getMetadata()[0]->getElements()['stats']);
@@ -99,6 +123,28 @@ class Session extends AbstractSession
         return $cypherResult;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function runPipeline(Pipeline $pipeline)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createPipeline()
+    {
+        return new Pipeline($this);
+    }
+
+    /**
+     * @param string      $statement
+     * @param array       $parameters
+     * @param null|string $tag
+     *
+     * @return CypherResult
+     */
     public function recv($statement, array $parameters = array(), $tag = null)
     {
         $runResponse = new Response();
@@ -108,11 +154,14 @@ class Session extends AbstractSession
         }
 
         $pullResponse = new Response();
+
         while (!$pullResponse->isCompleted()) {
             $r = $this->unpacker->unpack();
+
             if ($r->isRecord()) {
                 $pullResponse->onRecord($r);
             }
+
             if ($r->isSuccess()) {
                 $pullResponse->onSuccess($r);
             }
@@ -120,6 +169,7 @@ class Session extends AbstractSession
 
         $cypherResult = new CypherResult(Statement::create($statement, $parameters, $tag));
         $cypherResult->setFields($runResponse->getMetadata()[0]->getElements());
+
         foreach ($pullResponse->getRecords() as $record) {
             $cypherResult->pushRecord($record);
         }
@@ -133,31 +183,21 @@ class Session extends AbstractSession
         return $cypherResult;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function init()
     {
         $this->io->assertConnected();
         $ua = Driver::getUserAgent();
         $this->sendMessage(new InitMessage($ua, $this->credentials));
         $responseMessage = $this->receiveMessageInit();
-        if ($responseMessage->getSignature() == "SUCCESS") {
-            $this->isInitialized = true;
-        } else {
+
+        if ($responseMessage->getSignature() != 'SUCCESS') {
             throw new \Exception('Unable to INIT');
         }
+
         $this->isInitialized = true;
-    }
-
-    public function runPipeline(Pipeline $pipeline)
-    {
-
-    }
-
-    /**
-     * @return \GraphAware\Bolt\Protocol\Pipeline
-     */
-    public function createPipeline()
-    {
-        return new Pipeline($this);
     }
 
     /**
@@ -166,23 +206,24 @@ class Session extends AbstractSession
     public function receiveMessageInit()
     {
         $bytes = '';
-
         $chunkHeader = $this->io->read(2);
         list(, $chunkSize) = unpack('n', $chunkHeader);
         $nextChunkLength = $chunkSize;
+
         do {
             if ($nextChunkLength) {
                 $bytes .= $this->io->read($nextChunkLength);
             }
+
             list(, $next) = unpack('n', $this->io->read(2));
             $nextChunkLength = $next;
-        } while($nextChunkLength > 0);
+        } while ($nextChunkLength > 0);
 
         $rawMessage = new RawMessage($bytes);
 
         $message = $this->serializer->deserialize($rawMessage);
 
-        if ($message->getSignature() === "FAILURE") {
+        if ($message->getSignature() === 'FAILURE') {
             $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
             $e = new MessageFailureException($msg);
             $e->setStatusCode($message->getElements()['code']);
@@ -201,22 +242,23 @@ class Session extends AbstractSession
     {
         $bytes = '';
 
-        $chunkHeader = $this->bw->read(2);
+        $chunkHeader = $this->io->read(2);
         list(, $chunkSize) = unpack('n', $chunkHeader);
         $nextChunkLength = $chunkSize;
+
         do {
             if ($nextChunkLength) {
-                $bytes .= $this->bw->read($nextChunkLength);
+                $bytes .= $this->io->read($nextChunkLength);
             }
-            list(, $next) = unpack('n', $this->bw->read(2));
+
+            list(, $next) = unpack('n', $this->io->read(2));
             $nextChunkLength = $next;
-        } while($nextChunkLength > 0);
+        } while ($nextChunkLength > 0);
 
         $rawMessage = new RawMessage($bytes);
-
         $message = $this->serializer->deserialize($rawMessage);
 
-        if ($message->getSignature() === "FAILURE") {
+        if ($message->getSignature() === 'FAILURE') {
             $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
             $e = new MessageFailureException($msg);
             $e->setStatusCode($message->getElements()['code']);
@@ -249,7 +291,7 @@ class Session extends AbstractSession
     }
 
     /**
-     * Closes this session and the corresponding connection to the socket
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -257,6 +299,9 @@ class Session extends AbstractSession
         $this->isInitialized = false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function transaction()
     {
         if ($this->transaction instanceof Transaction) {

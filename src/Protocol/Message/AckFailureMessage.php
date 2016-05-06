@@ -17,11 +17,17 @@ class AckFailureMessage extends AbstractMessage
 {
     const MESSAGE_TYPE = 'ACK_FAILURE';
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct()
     {
         parent::__construct(Constants::SIGNATURE_ACK_FAILURE);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;

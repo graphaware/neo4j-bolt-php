@@ -22,6 +22,9 @@ class PullAllMessage extends AbstractMessage
         parent::__construct(Constants::SIGNATURE_PULL_ALL);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMessageType()
     {
         return self::MESSAGE_TYPE;
