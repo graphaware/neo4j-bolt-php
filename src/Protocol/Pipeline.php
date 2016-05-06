@@ -14,10 +14,10 @@ namespace GraphAware\Bolt\Protocol;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Common\Driver\PipelineInterface;
 use GraphAware\Common\Result\ResultCollection;
-use GraphAware\Neo4j\Client\HttpDriver\Pipeline as BasePipeline;
 
-class Pipeline extends BasePipeline
+class Pipeline implements PipelineInterface
 {
     /**
      * @var Session
@@ -34,13 +34,11 @@ class Pipeline extends BasePipeline
      */
     public function __construct(Session $session)
     {
-        parent::__construct($session);
+        $this->session = $session;
     }
 
     /**
-     * @param string $query
-     * @param array  $parameters
-     * @param null   $tag
+     * {@inheritdoc}
      */
     public function push($query, array $parameters = array(), $tag = null)
     {
@@ -48,23 +46,7 @@ class Pipeline extends BasePipeline
     }
 
     /**
-     * @return RunMessage[]
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->messages);
-    }
-
-    /**
-     * @return ResultCollection
+     * {@inheritdoc}
      */
     public function run()
     {
@@ -84,5 +66,21 @@ class Pipeline extends BasePipeline
         }
 
         return $resultCollection;
+    }
+
+    /**
+     * @return RunMessage[]
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->messages);
     }
 }

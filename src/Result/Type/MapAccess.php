@@ -11,9 +11,9 @@
 
 namespace GraphAware\Bolt\Result\Type;
 
-use GraphAware\Common\Type\MapAccessorInterface;
+use GraphAware\Common\Type\MapAccessor;
 
-class MapAccess implements MapAccessorInterface
+class MapAccess implements MapAccessor
 {
     /**
      * @var array

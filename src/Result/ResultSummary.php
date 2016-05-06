@@ -48,7 +48,7 @@ class ResultSummary implements ResultSummaryInterface
      */
     public function statementType()
     {
-        return $this->statement->getStatementType();
+        return $this->statement->statementType();
     }
 
     /**

@@ -11,11 +11,10 @@
 
 namespace GraphAware\Bolt\Result\Type;
 
-use GraphAware\Common\Type\NodeInterface;
-use GraphAware\Common\Type\PathInterface;
-use GraphAware\Common\Type\RelationshipInterface;
+use GraphAware\Common\Type\Node;
+use GraphAware\Common\Type\Path as BasePathInterface;
 
-class Path implements PathInterface
+class Path implements BasePathInterface
 {
     /**
      * @var Node[]
@@ -71,7 +70,7 @@ class Path implements PathInterface
     /**
      * {@inheritdoc}
      */
-    public function containsNode(NodeInterface $node)
+    public function containsNode(Node $node)
     {
         return in_array($node, $this->nodes);
     }
@@ -79,7 +78,7 @@ class Path implements PathInterface
     /**
      * {@inheritdoc}
      */
-    public function containsRelationship(RelationshipInterface $relationship)
+    public function containsRelationship(Relationship $relationship)
     {
         return in_array($relationship, $this->relationships);
     }

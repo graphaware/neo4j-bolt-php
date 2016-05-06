@@ -11,9 +11,9 @@
 
 namespace GraphAware\Bolt\Result\Type;
 
-use GraphAware\Common\Type\RelationshipInterface;
+use GraphAware\Common\Type\Relationship as RelationshipInterface;
 
-class Relationship extends MapAccessInterface implements RelationshipInterface
+class Relationship extends MapAccess implements RelationshipInterface
 {
     /**
      * @var int
