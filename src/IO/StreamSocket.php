@@ -133,6 +133,16 @@ class StreamSocket extends AbstractIO
     }
 
     /**
+     * @param int $l
+     *
+     * @return string
+     */
+    public function readChunk($l = 8192)
+    {
+        return stream_socket_recvfrom($this->sock, $l);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function select($sec, $usec)
