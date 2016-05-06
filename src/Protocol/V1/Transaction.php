@@ -108,13 +108,8 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getStatus()
-    {
-        return $this->state;
-    }
-
     public function begin()
     {
         $this->assertNotStarted();
@@ -122,9 +117,20 @@ class Transaction implements TransactionInterface
         $this->state = self::OPENED;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run(Statement $statement)
     {
         return $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->state;
     }
 
     /**

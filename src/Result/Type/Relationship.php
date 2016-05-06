@@ -13,7 +13,7 @@ namespace GraphAware\Bolt\Result\Type;
 
 use GraphAware\Common\Type\RelationshipInterface;
 
-class Relationship extends MapAccess implements RelationshipInterface
+class Relationship extends MapAccessInterface implements RelationshipInterface
 {
     /**
      * @var int

@@ -13,7 +13,7 @@ namespace GraphAware\Bolt\Result\Type;
 
 use GraphAware\Common\Type\NodeInterface;
 
-class Node extends MapAccess implements NodeInterface
+class Node extends MapAccessInterface implements NodeInterface
 {
     /**
      * @var int

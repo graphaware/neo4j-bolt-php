@@ -15,8 +15,9 @@ use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\V1\Session;
 use GraphAware\Common\Result\ResultCollection;
+use GraphAware\Neo4j\Client\HttpDriver\Pipeline as BasePipeline;
 
-class Pipeline
+class Pipeline extends BasePipeline
 {
     /**
      * @var Session
@@ -33,7 +34,7 @@ class Pipeline
      */
     public function __construct(Session $session)
     {
-        $this->session = $session;
+        parent::__construct($session);
     }
 
     /**
