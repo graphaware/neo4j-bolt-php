@@ -14,9 +14,10 @@ namespace GraphAware\Bolt\Protocol;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Common\Driver\PipelineInterface;
 use GraphAware\Common\Result\ResultCollection;
 
-class Pipeline
+class Pipeline implements PipelineInterface
 {
     /**
      * @var Session
@@ -37,9 +38,7 @@ class Pipeline
     }
 
     /**
-     * @param string $query
-     * @param array  $parameters
-     * @param null   $tag
+     * {@inheritdoc}
      */
     public function push($query, array $parameters = array(), $tag = null)
     {
@@ -47,23 +46,7 @@ class Pipeline
     }
 
     /**
-     * @return RunMessage[]
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->messages);
-    }
-
-    /**
-     * @return ResultCollection
+     * {@inheritdoc}
      */
     public function run()
     {
@@ -83,5 +66,21 @@ class Pipeline
         }
 
         return $resultCollection;
+    }
+
+    /**
+     * @return RunMessage[]
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->messages);
     }
 }

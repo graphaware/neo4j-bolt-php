@@ -11,7 +11,9 @@
 
 namespace GraphAware\Bolt\Protocol;
 
-interface SessionInterface
+use GraphAware\Common\Driver\SessionInterface as BaseSessionInterface;
+
+interface SessionInterface extends BaseSessionInterface
 {
     /**
      * @return string
@@ -35,14 +37,13 @@ interface SessionInterface
     public function runPipeline(Pipeline $pipeline);
 
     /**
-     * @return \GraphAware\Bolt\Protocol\Pipeline
+     * @param null|string $query
+     * @param array       $parameters
+     * @param null|string $tag
+     *
+     * @return Pipeline
      */
-    public function createPipeline();
-
-    /**
-     * Closes this session and the corresponding connection to the socket.
-     */
-    public function close();
+    public function createPipeline($query = null, array $parameters = array(), $tag = null);
 
     /**
      * @return \GraphAware\Bolt\Protocol\V1\Transaction

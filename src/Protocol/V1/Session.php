@@ -133,7 +133,7 @@ class Session extends AbstractSession
     /**
      * {@inheritdoc}
      */
-    public function createPipeline()
+    public function createPipeline($query = null, array $parameters = [], $tag = null)
     {
         return new Pipeline($this);
     }
@@ -149,6 +149,7 @@ class Session extends AbstractSession
     {
         $runResponse = new Response();
         $r = $this->unpacker->unpack();
+
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         }

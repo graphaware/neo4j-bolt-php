@@ -11,14 +11,14 @@
 
 namespace GraphAware\Bolt\Result\Type;
 
-use GraphAware\Common\Type\NodeInterface;
-use GraphAware\Common\Type\PathInterface;
-use GraphAware\Common\Type\RelationshipInterface;
+use GraphAware\Common\Type\Node as NodeInterface;
+use GraphAware\Common\Type\Path as BasePathInterface;
+use GraphAware\Common\Type\Relationship as RelationshipInterface;
 
-class Path implements PathInterface
+class Path implements BasePathInterface
 {
     /**
-     * @var Node[]
+     * @var NodeInterface[]
      */
     protected $nodes;
 
@@ -33,7 +33,7 @@ class Path implements PathInterface
     protected $sequence;
 
     /**
-     * @param Node[]                $nodes
+     * @param NodeInterface[]       $nodes
      * @param UnboundRelationship[] $relationships
      * @param int[]                 $sequence
      */
@@ -45,7 +45,7 @@ class Path implements PathInterface
     }
 
     /**
-     * @return Node
+     * @return NodeInterface
      */
     public function start()
     {
