@@ -12,6 +12,7 @@
 namespace GraphAware\Bolt\Protocol\V1;
 
 use GraphAware\Bolt\Driver;
+use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
 use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\Protocol\AbstractSession;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
@@ -71,6 +72,9 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = array(), $tag = null)
     {
+        if (null === $statement) {
+            throw new BoltInvalidArgumentException("Statement cannot be null");
+        }
         $messages = array(
             new RunMessage($statement, $parameters),
         );
