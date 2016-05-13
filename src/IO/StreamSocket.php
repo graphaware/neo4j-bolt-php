@@ -141,7 +141,7 @@ class StreamSocket extends AbstractIO
     public function readChunk($l = 8192)
     {
         $data = stream_socket_recvfrom($this->sock, $l);
-        echo Helper::prettyHex($data);
+        //echo Helper::prettyHex($data);
 
         return $data;
     }
