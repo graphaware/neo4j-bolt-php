@@ -74,12 +74,17 @@ class RecordView implements RecordViewInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
+     * @param mixed  $defaultValue
      *
      * @return \GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Path|\GraphAware\Bolt\Result\Type\Relationship|mixed
      */
-    public function get($key)
+    public function get($key, $defaultValue = null)
     {
+        if (!isset($this->keyToIndexMap[$key]) && 2 === func_num_args()) {
+            return $defaultValue;
+        }
+
         return $this->value($key);
     }
 

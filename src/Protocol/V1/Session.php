@@ -73,7 +73,7 @@ class Session extends AbstractSession
     public function run($statement, array $parameters = array(), $tag = null)
     {
         if (null === $statement) {
-            throw new BoltInvalidArgumentException("Statement cannot be null");
+            //throw new BoltInvalidArgumentException("Statement cannot be null");
         }
         $messages = array(
             new RunMessage($statement, $parameters),

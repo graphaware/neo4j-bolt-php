@@ -44,7 +44,7 @@ class Pipeline implements PipelineInterface
     public function push($query, array $parameters = array(), $tag = null)
     {
         if (null === $query) {
-            throw new BoltInvalidArgumentException("Statement cannot be null");
+            throw new BoltInvalidArgumentException('Statement cannot be null');
         }
         $this->messages[] = new RunMessage($query, $parameters, $tag);
     }
