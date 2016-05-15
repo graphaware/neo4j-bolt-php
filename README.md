@@ -1,30 +1,23 @@
 ## Neo4j Bolt PHP
 
-PHP Driver for Neo4j's Bolt Remoting Protocol
+PHP low level Driver for Neo4j's Bolt Remoting Protocol
 
 [![Build Status](https://travis-ci.org/graphaware/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/graphaware/neo4j-bolt-php)
 
 ---
 
-### DEV MODE
-
-This library will remain in 1.0.0-dev version until stable release of Neo4j's Bolt.
-
----
-
 ### References :
 
-* Documentation : http://remoting.neotechnology.com.s3-website-eu-west-1.amazonaws.com
-* Python driver : https://github.com/neo4j/neo4j-python-driver
-* Bolt How-To : https://github.com/nigelsmall/bolt-howto
-* Java Driver : https://github.com/neo4j/neo4j-java-driver
-* Neo4j 3.0-RC1 : http://neo4j.com
+* PHP Client embedding Bolt along with the http driver (recommended way of using Neo4j in PHP) : https://github.com/graphaware/neo4j-php-client
+* Neo4j 3.0 : http://neo4j.com/docs
 
 ### Requirements:
 
 * PHP5.6+
 * Neo4j3.0
 * PHP Sockets extension available
+* `bcmath` extension
+* `mbstring` extension
 
 ### Installation
 
