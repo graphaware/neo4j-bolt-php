@@ -126,7 +126,7 @@ class Transaction implements TransactionInterface
     public function run(Statement $statement)
     {
         try {
-            $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
+            return $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
         } catch (MessageFailureException $e) {
             $spl = explode('.', $e->getStatusCode());
             if (self::$NO_ROLLBACK_STATUS_CODE !== $spl[1]) {

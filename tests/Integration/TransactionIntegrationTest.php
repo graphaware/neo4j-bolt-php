@@ -32,6 +32,15 @@ class TransactionIntegrationTest extends IntegrationTestCase
         $this->assertXNodesWithTestLabelExist(5);
     }
 
+    public function testRunSingle()
+    {
+        $this->emptyDB();
+        $session = $this->driver->session();
+        $tx = $session->transaction();
+        $result = $tx->run(Statement::create('CREATE (n) RETURN id(n) as id'));
+        $this->assertTrue($result->firstRecord()->hasValue('id'));
+    }
+
     public function testManualRollbackOnException()
     {
         $this->emptyDB();
