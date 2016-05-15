@@ -4,6 +4,7 @@ namespace GraphAware\Bolt\Tests\Integration;
 
 use GraphAware\Bolt\GraphDatabase;
 use GraphAware\Bolt\Exception\MessageFailureException;
+use GraphAware\Common\Type\Node;
 
 /**
  * Class ExceptionDispatchTest
@@ -39,5 +40,18 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         } catch (MessageFailureException $e) {
             $this->assertEquals('Neo.ClientError.Statement.SyntaxError', $e->getStatusCode());
         }
+    }
+
+    public function testMessageFailuresAreHandled()
+    {
+        $driver = GraphDatabase::driver('bolt://localhost');
+        $session = $driver->session();
+        try {
+            $session->run('CR');
+        } catch (MessageFailureException $e) {
+            //
+        }
+        $result = $session->run('CREATE (n) RETURN n');
+        $this->assertTrue($result->firstRecord()->get('n') instanceof Node);
     }
 }

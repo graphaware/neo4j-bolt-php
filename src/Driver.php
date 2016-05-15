@@ -22,17 +22,7 @@ use GraphAware\Bolt\Exception\HandshakeException;
 
 class Driver implements DriverInterface
 {
-    const VERSION = '1.0.0-DEV';
-
-    const VERSION_ID = '10000';
-
-    const MAJOR_VERSION = '1';
-
-    const MINOR_VERSION = '0';
-
-    const RELEASE_VERSION = '0';
-
-    const EXTRA_VERSION = 'DEV';
+    const VERSION = '1.5.4';
 
     const DEFAULT_TCP_PORT = 7687;
 

@@ -2,7 +2,11 @@
 
 namespace GraphAware\Bolt\Tests\Integration;
 
+use GraphAware\Bolt\Exception\MessageFailureException;
+use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Common\Cypher\Statement;
+use GraphAware\Common\Transaction\TransactionState;
+use RuntimeException;
 
 /**
  * Class TransactionIntegrationTest
@@ -26,6 +30,21 @@ class TransactionIntegrationTest extends IntegrationTestCase
         $tx->runMultiple($statements);
         $tx->commit();
         $this->assertXNodesWithTestLabelExist(5);
+    }
+
+    public function testManualRollbackOnException()
+    {
+        $this->emptyDB();
+        $session = $this->driver->session();
+        $tx = $session->transaction();
+        try {
+            $tx->run(Statement::create("BLA BLA BLA"));
+        } catch (MessageFailureException $e) {
+            //
+        }
+        $result = $session->run('CREATE (n) RETURN n');
+        $this->assertTrue($result->firstRecord()->get('n') instanceof Node);
+        $this->assertEquals(TransactionState::ROLLED_BACK, $tx->status());
     }
 
     private function assertXNodesWithTestLabelExist($number = 1)

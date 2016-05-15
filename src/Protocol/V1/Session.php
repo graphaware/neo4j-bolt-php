@@ -88,7 +88,16 @@ class Session extends AbstractSession
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
         } elseif ($r->isFailure()) {
-            $runResponse->onFailure($r);
+            try {
+                $runResponse->onFailure($r);
+            } catch (MessageFailureException $e) {
+                // server ignores the PULL ALL
+                $this->handleIgnore();
+                $this->sendMessage(new AckFailureMessage());
+                // server success for ACK FAILURE
+                $r2 = $this->handleSuccess();
+                throw $e;
+            }
         }
 
         $pullResponse = new Response();
@@ -267,7 +276,6 @@ class Session extends AbstractSession
             $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
             $e = new MessageFailureException($msg);
             $e->setStatusCode($message->getElements()['code']);
-            $this->sendMessage(new AckFailureMessage());
 
             throw $e;
         }
@@ -314,5 +322,23 @@ class Session extends AbstractSession
         }
 
         return new Transaction($this);
+    }
+
+    private function handleSuccess()
+    {
+        $this->handleMessage('SUCCESS');
+    }
+
+    private function handleIgnore()
+    {
+        $this->handleMessage('IGNORED');
+    }
+
+    private function handleMessage($messageType)
+    {
+        $message = $this->unpacker->unpack();
+        if ($messageType !== $message->getSignature()) {
+            throw new \RuntimeException(sprintf('Expected an %s message, got %s', $messageType, $message->getSignature()));
+        }
     }
 }

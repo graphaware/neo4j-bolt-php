@@ -11,16 +11,19 @@
 
 namespace GraphAware\Bolt\Protocol\V1;
 
+use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Transaction\TransactionInterface;
 
 class Transaction implements TransactionInterface
 {
+    private static $NO_ROLLBACK_STATUS_CODE = 'ClientNotification';
+
     const OPENED = 'OPEN';
 
     const COMMITED = 'COMMITED';
 
-    const ROLLED_BACK = 'ROLLED_BACK';
+    const ROLLED_BACK = 'TRANSACTION_ROLLED_BACK';
 
     /**
      * @var string|null
@@ -122,7 +125,16 @@ class Transaction implements TransactionInterface
      */
     public function run(Statement $statement)
     {
-        return $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
+        try {
+            $this->session->run($statement->text(), $statement->parameters(), $statement->getTag());
+        } catch (MessageFailureException $e) {
+            $spl = explode('.', $e->getStatusCode());
+            if (self::$NO_ROLLBACK_STATUS_CODE !== $spl[1]) {
+                $this->state = self::ROLLED_BACK;
+                $this->closed = true;
+            }
+            throw $e;
+        }
     }
 
     /**
