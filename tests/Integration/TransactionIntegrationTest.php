@@ -56,6 +56,23 @@ class TransactionIntegrationTest extends IntegrationTestCase
         $this->assertEquals(TransactionState::ROLLED_BACK, $tx->status());
     }
 
+    /**
+     * @group tx-tag-multiple-fix
+     */
+    public function testRunMultipleInTransactionWithTags()
+    {
+        $this->emptyDB();
+        $statements = array();
+        for ($i = 0; $i < 5; ++$i) {
+            $statements[] = Statement::create('CREATE (n:Test) RETURN n', [], sprintf('statement_%d', $i));
+        }
+
+        $session = $this->driver->session();
+        $tx = $session->transaction();
+        $results = $tx->runMultiple($statements);
+        $this->assertEquals('statement_0', $results->results()[0]->statement()->getTag());
+    }
+
     private function assertXNodesWithTestLabelExist($number = 1)
     {
         $session = $this->driver->session();

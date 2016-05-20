@@ -155,7 +155,7 @@ class Transaction implements TransactionInterface
         $pipeline = $this->session->createPipeline();
 
         foreach ($statements as $statement) {
-            $pipeline->push($statement->text(), $statement->parameters());
+            $pipeline->push($statement->text(), $statement->parameters(), $statement->getTag());
         }
 
         return $pipeline->run();
