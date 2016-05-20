@@ -59,6 +59,14 @@ class MapAccess implements MapAccessor
     /**
      * {@inheritdoc}
      */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function containsKey($key)
     {
         return array_key_exists($key, $this->properties);
