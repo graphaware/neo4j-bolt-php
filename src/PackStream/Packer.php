@@ -398,9 +398,11 @@ class Packer
         // 64 INTEGERS POS
         if ($value >= pow(2, 31) && $value < pow(2, 63)) {
             $b .= chr(Constants::INT_64);
-            $b .= $this->packBigEndian($value, 8);
-            //$b .= pack('J', $value);
-
+            if (50600 > PHP_VERSION_ID) {
+                $b .= $this->packBigEndian($value, 8);
+                return $b;
+            }
+            $b .= pack('J', $value);
             return $b;
         }
 
