@@ -409,8 +409,11 @@ class Packer
         // 64 INTEGERS MINUS
         if ($value >= ((-1 * abs(pow(2, 63))) - 1) && $value < (-1 * abs(pow(2, 31)))) {
             $b .= chr(Constants::INT_64);
+            if (50600 > PHP_VERSION_ID) {
+                $b .= $this->packBigEndian($value, 8);
+                return $b;
+            }
             $b .= pack('J', $value);
-
             return $b;
         }
 
