@@ -13,7 +13,7 @@ PHP low level Driver for Neo4j's Bolt Remoting Protocol
 
 ### Requirements:
 
-* PHP5.6+
+* PHP5.5+
 * Neo4j3.0
 * PHP Sockets extension available
 * `bcmath` extension
