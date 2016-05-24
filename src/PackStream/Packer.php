@@ -410,7 +410,7 @@ class Packer
         if ($value >= ((-1 * abs(pow(2, 63))) - 1) && $value < (-1 * abs(pow(2, 31)))) {
             $b .= chr(Constants::INT_64);
             if (50600 > PHP_VERSION_ID) {
-                $b .= $this->packBigEndian($value, 8);
+                $b .= $this->packBigEndianNeg2($value);
                 return $b;
             }
             $b .= pack('J', $value);
@@ -554,5 +554,81 @@ class Packer
         }
 
         return implode(array_reverse($res));
+    }
+
+    private function packBigEndianNeg($x, $bytes)
+    {
+        if (($bytes <= 0) || ($bytes % 2)) {
+            throw new BoltInvalidArgumentException(sprintf('Expected bytes count must be multiply of 2, %s given', $bytes));
+        }
+
+        $ox = $x; //purely for dbg purposes (overflow exception)
+        $isNeg = false;
+
+        if (is_int($x)) {
+            if ($x < 0) {
+                $isNeg = true;
+                $x = abs($x);
+            }
+        } elseif (is_string($x)) {
+            if (!is_numeric($x)) {
+                throw new BoltInvalidArgumentException(sprintf('Unknown numeric string format: %s', $x));
+            }
+            $x = preg_replace('/^-/', '', $x, 1, $isNeg);
+        } else {
+            throw new BoltInvalidArgumentException('Only integer and numeric string values are supported');
+        }
+
+        if ($isNeg) {
+            $x = bcadd($x, -1, 0);
+        } //in negative domain starting point is -1, not 0
+
+        $res = array();
+        for ($b = 0; $b < $bytes; $b += 2) {
+            $chnk = (int) bcmod($x, 65536);
+            $x = bcdiv($x, 65536, 0);
+            $res[] = pack('n', $isNeg ? ~$chnk : $chnk);
+        }
+
+        if ($x || ($isNeg && ($chnk & 0x8000))) {
+            throw new BoltOutOfBoundsException(sprintf('Overflow detected while attempting to pack %s into %s bytes', $ox, $bytes));
+        }
+
+        return implode(array_reverse($res));
+    }
+
+    private function packBigEndianNeg2($n)
+    {
+        $out = '';
+        if ((bcadd($n, PHP_INT_MAX, 0) >= -1) && (bcadd($n, -PHP_INT_MAX, 0) <= 0)) {
+            if (50600 <= PHP_VERSION_ID) {
+                list($hi, $lo) = $this->splitIntoQuads($n);
+            } else {
+                $hi = $n < 0 ? -1 : 0;
+                $lo = $n;
+            } //0xffffffff for negatives
+            $out .= pack('NN', $hi, $lo);
+        } elseif (50600 <= PHP_VERSION_ID) {
+            throw new BoltInvalidArgumentException('Signed longlong out of range: ' . $n);
+        } else {
+            if (bcadd($n, '-9223372036854775807', 0) > 0) {
+                throw new BoltInvalidArgumentException('Signed longlong out of range: ' . $n);
+            }
+            try {
+                //will catch only negative overflow, as values >9223372036854775807 are valid for 8bytes range (unsigned)
+                $out .= $this->packBigEndian($n, 8);
+            } catch (BoltOutOfBoundsException $ex) {
+                throw new BoltInvalidArgumentException('Signed longlong out of range: ' . $n, 0, $ex);
+            }
+        }
+
+        return $out;
+    }
+
+    private function splitIntoQuads($n)
+    {
+        $n = (int) $n;
+
+        return array($n >> 32, $n & 0x00000000ffffffff);
     }
 }
