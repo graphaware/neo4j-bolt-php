@@ -92,7 +92,11 @@ class Driver implements DriverInterface
         }
         */
 
-        $this->io = new StreamSocket($uri, self::DEFAULT_TCP_PORT);
+        $parsedUri = parse_url($uri);
+        $this->io = new StreamSocket(
+            isset($parsedUri['host']) ? $parsedUri['host'] : $parsedUri['path'],
+            isset($parsedUri['port']) ? $parsedUri['port'] : static::DEFAULT_TCP_PORT
+        );
         $this->dispatcher = new EventDispatcher();
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(Session::class);
