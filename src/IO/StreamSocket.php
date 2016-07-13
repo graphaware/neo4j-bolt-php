@@ -11,6 +11,7 @@
 
 namespace GraphAware\Bolt\IO;
 
+use GraphAware\Bolt\Configuration;
 use GraphAware\Bolt\Exception\IOException;
 use GraphAware\Bolt\Misc\Helper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -73,12 +74,30 @@ class StreamSocket extends AbstractIO
         $this->eventDispatcher = $eventDispatcher;
         $this->protocol = 'tcp';
 
+        $this->context = null !== $context ? $context : stream_context_create();
+
+        /*
         if (is_null($this->context)) {
             $this->context = stream_context_create();
         } else {
             $this->protocol = 'ssl';
         }
+        */
         //stream_set_blocking($this->sock, false);
+    }
+
+    public static function withConfiguration($host, $port, Configuration $configuration, EventDispatcher $eventDispatcher = null)
+    {
+        $context = null;
+        if (null !== $configuration->getBindtoInterface()) {
+            $context = stream_context_create([
+                'socket' => [
+                    'bindto' => $configuration->getBindtoInterface()
+                ]
+            ]);
+        }
+
+        return new self($host, $port, $context, false, $eventDispatcher);
     }
 
     /**

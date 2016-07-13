@@ -92,12 +92,12 @@ class Driver implements DriverInterface
         }
         */
 
+        $config = null !== $configuration ? $configuration : Configuration::newInstance();
         $parsedUri = parse_url($uri);
-        $this->io = new StreamSocket(
-            isset($parsedUri['host']) ? $parsedUri['host'] : $parsedUri['path'],
-            isset($parsedUri['port']) ? $parsedUri['port'] : static::DEFAULT_TCP_PORT
-        );
+        $host = isset($parsedUri['host']) ? $parsedUri['host'] : $parsedUri['path'];
+        $port = isset($parsedUri['port']) ? $parsedUri['port'] : static::DEFAULT_TCP_PORT;
         $this->dispatcher = new EventDispatcher();
+        $this->io = StreamSocket::withConfiguration($host, $port, $config, $this->dispatcher);
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(Session::class);
     }

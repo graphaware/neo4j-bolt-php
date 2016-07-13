@@ -15,18 +15,54 @@ use GraphAware\Common\Driver\ConfigInterface;
 
 class Configuration implements ConfigInterface
 {
+    private static $DEFAULT_INTERFACE = "null";
+    private static $DEFAULT_TIMEOUT = 5;
+    private static $DEFAULT_USER = "null";
+    private static $DEFAULT_PASSWORD = "null";
+
+
     /**
      * @var array
      */
     protected $credentials;
 
+    protected $username;
+
+    protected $password;
+
+    /**
+     * @var string
+     */
+    protected $bindtoInterface;
+
+    /**
+     * @var int
+     */
+    protected $timeout;
+
     /**
      * @param string $username
      * @param string $password
      */
-    public function __construct($username, $password)
+    private function __construct($username, $password, $interface, $timeout)
     {
-        $this->credentials = array($username, $password);
+        $this->checkCredentials($username, $password);
+        $this->bindtoInterface = $interface;
+        $this->timeout = $timeout;
+    }
+
+    public static function newInstance()
+    {
+        return new self(self::$DEFAULT_USER, self::$DEFAULT_PASSWORD, self::$DEFAULT_INTERFACE, self::$DEFAULT_TIMEOUT);
+    }
+
+    private function checkCredentials($username, $password)
+    {
+        if (null !== $username && null !== $password) {
+            $this->username = $username;
+            $this->password = $password;
+            $this->credentials = array($username, $password);
+        }
     }
 
     /**
@@ -35,9 +71,19 @@ class Configuration implements ConfigInterface
      *
      * @return Configuration
      */
-    public static function withCredentials($username, $password)
+    public function withCredentials($username, $password)
     {
-        return new self($username, $password);
+        return new self($username, $password, $this->getBindtoInterface(), $this->getTimeout());
+    }
+
+    public function bindToInterface($interface)
+    {
+        return new self($this->getUsername(), $this->getPassword(), $interface, $this->getTimeout());
+    }
+
+    public function withTimeout($timeout)
+    {
+        return new self($this->getUsername(), $this->getPassword(), $this->getBindtoInterface(), $timeout);
     }
 
     /**
@@ -47,4 +93,40 @@ class Configuration implements ConfigInterface
     {
         return $this->credentials;
     }
+
+    /**
+     * @return string
+     */
+    public function getBindtoInterface()
+    {
+        return $this->bindtoInterface;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+
+
+
 }
