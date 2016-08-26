@@ -162,6 +162,20 @@ class Session extends AbstractSession
     {
         $runResponse = new Response();
         $r = $this->unpacker->unpack();
+        if ($r->isFailure()) {
+            try {
+                $runResponse->onFailure($r);
+            } catch (MessageFailureException $e) {
+                // server ignores the PULL ALL
+                $this->handleIgnore();
+                $this->handleIgnore();
+                $this->sendMessage(new AckFailureMessage());
+                $this->handleIgnore();
+                // server success for ACK FAILURE
+                $r2 = $this->handleSuccess();
+                throw $e;
+            }
+        }
 
         if ($r->isSuccess()) {
             $runResponse->onSuccess($r);
