@@ -49,6 +49,19 @@ $session->close();
 $session->run("CREATE (n) SET n += {props}", ['name' => 'Mike', 'age' => 27]);
 ```
 
+### TLS Encryption
+
+In order to enable TLS support, you need to set the configuration option to `REQUIRED`, here an example :
+
+```php
+$config = \GraphAware\Bolt\Configuration::newInstance()
+    ->withCredentials('bolttest', 'L7n7SfTSj0e6U')
+    ->withTLSMode(\GraphAware\Bolt\Configuration::TLSMODE_REQUIRED);
+
+$driver = \GraphAware\Bolt\GraphDatabase::driver('bolt://hobomjfhocgbkeenl.dbs.graphenedb.com:24786', $config);
+$session = $driver->session();
+```
+
 ### License
 
 Copyright (c) 2015-2016 GraphAware Ltd
