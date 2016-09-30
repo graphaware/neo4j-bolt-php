@@ -74,7 +74,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
     {
         $driver = GraphDatabase::driver('bolt://localhost');
         $session = $driver->session();
-        $session->run('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
+        $this->createConstraint('User', 'id');
         $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $this->setExpectedException(MessageFailureException::class);
@@ -104,7 +104,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
     {
         $driver = GraphDatabase::driver('bolt://localhost');
         $session = $driver->session();
-        $session->run('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
+        $this->createConstraint('User', 'id');
         $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $pipeline = $session->createPipeline();
@@ -123,5 +123,49 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         $pipeline->push('CREATE (n) RETURN n');
         $results = $pipeline->run();
         $this->assertEquals(2, $results->size());
+    }
+
+    public function testConstraintViolationInTransaction()
+    {
+        $driver = GraphDatabase::driver('bolt://localhost');
+        $session = $driver->session();
+
+        $session->run('MATCH (n) DETACH DELETE n');
+        $this->createConstraint('User', 'id');
+        $this->createConstraint('User', 'login');
+        $session->run('MERGE (n:User {login: "ikwattro", id:1})');
+        $session->run('MERGE (n:User {login: "jexp", id: 2})');
+
+        $tx = $session->createPipeline();
+        $tx->push('MERGE (n:User {id:3}) SET n.login = "bachmanm"');
+        $tx->push('MERGE (n:User {id:2}) SET n.login = "ikwattro"');
+        $tx->push('MERGE (n:User {id:4}) SET n.login = "ale"');
+        $tx->run();
+
+    }
+
+    private function createConstraint($label, $key)
+    {
+        $driver = GraphDatabase::driver('bolt://localhost');
+        $session = $driver->session();
+
+        try {
+            $session->run(sprintf('CREATE CONSTRAINT ON (n:`%s`) ASSERT n.`%s` IS UNIQUE', $label, $key));
+        } catch (MessageFailureException $e) {
+            if ($e->getStatusCode() === 'Neo.ClientError.Schema.IndexAlreadyExists') {
+                $this->dropIndex($label, $key);
+                $this->createConstraint($label, $key);
+            }
+
+            throw $e;
+        }
+    }
+
+    private function dropIndex($label, $key)
+    {
+        $driver = GraphDatabase::driver('bolt://localhost');
+        $session = $driver->session();
+
+        $session->run(sprintf('DROP INDEX ON :%s(%s)', $label, $key));
     }
 }

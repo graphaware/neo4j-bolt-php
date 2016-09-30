@@ -15,6 +15,10 @@ use GraphAware\Common\Driver\ConfigInterface;
 
 class Configuration implements ConfigInterface
 {
+
+    const TLSMODE_REQUIRED = "REQUIRED";
+    const TLSMODE_REJECTED = "REJECTED";
+
     private static $DEFAULT_INTERFACE = "null";
     private static $DEFAULT_TIMEOUT = 5;
     private static $DEFAULT_USER = "null";
@@ -40,6 +44,7 @@ class Configuration implements ConfigInterface
      */
     protected $timeout;
 
+    protected $tlsMode;
     /**
      * @param string $username
      * @param string $password
@@ -126,7 +131,19 @@ class Configuration implements ConfigInterface
         return $this->password;
     }
 
+    public function withTLSMode($mode)
+    {
+        $this->tlsMode = $mode;
+        return $this;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getTlsMode()
+    {
+        return $this->tlsMode;
+    }
 
 
 }
