@@ -210,7 +210,10 @@ class StreamSocket extends AbstractIO
         }
 
         if ($this->shouldEnableCrypto()) {
-            stream_socket_enable_crypto($this->sock, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT);
+            $result = stream_socket_enable_crypto($this->sock, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+            if (true !== $result) {
+                throw new \RuntimeException(sprintf('Unable to enable crypto on socket'));
+            }
         }
 
         stream_set_read_buffer($this->sock, 0);
@@ -283,7 +286,7 @@ class StreamSocket extends AbstractIO
         return $data;
     }
 
-    private function shouldEnableCrypto()
+    public function shouldEnableCrypto()
     {
         if (null !== $this->configuration && $this->configuration->getTlsMode() === Configuration::TLSMODE_REQUIRED) {
             return true;

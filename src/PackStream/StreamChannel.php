@@ -66,7 +66,11 @@ class StreamChannel
 
         while ($remaining > 0) {
             //$this->io->wait();
-            $new = $this->io->readChunk();
+            if ($this->io->shouldEnableCrypto()) {
+                $new = $this->io->read($remaining);
+            } else {
+                $new = $this->io->readChunk($remaining);
+            }
             $this->bytes .= $new;
             $remaining -= strlen($new);
         }

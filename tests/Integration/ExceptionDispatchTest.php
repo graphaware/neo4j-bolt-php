@@ -140,7 +140,13 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         $tx->push('MERGE (n:User {id:3}) SET n.login = "bachmanm"');
         $tx->push('MERGE (n:User {id:2}) SET n.login = "ikwattro"');
         $tx->push('MERGE (n:User {id:4}) SET n.login = "ale"');
-        $tx->run();
+        try {
+            $tx->run();
+            // should fail
+            $this->assertFale(true);
+        } catch (\Exception $e) {
+            $this->assertTrue(true);
+        }
 
     }
 
