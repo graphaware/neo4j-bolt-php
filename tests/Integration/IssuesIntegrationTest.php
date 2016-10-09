@@ -51,5 +51,11 @@ class IssuesIntegrationTest extends IntegrationTestCase
         $session = $driver->session();
         $result = $session->run('CREATE (n:Node {time: {time} }) RETURN n.time as t', ['time' => $timestamp]);
         $this->assertEquals($timestamp, $result->firstRecord()->get('t'));
+
+        $this->emptyDB();
+        $time = 1475921198602;
+        $session->run('CREATE (n:Node) SET n.time = {time}', ['time' => $time]);
+        $result = $session->run('MATCH (n:Node) RETURN n.time as t');
+        $this->assertEquals($time, $result->firstRecord()->get('t'));
     }
 }
