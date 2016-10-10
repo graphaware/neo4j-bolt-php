@@ -19,6 +19,7 @@ use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\UnboundRelationship;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
+use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class Result extends AbstractRecordCursor
 {
@@ -62,12 +63,12 @@ class Result extends AbstractRecordCursor
     /**
      * @return RecordView
      *
-     * @throws \InvalidArgumentException
+     * @throws \RuntimeException When there is no record.
      */
     public function getRecord()
     {
         if (count($this->records) < 1) {
-            throw new \InvalidArgumentException('No records');
+            throw new \RuntimeException('There is no record');
         }
 
         return $this->records[0];
@@ -149,7 +150,8 @@ class Result extends AbstractRecordCursor
     }
 
     /**
-     * @return RecordView|null
+     * @return RecordView
+     * @throws \RuntimeException When there is no record
      */
     public function firstRecord()
     {
@@ -157,6 +159,6 @@ class Result extends AbstractRecordCursor
             return $this->records[0];
         }
 
-        return;
+        throw new RuntimeException('There is no record');
     }
 }
