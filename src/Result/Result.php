@@ -20,7 +20,7 @@ use GraphAware\Bolt\Result\Type\UnboundRelationship;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
 use GraphAware\Common\Result\Record;
-use Symfony\Component\Yaml\Exception\RuntimeException;
+use RuntimeException;
 
 class Result extends AbstractRecordCursor
 {
