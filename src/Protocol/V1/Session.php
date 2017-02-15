@@ -179,7 +179,6 @@ class Session extends AbstractSession
         }
 
         if ($shouldThrow !== false) {
-            var_dump("cooollll");
             throw $shouldThrow;
         }
 
