@@ -162,6 +162,7 @@ class Session extends AbstractSession
     {
         $runResponse = new Response();
         $r = $this->unpacker->unpack();
+        $shouldThrow = false;
         if ($r->isFailure()) {
             try {
                 $runResponse->onFailure($r);
@@ -173,8 +174,13 @@ class Session extends AbstractSession
                 $this->handleIgnore();
                 // server success for ACK FAILURE
                 $r2 = $this->handleSuccess();
-                throw $e;
+                $shouldThrow = $e;
             }
+        }
+
+        if ($shouldThrow !== false) {
+            var_dump("cooollll");
+            throw $shouldThrow;
         }
 
         if ($r->isSuccess()) {
@@ -340,7 +346,7 @@ class Session extends AbstractSession
 
     private function handleSuccess()
     {
-        $this->handleMessage('SUCCESS');
+        return $this->handleMessage('SUCCESS');
     }
 
     private function handleIgnore()
@@ -354,5 +360,7 @@ class Session extends AbstractSession
         if ($messageType !== $message->getSignature()) {
             throw new \RuntimeException(sprintf('Expected an %s message, got %s', $messageType, $message->getSignature()));
         }
+
+        return $message;
     }
 }

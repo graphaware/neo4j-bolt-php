@@ -94,7 +94,23 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         $pipeline->push('CREATE (n:User {id:1})');
         $pipeline->push('CREATE (n:User {id:5})');
         $this->setExpectedException(MessageFailureException::class);
-        $results = $pipeline->run();
+        $pipeline->run();
+    }
+
+    /**
+     * @group issue-111
+     */
+    public function testPipelineWithConstraintCreation()
+    {
+        $driver = GraphDatabase::driver('bolt://localhost');
+        $session = $driver->session();
+        $session->run('MATCH (n) DETACH DELETE n');
+        $session->run('CREATE (n:User {id:1})');
+        $pipeline = $session->createPipeline();
+        $pipeline->push('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
+        $pipeline->push('CREATE (n:User {id:1})');
+        $this->setExpectedException(MessageFailureException::class);
+        $pipeline->run();
     }
 
     /**

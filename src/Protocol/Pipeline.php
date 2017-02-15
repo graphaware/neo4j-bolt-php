@@ -59,16 +59,8 @@ class Pipeline implements PipelineInterface
         $resultCollection = new ResultCollection();
 
         foreach ($this->messages as $message) {
-            $batch[] = $message;
-            $batch[] = $pullAllMessage;
-        }
-
-        $this->session->sendMessages($batch);
-
-        foreach ($this->messages as $message) {
-            $resultCollection->add(
-                $this->session->recv($message->getStatement(), $message->getParams(), $message->getTag()), $message->getTag()
-            );
+            $result = $this->session->run($message->getStatement(), $message->getParams(), $message->getTag());
+            $resultCollection->add($result);
         }
 
         return $resultCollection;

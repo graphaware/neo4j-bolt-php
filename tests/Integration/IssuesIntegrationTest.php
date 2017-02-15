@@ -23,7 +23,6 @@ class IssuesIntegrationTest extends IntegrationTestCase
         $this->assertCount(22, $props);
         $session = $this->driver->session();
         $result = $session->run('CREATE (n:IssueNode) SET n = {props} RETURN n', ['props' => $props]);
-        print_r($result);
     }
 
     /**
