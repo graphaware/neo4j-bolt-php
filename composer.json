@@ -1,5 +1,5 @@
 {
-    "name": "jerairrest/neo4j-bolt",
+    "name": "graphaware/neo4j-bolt",
     "description": "Neo4j Bolt Binary Protocol PHP Driver",
     "type": "library",
     "license": "MIT",
