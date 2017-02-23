@@ -31,5 +31,6 @@
         "phpunit/phpunit": "^4.8",
         "symfony/stopwatch": "^2.7",
         "behat/behat": "~3.0.4"
-    }
+    },
+    "minimum-stability": "dev"
 }
