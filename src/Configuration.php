@@ -12,62 +12,84 @@
 namespace GraphAware\Bolt;
 
 use GraphAware\Common\Driver\ConfigInterface;
+use GraphAware\Common\Connection\BaseConfiguration;
 
-class Configuration implements ConfigInterface
+/**
+ * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ */
+class Configuration extends BaseConfiguration implements ConfigInterface
 {
-
-    const TLSMODE_REQUIRED = "REQUIRED";
-    const TLSMODE_REJECTED = "REJECTED";
-
-    private static $DEFAULT_INTERFACE = "null";
-    private static $DEFAULT_TIMEOUT = 5;
-    private static $DEFAULT_USER = "null";
-    private static $DEFAULT_PASSWORD = "null";
-
+    const TLSMODE_REQUIRED = 'REQUIRED';
+    const TLSMODE_REJECTED = 'REJECTED';
 
     /**
      * @var array
+     *
+     * @deprecated
      */
     protected $credentials;
 
+    /**
+     * @deprecated
+     */
     protected $username;
 
+    /**
+     * @deprecated
+     */
     protected $password;
 
     /**
      * @var string
+     *
+     * @deprecated
      */
     protected $bindtoInterface;
 
     /**
      * @var int
+     *
+     * @deprecated
      */
     protected $timeout;
 
-    protected $tlsMode;
     /**
-     * @param string $username
-     * @param string $password
+     * @deprecated
      */
-    private function __construct($username, $password, $interface, $timeout)
+    protected $tlsMode;
+
+    /**
+     * Create a new configuration with default values.
+     *
+     * @return self
+     */
+    public static function create()
     {
-        $this->checkCredentials($username, $password);
-        $this->bindtoInterface = $interface;
-        $this->timeout = $timeout;
+        return new self([
+            'user' => 'null',
+            'password' => 'null',
+            'bind_to_interface' => 'null',
+            'timeout' => 5,
+            'credentials' => ['null', 'null'],
+        ]);
     }
 
+    /**
+     * @return Configuration
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::create
+     */
     public static function newInstance()
     {
-        return new self(self::$DEFAULT_USER, self::$DEFAULT_PASSWORD, self::$DEFAULT_INTERFACE, self::$DEFAULT_TIMEOUT);
-    }
+        $config = self::create();
 
-    private function checkCredentials($username, $password)
-    {
-        if (null !== $username && null !== $password) {
-            $this->username = $username;
-            $this->password = $password;
-            $this->credentials = array($username, $password);
-        }
+        $config->username = 'null';
+        $config->password = 'null';
+        $config->credentials = ['null', 'null'];
+        $config->bindtoInterface = 'null';
+        $config->timeout = 5;
+
+        return $config;
     }
 
     /**
@@ -78,72 +100,125 @@ class Configuration implements ConfigInterface
      */
     public function withCredentials($username, $password)
     {
-        return new self($username, $password, $this->getBindtoInterface(), $this->getTimeout());
+        if (null === $username || null === $password) {
+            // No change if credentials or null
+            return $this;
+        }
+
+        $new = $this->setValue('username', $username)
+            ->setValue('password', $password)
+            ->setValue('credentials', [$username, $password]);
+
+        // To keep BC
+        $new->username = $username;
+        $new->password = $password;
+        $new->credentials = [$username, $password];
+
+        return $new;
     }
 
+    /**
+     * @param string $interface
+     *
+     * @return Configuration
+     */
     public function bindToInterface($interface)
     {
-        return new self($this->getUsername(), $this->getPassword(), $interface, $this->getTimeout());
+        $new = $this->setValue('bind_to_interface', $interface);
+
+        // To keep BC
+        $new->bindtoInterface = $interface;
+
+        return $new;
     }
 
+    /**
+     * @param int $timeout
+     *
+     * @return Configuration
+     */
     public function withTimeout($timeout)
     {
-        return new self($this->getUsername(), $this->getPassword(), $this->getBindtoInterface(), $timeout);
+        $new = $this->setValue('timeout', $timeout);
+
+        // To keep BC
+        $new->timeout = $timeout;
+
+        return $new;
     }
 
     /**
      * @return array
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('credentials')
      */
     public function getCredentials()
     {
-        return $this->credentials;
+        return $this->getValue('credentials');
     }
 
     /**
      * @return string
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('bind_to_interface')
      */
     public function getBindtoInterface()
     {
-        return $this->bindtoInterface;
+        return $this->getValue('bind_to_interface');
     }
 
     /**
      * @return int
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('timeout')
      */
     public function getTimeout()
     {
-        return $this->timeout;
+        return $this->getValue('timeout');
     }
 
     /**
      * @return mixed
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('username')
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->getValue('username');
     }
 
     /**
      * @return mixed
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('password')
      */
     public function getPassword()
     {
-        return $this->password;
+        return $this->getValue('password');
     }
 
+    /**
+     * @param $mode
+     *
+     * @return Configuration
+     */
     public function withTLSMode($mode)
     {
-        $this->tlsMode = $mode;
-        return $this;
+        $new = $this->setValue('tls_mode', $mode);
+
+        // To keep BC
+        $new->tlsMode = $mode;
+
+        return $new;
     }
 
     /**
      * @return mixed
+     *
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('tls_mode')
      */
     public function getTlsMode()
     {
-        return $this->tlsMode;
+        return $this->getValue('tls_mode');
     }
-
-
 }

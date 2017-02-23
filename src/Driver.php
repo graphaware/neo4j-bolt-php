@@ -70,7 +70,7 @@ class Driver implements DriverInterface
      */
     public function __construct($uri, Configuration $configuration = null)
     {
-        $this->credentials = (null !== $configuration && null !== $configuration->getCredentials()) ? $configuration->getCredentials() : array();
+        $this->credentials = null !== $configuration ? $configuration->getValue('credentials', []) : [];
         /*
         $ctx = stream_context_create(array());
         define('CERTS_PATH',
@@ -92,7 +92,7 @@ class Driver implements DriverInterface
         }
         */
 
-        $config = null !== $configuration ? $configuration : Configuration::newInstance();
+        $config = null !== $configuration ? $configuration : Configuration::create();
         $parsedUri = parse_url($uri);
         $host = isset($parsedUri['host']) ? $parsedUri['host'] : $parsedUri['path'];
         $port = isset($parsedUri['port']) ? $parsedUri['port'] : static::DEFAULT_TCP_PORT;

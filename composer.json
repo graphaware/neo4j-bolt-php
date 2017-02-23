@@ -14,7 +14,7 @@
         "ext-bcmath": "*",
         "ext-mbstring": "*",
         "symfony/event-dispatcher": "^2.7|^3.0",
-        "graphaware/neo4j-common": "^3.0",
+        "graphaware/neo4j-common": "^3.4",
         "myclabs/php-enum": "^1.4"
     },
     "autoload": {
@@ -31,5 +31,6 @@
         "phpunit/phpunit": "^4.8",
         "symfony/stopwatch": "^2.7",
         "behat/behat": "~3.0.4"
-    }
+    },
+    "minimum-stability": "dev"
 }
