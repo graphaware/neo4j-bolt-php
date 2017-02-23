@@ -92,10 +92,10 @@ class StreamSocket extends AbstractIO
     public static function withConfiguration($host, $port, Configuration $configuration, EventDispatcher $eventDispatcher = null)
     {
         $context = null;
-        if (null !== $configuration->getBindtoInterface()) {
+        if (null !== $configuration->getValue('bind_to_interface')) {
             $context = stream_context_create([
                 'socket' => [
-                    'bindto' => $configuration->getBindtoInterface()
+                    'bindto' => $configuration->getValue('bind_to_interface')
                 ]
             ]);
         }
@@ -288,7 +288,7 @@ class StreamSocket extends AbstractIO
 
     public function shouldEnableCrypto()
     {
-        if (null !== $this->configuration && $this->configuration->getTlsMode() === Configuration::TLSMODE_REQUIRED) {
+        if (null !== $this->configuration && $this->configuration->getValue('tls_mode') === Configuration::TLSMODE_REQUIRED) {
             return true;
         }
 

@@ -30,7 +30,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
      */
     public function testBindToInterface()
     {
-        $config = Configuration::newInstance()
+        $config = Configuration::create()
             ->bindToInterface('0:0');
         $driver = GraphDatabase::driver('bolt://localhost:7687', $config);
         $session = $driver->session();
