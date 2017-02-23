@@ -19,11 +19,12 @@ use GraphAware\Common\Connection\BaseConfiguration;
  */
 class Configuration extends BaseConfiguration implements ConfigInterface
 {
-    const TLSMODE_REQUIRED = "REQUIRED";
-    const TLSMODE_REJECTED = "REJECTED";
+    const TLSMODE_REQUIRED = 'REQUIRED';
+    const TLSMODE_REJECTED = 'REJECTED';
 
     /**
      * @var array
+     *
      * @deprecated
      */
     protected $credentials;
@@ -40,12 +41,14 @@ class Configuration extends BaseConfiguration implements ConfigInterface
 
     /**
      * @var string
+     *
      * @deprecated
      */
     protected $bindtoInterface;
 
     /**
      * @var int
+     *
      * @deprecated
      */
     protected $timeout;
@@ -78,7 +81,15 @@ class Configuration extends BaseConfiguration implements ConfigInterface
      */
     public static function newInstance()
     {
-        return self::create();
+        $config = self::create();
+
+        $config->username = 'null';
+        $config->password = 'null';
+        $config->credentials = ['null', 'null'];
+        $config->bindtoInterface = 'null';
+        $config->timeout = 5;
+
+        return $config;
     }
 
     /**
@@ -139,7 +150,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return array
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('credentials').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('credentials')
      */
     public function getCredentials()
     {
@@ -149,7 +160,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return string
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('bind_to_interface').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('bind_to_interface')
      */
     public function getBindtoInterface()
     {
@@ -159,7 +170,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return int
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('timeout').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('timeout')
      */
     public function getTimeout()
     {
@@ -169,7 +180,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return mixed
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('username').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('username')
      */
     public function getUsername()
     {
@@ -179,7 +190,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return mixed
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('password').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('password')
      */
     public function getPassword()
     {
@@ -204,7 +215,7 @@ class Configuration extends BaseConfiguration implements ConfigInterface
     /**
      * @return mixed
      *
-     * @deprecated Will be removed in 2.0. Use Configuration::getValue('tls_mode').
+     * @deprecated Will be removed in 2.0. Use Configuration::getValue('tls_mode')
      */
     public function getTlsMode()
     {
