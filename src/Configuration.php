@@ -94,9 +94,16 @@ class Configuration extends BaseConfiguration implements ConfigInterface
             return $this;
         }
 
-        return $this->setValue('username', $username)
+        $new = $this->setValue('username', $username)
             ->setValue('password', $password)
             ->setValue('credentials', [$username, $password]);
+
+        // To keep BC
+        $new->username = $username;
+        $new->password = $password;
+        $new->credentials = [$username, $password];
+
+        return $new;
     }
 
     /**
@@ -106,7 +113,12 @@ class Configuration extends BaseConfiguration implements ConfigInterface
      */
     public function bindToInterface($interface)
     {
-        return $this->setValue('bind_to_interface', $interface);
+        $new = $this->setValue('bind_to_interface', $interface);
+
+        // To keep BC
+        $new->bindtoInterface = $interface;
+
+        return $new;
     }
 
     /**
@@ -116,7 +128,12 @@ class Configuration extends BaseConfiguration implements ConfigInterface
      */
     public function withTimeout($timeout)
     {
-        return $this->setValue('timeout', $timeout);
+        $new = $this->setValue('timeout', $timeout);
+
+        // To keep BC
+        $new->timeout = $timeout;
+
+        return $new;
     }
 
     /**
@@ -176,7 +193,12 @@ class Configuration extends BaseConfiguration implements ConfigInterface
      */
     public function withTLSMode($mode)
     {
-        return $this->setValue('tls_mode', $mode);
+        $new = $this->setValue('tls_mode', $mode);
+
+        // To keep BC
+        $new->tlsMode = $mode;
+
+        return $new;
     }
 
     /**
