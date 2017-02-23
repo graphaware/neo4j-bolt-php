@@ -12,7 +12,7 @@
 namespace GraphAware\Bolt;
 
 use GraphAware\Common\Driver\ConfigInterface;
-use GraphAware\Common\Connection\Configuration as BaseConfiguration;
+use GraphAware\Common\Connection\BaseConfiguration;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
