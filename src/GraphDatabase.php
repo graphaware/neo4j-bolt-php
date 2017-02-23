@@ -11,6 +11,7 @@
 
 namespace GraphAware\Bolt;
 
+use GraphAware\Common\Connection\Configuration;
 use GraphAware\Common\Driver\ConfigInterface;
 use GraphAware\Common\GraphDatabaseInterface;
 
