@@ -1,6 +1,8 @@
 <?php
 
 namespace GraphAware\Bolt\Tests\Integration;
+use GraphAware\Common\Cypher\Statement;
+use GraphAware\Common\Result\StatementStatisticsInterface;
 
 /**
  * Class RealLifeUseCasesITest
@@ -28,6 +30,23 @@ class RealLifeUseCasesITest extends IntegrationTestCase
 
         $session = $this->driver->session();
         $session->run($query, ['batches' => $batches]);
+    }
+
+    /**
+     * @group stats
+     */
+    public function testResultSummaryReturnsStats()
+    {
+        $this->emptyDB();
+        $session = $this->driver->session();
+        $result = $session->run('CREATE (n)');
+        $this->assertInstanceOf(StatementStatisticsInterface::class, $result->summarize()->updateStatistics());
+
+        $tx = $session->transaction();
+        $tx->begin();
+        $result = $tx->run(Statement::create('CREATE (n)'));
+        $tx->commit();
+        $this->assertInstanceOf(StatementStatisticsInterface::class, $result->summarize()->updateStatistics());
     }
 
     private function createBatch($i)
