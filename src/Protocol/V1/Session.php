@@ -130,6 +130,8 @@ class Session extends AbstractSession
         if (isset($pullMeta[0])) {
             if (isset($pullMeta[0]->getElements()['stats'])) {
                 $cypherResult->setStatistics($pullResponse->getMetadata()[0]->getElements()['stats']);
+            } else {
+                $cypherResult->setStatistics([]);
             }
         }
 

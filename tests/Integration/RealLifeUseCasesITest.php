@@ -39,7 +39,7 @@ class RealLifeUseCasesITest extends IntegrationTestCase
     {
         $this->emptyDB();
         $session = $this->driver->session();
-        $result = $session->run('CREATE (n)');
+        $result = $session->run('MATCH (n) RETURN count(n)');
         $this->assertInstanceOf(StatementStatisticsInterface::class, $result->summarize()->updateStatistics());
 
         $tx = $session->transaction();
