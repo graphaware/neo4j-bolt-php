@@ -195,6 +195,12 @@ class Unpacker
             return $this->unpackList($size, $walker);
         }
 
+        if ($byte === Constants::LIST_32) {
+            $size = $this->readUnsignedLong($walker);
+
+            return $this->unpackList($size, $walker);
+        }
+
         // Checks for TINY INTS
         if ($this->isInRange(0x00, 0x7f, $marker) || $this->isInRange(0xf0, 0xff, $marker)) {
             $walker->rewind(1);
