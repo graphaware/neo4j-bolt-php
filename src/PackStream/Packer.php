@@ -15,6 +15,9 @@ use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
 use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
 use GraphAware\Bolt\Protocol\Constants;
+use GraphAware\Common\Collection\ArrayList;
+use GraphAware\Common\Collection\CollectionInterface;
+use GraphAware\Common\Collection\Map;
 
 class Packer
 {
@@ -28,7 +31,12 @@ class Packer
         $stream = '';
         if (is_string($v)) {
             $stream .= $this->packText($v);
-        } elseif (is_array($v)) {
+        } elseif ($v instanceof CollectionInterface && $v instanceof Map) {
+            $stream .= $this->packMap($v->getElements());
+        } elseif ($v instanceof CollectionInterface && $v instanceof ArrayList) {
+            $stream .= $this->packList($v->getElements());
+        }
+        elseif (is_array($v)) {
             $stream .= ($this->isList($v) && !empty($v)) ? $this->packList($v) : $this->packMap($v);
         } elseif (is_float($v)) {
             $stream .= $this->packFloat($v);
