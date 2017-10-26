@@ -21,8 +21,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
             $props['prop'.$i] = $i;
         }
         $this->assertCount(22, $props);
-        $session = $this->driver->session();
-        $result = $session->run('CREATE (n:IssueNode) SET n = {props} RETURN n', ['props' => $props]);
+        $this->getSession()->run('CREATE (n:IssueNode) SET n = {props} RETURN n', ['props' => $props]);
     }
 
     /**
@@ -46,8 +45,8 @@ class IssuesIntegrationTest extends IntegrationTestCase
     {
         $this->emptyDB();
         $timestamp = time() * 1000;
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+
+        $session = $this->getSession();
         $result = $session->run('CREATE (n:Node {time: {time} }) RETURN n.time as t', ['time' => $timestamp]);
         $this->assertEquals($timestamp, $result->firstRecord()->get('t'));
 

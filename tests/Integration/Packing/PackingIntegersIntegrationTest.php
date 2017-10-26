@@ -14,11 +14,11 @@ use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
  */
 class PackingIntegrationTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();
-        $this->driver->session()->run("CREATE INDEX ON :Integer(value)");
+        $this->getSession()->run("CREATE INDEX ON :Integer(value)");
     }
 
     /**
@@ -115,7 +115,7 @@ class PackingIntegrationTest extends IntegrationTestCase
     private function doRangeTest($min, $max)
     {
         $range = range($min, $max);
-        $session = $this->driver->session();
+        $session = $this->getSession();
         foreach ($range as $i) {
             $q = 'CREATE (n:Integer) SET n.value = {value}';
             $session->run($q, ['value' => $i]);

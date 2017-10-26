@@ -14,17 +14,12 @@ use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
  */
 class PackingTextIntegrationTest extends IntegrationTestCase
 {
-    /**
-     * @var \GraphAware\Bolt\Protocol\SessionInterface
-     */
-    protected $session;
-
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();
-        $this->session = $this->driver->session();
-        $this->session->run("CREATE INDEX ON :Text(value)");
+
+        $this->getSession()->run("CREATE INDEX ON :Text(value)");
     }
 
     /**
@@ -69,16 +64,20 @@ class PackingTextIntegrationTest extends IntegrationTestCase
 
     public function doRangeTest($min, $max)
     {
-        foreach (range($min, $max) as $i) {
-            $txt = str_repeat('a', $i);
-            $q = 'CREATE (n:Text) SET n.value = {value}';
-            $this->session->run($q, array('value' => $txt));
-        }
+        $session = $this->getSession();
+
+        $q = 'CREATE (n:Text) SET n.value = {value}';
 
         foreach (range($min, $max) as $i) {
             $txt = str_repeat('a', $i);
-            $q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value as x';
-            $response = $this->session->run($q, ['value' => $txt]);
+            $session->run($q, array('value' => $txt));
+        }
+
+        $q = 'MATCH (n:Text) WHERE n.value = {value} RETURN n.value as x';
+
+        foreach (range($min, $max) as $i) {
+            $txt = str_repeat('a', $i);
+            $response = $session->run($q, ['value' => $txt]);
             $this->assertCount(1, $response->getRecords());
             $this->assertEquals($txt, $response->getRecord()->value('x'));
         }
