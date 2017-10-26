@@ -2,7 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 class PackingListIntegrationTest extends IntegrationTestCase
 {

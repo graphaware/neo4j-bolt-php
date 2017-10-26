@@ -2,7 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class PackingTextIntegrationTest
@@ -43,7 +43,7 @@ class PackingTextIntegrationTest extends IntegrationTestCase
      */
     public function testText16Packing()
     {
-        $this->doRangeTest(256,356);
+        $this->doRangeTest(256, 356);
         $this->doRangeTest(1024, 1026);
         $this->doRangeTest(2048, 2050);
         //$this->doRangeTest(16351, 16383);

@@ -1,16 +1,19 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace GraphAware\Bolt\Tests;
 
 use GraphAware\Bolt\GraphDatabase;
 
-abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
+class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \GraphAware\Bolt\Driver
      */
     protected $driver;
 
+    /**
+     * @inheritdoc
+     */
     protected function setUp()
     {
         $this->driver = GraphDatabase::driver("bolt://localhost");
@@ -35,8 +38,8 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Empty the database
      */
-    public function emptyDB()
+    protected function emptyDB()
     {
-        $this->driver->session()->run('MATCH (n) DETACH DELETE n');
+        $this->getSession()->run('MATCH (n) DETACH DELETE n');
     }
 }

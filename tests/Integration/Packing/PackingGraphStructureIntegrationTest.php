@@ -2,7 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\Path;
@@ -14,7 +14,7 @@ use GraphAware\Bolt\Result\Type\Path;
  */
 class PackingGraphStructureIntegrationTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();
@@ -25,8 +25,7 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
      */
     public function testUnpackingNode()
     {
-        $session = $this->getSession();
-        $result = $session->run("CREATE (n:Node) SET n.time = {t}, n.desc = {d} RETURN n", ['t' => time(), 'd' => 'GraphAware is awesome !']);
+        $result = $this->getSession()->run("CREATE (n:Node) SET n.time = {t}, n.desc = {d} RETURN n", ['t' => time(), 'd' => 'GraphAware is awesome !']);
 
         $this->assertTrue($result->getRecord()->value('n') instanceof Node);
         $this->assertEquals('GraphAware is awesome !', $result->getRecord()->value('n')->value('desc'));
@@ -34,8 +33,7 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
 
     public function testUnpackingUnboundRelationship()
     {
-        $session = $this->getSession();
-        $result = $session->run("CREATE (n:Node)-[r:RELATES_TO {since: 1992}]->(b:Node) RETURN r");
+        $result = $this->getSession()->run("CREATE (n:Node)-[r:RELATES_TO {since: 1992}]->(b:Node) RETURN r");
         $record = $result->getRecord();
 
         $this->assertTrue($record->value('r') instanceof Relationship);

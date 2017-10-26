@@ -2,8 +2,6 @@
 
 namespace GraphAware\Bolt\Tests\Result;
 
-use \InvalidArgumentException;
-
 /**
  * Class MapAccessUnitTest
  * @package GraphAware\Bolt\Tests\Result
@@ -22,7 +20,7 @@ class MapAccessUnitTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIsThrownIfNotDefaultGiven()
     {
         $map = new DummyMA(array('key' => 'val'));
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException(\InvalidArgumentException::class);
         $map->value('not_exist');
     }
 }

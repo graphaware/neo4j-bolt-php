@@ -1,6 +1,8 @@
 <?php
 
 namespace GraphAware\Bolt\Tests\Integration;
+
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Result\StatementStatisticsInterface;
 

@@ -2,7 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 /**
  * @group packing
@@ -11,7 +11,7 @@ use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
  */
 class PackingFloatsIntegrationTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();

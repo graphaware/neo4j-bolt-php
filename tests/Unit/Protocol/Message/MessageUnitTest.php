@@ -2,8 +2,6 @@
 
 namespace GraphAware\Bolt\Tests\Protocol\Message;
 
-use GraphAware\Bolt\PackStream\Structure\Map;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\SuccessMessage;
 use GraphAware\Bolt\Protocol\Message\AbstractMessage;
 

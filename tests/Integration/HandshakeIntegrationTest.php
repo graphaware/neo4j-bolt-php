@@ -3,6 +3,7 @@
 namespace GraphAware\Bolt\Tests\Integration;
 
 use GraphAware\Bolt\Protocol\SessionInterface;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class HandshakeIntegrationTest
