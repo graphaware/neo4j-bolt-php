@@ -5,6 +5,7 @@ namespace GraphAware\Bolt\Tests\Integration;
 use GraphAware\Bolt\Configuration;
 use GraphAware\Bolt\GraphDatabase;
 use GraphAware\Bolt\Result\Result;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 class IssuesIntegrationTest extends IntegrationTestCase
 {
@@ -21,8 +22,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
             $props['prop'.$i] = $i;
         }
         $this->assertCount(22, $props);
-        $session = $this->driver->session();
-        $result = $session->run('CREATE (n:IssueNode) SET n = {props} RETURN n', ['props' => $props]);
+        $this->getSession()->run('CREATE (n:IssueNode) SET n = {props} RETURN n', ['props' => $props]);
     }
 
     /**
@@ -33,8 +33,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
         $config = Configuration::create()
             ->bindToInterface('0:0');
         $driver = GraphDatabase::driver('bolt://localhost:7687', $config);
-        $session = $driver->session();
-        $result = $session->run('MATCH (n) RETURN count(n)');
+        $result = $driver->session()->run('MATCH (n) RETURN count(n)');
         $this->assertInstanceOf(Result::class, $result);
     }
 
@@ -46,8 +45,8 @@ class IssuesIntegrationTest extends IntegrationTestCase
     {
         $this->emptyDB();
         $timestamp = time() * 1000;
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+
+        $session = $this->getSession();
         $result = $session->run('CREATE (n:Node {time: {time} }) RETURN n.time as t', ['time' => $timestamp]);
         $this->assertEquals($timestamp, $result->firstRecord()->get('t'));
 

@@ -2,6 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\TCK;
 
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Type\Node;
 use GraphAware\Common\Type\Relationship;
 use GraphAware\Common\Type\Path;
@@ -10,7 +11,7 @@ use GraphAware\Common\Type\Path;
  * @group tck
  * @group tck9
  */
-class TCK9TypesTest extends TCKTestCase
+class TCK9TypesTest extends IntegrationTestCase
 {
     /**
      * Scenario: To ensure safe escaped provision of user supplied values
@@ -75,8 +76,7 @@ class TCK9TypesTest extends TCKTestCase
      */
     public function testResultTypes()
     {
-        $driver = $this->getDriver();
-        $session = $driver->session();
+        $session = $this->getSession();
 
         // null
         $result = $session->run("CREATE (n) RETURN n.key as nilKey");
@@ -205,10 +205,9 @@ class TCK9TypesTest extends TCKTestCase
 
     private function runValue($value)
     {
-        $driver = $this->getDriver();
-        $session = $driver->session();
-        $result = $session->run("RETURN {x} as x", ['x' => $value]);
-
-        return $result->getRecord()->value('x');
+        return $this->getSession()
+            ->run("RETURN {x} as x", ['x' => $value])
+            ->getRecord()
+            ->value('x');
     }
 }

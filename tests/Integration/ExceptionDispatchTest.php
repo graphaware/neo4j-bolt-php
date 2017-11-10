@@ -2,8 +2,8 @@
 
 namespace GraphAware\Bolt\Tests\Integration;
 
-use GraphAware\Bolt\GraphDatabase;
 use GraphAware\Bolt\Exception\MessageFailureException;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Type\Node;
 
@@ -14,12 +14,11 @@ use GraphAware\Common\Type\Node;
  * @group integration
  * @group exception-dispatch
  */
-class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
+class ExceptionDispatchTest extends IntegrationTestCase
 {
     public function testExceptionsAreThrown()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
 
         $this->setExpectedException(MessageFailureException::class);
         $session->run("CREATE (n:)");
@@ -33,11 +32,8 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     public function testNeo4jStatusCodeIsAvalailble()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
-
         try {
-            $session->run("CR");
+            $this->getSession()->run("CR");
         } catch (MessageFailureException $e) {
             $this->assertEquals('Neo.ClientError.Statement.SyntaxError', $e->getStatusCode());
         }
@@ -45,22 +41,23 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     public function testMessageFailuresAreHandled()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
+
         try {
             $session->run('CR');
         } catch (MessageFailureException $e) {
             //
         }
+
         $result = $session->run('CREATE (n) RETURN n');
         $this->assertTrue($result->firstRecord()->get('n') instanceof Node);
     }
 
     public function testMessageFailuresInTransactionsAreHandled()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
         $tx = $session->transaction();
+
         try {
             $tx->run(Statement::create('CR'));
         } catch (MessageFailureException $e) {
@@ -72,8 +69,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     public function testMessageFailuresAreHandledInSequence()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
         $this->createConstraint('User', 'id');
         $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
@@ -83,8 +79,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     public function testMessageFailuresAreHandledInPipelines()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
         $session->run('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
         $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
@@ -102,8 +97,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testPipelineWithConstraintCreation()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
         $session->run('MATCH (n) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $pipeline = $session->createPipeline();
@@ -118,8 +112,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
      */
     public function testPipelinesCanBeRunAfterFailure()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
         $this->createConstraint('User', 'id');
         $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
@@ -143,8 +136,7 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     public function testConstraintViolationInTransaction()
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
+        $session = $this->getSession();
 
         $session->run('MATCH (n) DETACH DELETE n');
         $this->createConstraint('User', 'id');
@@ -156,23 +148,20 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
         $tx->push('MERGE (n:User {id:3}) SET n.login = "bachmanm"');
         $tx->push('MERGE (n:User {id:2}) SET n.login = "ikwattro"');
         $tx->push('MERGE (n:User {id:4}) SET n.login = "ale"');
+
         try {
             $tx->run();
             // should fail
-            $this->assertFale(true);
+            $this->assertFalse(true);
         } catch (\Exception $e) {
             $this->assertTrue(true);
         }
-
     }
 
     private function createConstraint($label, $key)
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
-
         try {
-            $session->run(sprintf('CREATE CONSTRAINT ON (n:`%s`) ASSERT n.`%s` IS UNIQUE', $label, $key));
+            $this->getSession()->run(sprintf('CREATE CONSTRAINT ON (n:`%s`) ASSERT n.`%s` IS UNIQUE', $label, $key));
         } catch (MessageFailureException $e) {
             if ($e->getStatusCode() === 'Neo.ClientError.Schema.IndexAlreadyExists') {
                 $this->dropIndex($label, $key);
@@ -185,9 +174,6 @@ class ExceptionDispatchTest extends \PHPUnit_Framework_TestCase
 
     private function dropIndex($label, $key)
     {
-        $driver = GraphDatabase::driver('bolt://localhost');
-        $session = $driver->session();
-
-        $session->run(sprintf('DROP INDEX ON :%s(%s)', $label, $key));
+        $this->getSession()->run(sprintf('DROP INDEX ON :%s(%s)', $label, $key));
     }
 }

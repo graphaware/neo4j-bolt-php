@@ -1,19 +1,20 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace GraphAware\Bolt\Tests;
 
-use GraphAware\Bolt\Driver;
 use GraphAware\Bolt\GraphDatabase;
-use Neoxygen\NeoClient\ClientBuilder;
 
-abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
+class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \GraphAware\Bolt\Driver
      */
     protected $driver;
 
-    public function setUp()
+    /**
+     * @inheritdoc
+     */
+    protected function setUp()
     {
         $this->driver = GraphDatabase::driver("bolt://localhost");
     }
@@ -21,7 +22,7 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return \GraphAware\Bolt\Driver
      */
-    public function getDriver()
+    protected function getDriver()
     {
         return $this->driver;
     }
@@ -29,7 +30,7 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return \Graphaware\Bolt\Protocol\SessionInterface
      */
-    public function getSession()
+    protected function getSession()
     {
         return $this->driver->session();
     }
@@ -37,9 +38,8 @@ abstract class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Empty the database
      */
-    public function emptyDB()
+    protected function emptyDB()
     {
-        $q = 'MATCH (n) DETACH DELETE n';
-        $this->driver->session()->run($q);
+        $this->getSession()->run('MATCH (n) DETACH DELETE n');
     }
 }

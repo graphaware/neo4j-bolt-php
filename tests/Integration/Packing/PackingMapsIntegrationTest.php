@@ -2,7 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class PackingMapsIntegrationTest
@@ -14,16 +14,10 @@ use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
  */
 class PackingMapsIntegrationTest extends IntegrationTestCase
 {
-    /**
-     * @var \GraphAware\Bolt\Protocol\SessionInterface
-     */
-    protected $session;
-
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();
-        $this->session = $this->driver->session();
     }
 
     public function testMapTiny()
@@ -50,16 +44,17 @@ class PackingMapsIntegrationTest extends IntegrationTestCase
         $this->doRangeTest(65533, 65535);
     }
 
-
     private function doRangeTest($min, $max)
     {
         $query = 'CREATE (n:MapTest) SET n += {props} RETURN n';
+        $session = $this->getSession();
+
         for ($i = $min; $i < $max; ++$i) {
             $parameters = [];
             foreach (range(1, $i) as $x) {
                 $parameters['prop' . $x] = $i;
             }
-            $result = $this->session->run($query, ['props' => $parameters]);
+            $result = $session->run($query, ['props' => $parameters]);
             $node = $result->firstRecord()->nodeValue('n');
             $this->assertEquals($i, count($node->values()));
         }

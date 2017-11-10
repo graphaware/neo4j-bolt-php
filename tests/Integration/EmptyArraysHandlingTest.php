@@ -3,6 +3,7 @@
 namespace GraphAware\Bolt\Tests\Integration;
 
 use GraphAware\Common\Collections;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class EmptyArraysHandlingTest
@@ -22,9 +23,11 @@ class EmptyArraysHandlingTest extends IntegrationTestCase
         MERGE (f)-[:KNOWS]->(n)';
 
         $params = ['id' => 'me', 'friends' => Collections::asList([])];
-        $this->getSession()->run($query, $params);
 
-        $result = $this->getSession()->run('MATCH (n:User) RETURN count(n) AS c');
+        $session = $this->getSession();
+        $session->run($query, $params);
+
+        $result = $session->run('MATCH (n:User) RETURN count(n) AS c');
         $this->assertEquals(1, $result->firstRecord()->get('c'));
     }
 
@@ -38,9 +41,11 @@ class EmptyArraysHandlingTest extends IntegrationTestCase
         MERGE (f)-[:KNOWS]->(n)';
 
         $params = ['id' => 'me', 'friends' => Collections::asMap([])];
-        $this->getSession()->run($query, $params);
+        $session = $this->getSession();
 
-        $result = $this->getSession()->run('MATCH (n:User) RETURN count(n) AS c');
+        $session->run($query, $params);
+
+        $result = $session->run('MATCH (n:User) RETURN count(n) AS c');
         $this->assertEquals(1, $result->firstRecord()->get('c'));
     }
 }

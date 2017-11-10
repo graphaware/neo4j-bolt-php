@@ -2,8 +2,7 @@
 
 namespace GraphAware\Bolt\Tests\Example;
 
-use GraphAware\Bolt\Tests\Integration\IntegrationTestCase;
-use \InvalidArgumentException;
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Bolt\Result\Type\Node;
 
 /**
@@ -12,7 +11,7 @@ use GraphAware\Bolt\Result\Type\Node;
  */
 class MovieExampleTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->emptyDB();
@@ -33,21 +32,19 @@ CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix1)
 CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix2)
 CREATE (carrieanne)-[:ACTS_IN { role : 'Trinity' }]->(matrix3)
 QUERY;
-        $session = $this->driver->session();
-        $session->run($q);
 
+        $this->getSession()->run($q);
     }
 
     public function testGetSimpleNode()
     {
         $q = 'MATCH (m:Movie {title: {title}}) RETURN m;';
         $p = ['title' => 'The Matrix'];
-        $session = $this->driver->session();
-        $result = $session->run($q, $p);
+
+        $result = $this->getSession()->run($q, $p);
+
         $this->assertCount(1, $result->getRecords());
-        foreach ($result->getRecords() as $record) {
-            $this->assertTrue(in_array('Movie', $record->value('m')->labels()));
-        }
+        $this->assertTrue(in_array('Movie', $result->firstRecord()->value('m')->labels()));
     }
 
     /**
@@ -58,15 +55,13 @@ QUERY;
     public function testRecordViewThrowsExceptionWhenKeyDoesntExist()
     {
         $query = 'MATCH (m:Movie {title: {title} }) RETURN m';
-        $session = $this->driver->session();
-        $result = $session->run($query, ['title' => 'The Matrix']);
+        $result = $this->getSession()->run($query, ['title' => 'The Matrix']);
         $record = $result->firstRecord();
 
         $movieNode = $record->nodeValue('m');
         $this->assertInstanceOf(Node::class, $movieNode);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException(\InvalidArgumentException::class);
         $record->nodeValue('z');
-
     }
 }

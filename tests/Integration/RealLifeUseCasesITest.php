@@ -1,6 +1,8 @@
 <?php
 
 namespace GraphAware\Bolt\Tests\Integration;
+
+use GraphAware\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Result\StatementStatisticsInterface;
 
@@ -28,8 +30,7 @@ class RealLifeUseCasesITest extends IntegrationTestCase
         MERGE (o:Person {id: prev})
         MERGE (p)-[:KNOWS]->(o)';
 
-        $session = $this->driver->session();
-        $session->run($query, ['batches' => $batches]);
+        $this->getSession()->run($query, ['batches' => $batches]);
     }
 
     /**
@@ -38,7 +39,7 @@ class RealLifeUseCasesITest extends IntegrationTestCase
     public function testResultSummaryReturnsStats()
     {
         $this->emptyDB();
-        $session = $this->driver->session();
+        $session = $this->getSession();
         $result = $session->run('MATCH (n) RETURN count(n)');
         $this->assertInstanceOf(StatementStatisticsInterface::class, $result->summarize()->updateStatistics());
 
