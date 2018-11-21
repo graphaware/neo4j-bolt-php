@@ -16,13 +16,14 @@ use GraphAware\Bolt\IO\StreamSocket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Bolt\Protocol\V1\SessionV2;
 use GraphAware\Common\Driver\DriverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use GraphAware\Bolt\Exception\HandshakeException;
 
 class Driver implements DriverInterface
 {
-    const VERSION = '1.5.4';
+    const VERSION = '2.0.0';
 
     const DEFAULT_TCP_PORT = 7687;
 
@@ -100,6 +101,7 @@ class Driver implements DriverInterface
         $this->io = StreamSocket::withConfiguration($host, $port, $config, $this->dispatcher);
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(Session::class);
+        $this->sessionRegistry->registerSession(SessionV2::class);
     }
 
     /**
@@ -136,7 +138,7 @@ class Driver implements DriverInterface
         $msg = '';
         $msg .= chr(0x60).chr(0x60).chr(0xb0).chr(0x17);
 
-        foreach (array(1, 0, 0, 0) as $v) {
+        foreach (array(2, 0, 0, 0) as $v) {
             $msg .= $packer->packBigEndian($v, 4);
         }
 

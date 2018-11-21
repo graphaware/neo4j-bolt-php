@@ -116,4 +116,13 @@ class Constants
     const MARKER_TRUE = 0xc3;
 
     const MARKER_FALSE = 0xc2;
+
+    // TEMPORAL
+    const DURATION = 0x45;
+    const LOCAL_TIME = 0x74;
+    const DATE = 0x44;
+    const TIME = 0x54;
+    const LOCAL_DATE_TIME = 0x64;
+    const DATE_TIME_WITH_ZONE_OFFSET = 0x46;
+    const DATE_TIME_WITH_ZONE_ID = 0x66;
 }

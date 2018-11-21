@@ -76,6 +76,13 @@ class Unpacker
         return $this->unpackElement(new BytesWalker(new RawMessage($b)));
     }
 
+    private function unpackDate(BytesWalker $walker)
+    {
+        $integer = $this->readSignedShort($walker);
+        $epochDay = $this->unpackInteger($integer);
+        var_dump($epochDay);
+    }
+
     /**
      * @param \GraphAware\Bolt\PackStream\BytesWalker $walker
      *
@@ -94,6 +101,10 @@ class Unpacker
             $walker->rewind(1);
             $structureSize = $this->getStructureSize($walker);
             $sig = $this->getSignature($walker);
+            var_dump($sig);
+            if ($sig === 'DATE') {
+                echo 'DATE FOUND' . PHP_EOL;
+            }
             $str = new Structure($sig, $structureSize);
             $done = 0;
             while ($done < $structureSize) {
@@ -359,6 +370,10 @@ class Unpacker
             Constants::SIGNATURE_NODE => 'NODE',
             Constants::SIGNATURE_PATH => 'PATH',
             Constants::SIGNATURE_RELATIONSHIP => 'RELATIONSHIP',
+            Constants::DATE => 'DATE',
+            Constants::DURATION => 'DURATION',
+            Constants::TIME => 'TIME',
+            Constants::LOCAL_DATE_TIME => 'LOCAL_DATE_TIME'
         ];
 
         $sigMarker = $walker->read(1);
