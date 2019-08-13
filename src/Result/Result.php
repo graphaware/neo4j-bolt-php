@@ -112,9 +112,14 @@ class Result extends AbstractRecordCursor
         // TODO: Implement position() method.
     }
 
-    public function skip()
+    /**
+     * @param int $offset
+     * @param null $length
+     * @return array|RecordView[]
+     */
+    public function skip(int $offset, $length = null)
     {
-        // TODO: Implement skip() method.
+        return array_slice($this->records, $offset, $length);
     }
 
     private function array_map_deep(array $array)
