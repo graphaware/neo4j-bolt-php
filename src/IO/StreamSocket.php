@@ -194,14 +194,20 @@ class StreamSocket extends AbstractIO
             $this->port
         );
 
-        $this->sock = stream_socket_client(
-            $remote,
-            $errno,
-            $errstr,
-            $this->timeout,
-            STREAM_CLIENT_CONNECT,
-            $this->context
-        );
+        try {
+            $this->sock = stream_socket_client(
+                $remote,
+                $errno,
+                $errstr,
+                $this->timeout,
+                STREAM_CLIENT_CONNECT,
+                $this->context
+            );
+        } catch(\ErrorException $e) {
+            throw new IOException(sprintf(
+                'Error to connect to the server(%s) :  "%s"', $errno, $errstr
+            ));
+        }
 
         if (false === $this->sock) {
             throw new IOException(sprintf(
