@@ -4,6 +4,13 @@ namespace GraphAware\Bolt\PackStream\Structure;
 
 class Structure
 {
+    const SIGNATURE_UNBOUND_RELATIONSHIP = 'UNBOUND_RELATIONSHIP';
+    const SIGNATURE_NODE = 'NODE';
+    const SIGNATURE_PATH = 'PATH';
+    const SIGNATURE_RELATIONSHIP = 'RELATIONSHIP';
+    const SIGNATURE_POINT2D = 'POINT2D';
+    const SIGNATURE_POINT3D = 'POINT3D';
+
     /**
      * @var string
      */
@@ -154,6 +161,13 @@ class Structure
      */
     private function types()
     {
-        return ['NODE', 'RELATIONSHIP', 'PATH', 'UNBOUND_RELATIONSHIP'];
+        return [
+            self::SIGNATURE_NODE,
+            self::SIGNATURE_RELATIONSHIP,
+            self::SIGNATURE_PATH,
+            self::SIGNATURE_UNBOUND_RELATIONSHIP,
+            self::SIGNATURE_POINT2D,
+            self::SIGNATURE_POINT3D
+        ];
     }
 }

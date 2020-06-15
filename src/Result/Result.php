@@ -15,6 +15,8 @@ use GraphAware\Bolt\PackStream\Structure\Structure;
 use GraphAware\Bolt\Record\RecordView;
 use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Bolt\Result\Type\Path;
+use GraphAware\Bolt\Result\Type\Point2D;
+use GraphAware\Bolt\Result\Type\Point3D;
 use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\UnboundRelationship;
 use GraphAware\Common\Cypher\StatementInterface;
@@ -120,21 +122,36 @@ class Result extends AbstractRecordCursor
     private function array_map_deep(array $array)
     {
         foreach ($array as $k => $v) {
-            if ($v instanceof Structure && $v->getSignature() === 'NODE') {
+            if ($v instanceof Structure) {
                 $elts = $v->getElements();
-                $array[$k] = new Node($elts[0], $elts[1], $elts[2]);
-            } elseif ($v instanceof Structure && $v->getSignature() === 'RELATIONSHIP') {
-                $elts = $v->getElements();
-                $array[$k] = new Relationship($elts[0], $elts[1], $elts[2], $elts[3], $elts[4]);
-            } elseif ($v instanceof Structure && $v->getSignature() === 'UNBOUND_RELATIONSHIP') {
-                $elts = $v->getElements();
-                $array[$k] = new UnboundRelationship($elts[0], $elts[1], $elts[2]);
-            } elseif ($v instanceof Structure && $v->getSignature() === 'PATH') {
-                $elts = $v->getElements();
-                $array[$k] = new Path($this->array_map_deep($elts[0]), $this->array_map_deep($elts[1]), $this->array_map_deep($elts[2]));
-            } elseif ($v instanceof Structure) {
-                $array[$k] = $this->array_map_deep($v->getElements());
-            } elseif (is_array($v)) {
+                switch ($v->getSignature()){
+                    case Structure::SIGNATURE_NODE:
+                        $array[$k] = new Node($elts[0], $elts[1], $elts[2]);
+                        break;
+                    case Structure::SIGNATURE_RELATIONSHIP:
+                        $array[$k] = new Relationship($elts[0], $elts[1], $elts[2], $elts[3], $elts[4]);
+                        break;
+                    case Structure::SIGNATURE_UNBOUND_RELATIONSHIP:
+                        $array[$k] = new UnboundRelationship($elts[0], $elts[1], $elts[2]);
+                        break;
+                    case Structure::SIGNATURE_PATH:
+                        $array[$k] = new Path(
+                            $this->array_map_deep($elts[0]),
+                            $this->array_map_deep($elts[1]),
+                            $this->array_map_deep($elts[2])
+                        );
+                        break;
+                    case Structure::SIGNATURE_POINT3D:
+                        $array[$k] = new Point3D($elts[1], $elts[2], $elts[3], $elts[0]);
+                        break;
+                    case Structure::SIGNATURE_POINT2D:
+                        $array[$k] = new Point2D($elts[1], $elts[2], $elts[0]);
+                        break;
+                    default:
+                        $array[$k] = $this->array_map_deep($v->getElements());
+                }
+            }
+            elseif (is_array($v)){
                 $array[$k] = $this->array_map_deep($v);
             }
         }

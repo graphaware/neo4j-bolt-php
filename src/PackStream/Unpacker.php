@@ -355,10 +355,12 @@ class Unpacker
             Constants::SIGNATURE_FAILURE => self::FAILURE,
             Constants::SIGNATURE_RECORD => self::RECORD,
             Constants::SIGNATURE_IGNORE => self::IGNORED,
-            Constants::SIGNATURE_UNBOUND_RELATIONSHIP => 'UNBOUND_RELATIONSHIP',
-            Constants::SIGNATURE_NODE => 'NODE',
-            Constants::SIGNATURE_PATH => 'PATH',
-            Constants::SIGNATURE_RELATIONSHIP => 'RELATIONSHIP',
+            Constants::SIGNATURE_UNBOUND_RELATIONSHIP => Structure::SIGNATURE_UNBOUND_RELATIONSHIP,
+            Constants::SIGNATURE_NODE => Structure::SIGNATURE_NODE,
+            Constants::SIGNATURE_PATH => Structure::SIGNATURE_PATH,
+            Constants::SIGNATURE_RELATIONSHIP => Structure::SIGNATURE_RELATIONSHIP,
+            Constants::SIGNATURE_POINT3D => Structure::SIGNATURE_POINT3D,
+            Constants::SIGNATURE_POINT2D => Structure::SIGNATURE_POINT2D
         ];
 
         $sigMarker = $walker->read(1);
@@ -366,39 +368,7 @@ class Unpacker
 
         return $signatures[$ordMarker];
 
-//        if (Constants::SIGNATURE_SUCCESS === $ordMarker) {
-//            return self::SUCCESS;
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_FAILURE, $sigMarker)) {
-//            return self::FAILURE;
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_RECORD, $sigMarker)) {
-//            return self::RECORD;
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_IGNORE, $sigMarker)) {
-//            return self::IGNORED;
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_UNBOUND_RELATIONSHIP, $sigMarker)) {
-//            return "UNBOUND_RELATIONSHIP";
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_NODE, $sigMarker)) {
-//            return "NODE";
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_PATH, $sigMarker)) {
-//            return "PATH";
-//        }
-//
-//        if ($this->isSignature(Constants::SIGNATURE_RELATIONSHIP, $sigMarker)) {
-//            return "RELATIONSHIP";
-//        }
-//
-//        throw new SerializationException(sprintf('Unable to guess the signature for byte "%s"', Helper::prettyHex($sigMarker)));
+
     }
 
     /**

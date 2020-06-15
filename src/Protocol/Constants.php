@@ -117,6 +117,16 @@ class Constants
 
     const MARKER_FLOAT = 0xc1;
 
+    // POINTS (V3+)
+
+    const MARKER_POINT2D = 0xb3;
+
+    const SIGNATURE_POINT2D = 0x58;
+
+    const MARKER_POINT3D = 0xb4;
+
+    const SIGNATURE_POINT3D = 0x59;
+
     // MISC
 
     const MISC_ZERO = 0x00;

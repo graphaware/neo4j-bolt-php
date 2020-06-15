@@ -14,7 +14,10 @@ namespace GraphAware\Bolt\PackStream;
 use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
 use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
+use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Constants;
+use GraphAware\Bolt\Type\Point2D;
+use GraphAware\Bolt\Type\Point3D;
 use GraphAware\Common\Collection\ArrayList;
 use GraphAware\Common\Collection\CollectionInterface;
 use GraphAware\Common\Collection\Map;
@@ -31,30 +34,45 @@ class Packer
         $stream = '';
         if (is_string($v)) {
             $stream .= $this->packText($v);
-        } elseif ($v instanceof CollectionInterface && $v instanceof Map) {
+        }
+        elseif ($v instanceof Point3D) {
+            $stream .= $this->packPoint3D($v);
+        }
+        elseif ($v instanceof Point2D) {
+            $stream .= $this->packPoint2D($v);
+        }
+        elseif ($v instanceof CollectionInterface && $v instanceof Map) {
             $stream .= $this->packMap($v->getElements());
-        } elseif ($v instanceof CollectionInterface && $v instanceof ArrayList) {
+        }
+        elseif ($v instanceof CollectionInterface && $v instanceof ArrayList) {
             $stream .= $this->packList($v->getElements());
         }
         elseif (is_array($v)) {
             $stream .= ($this->isList($v) && !empty($v)) ? $this->packList($v) : $this->packMap($v);
-        } elseif (is_float($v)) {
+        }
+        elseif (is_float($v)) {
             $stream .= $this->packFloat($v);
-        } elseif (is_int($v)) {
+        }
+        elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
-        } elseif (is_null($v)) {
+        }
+        elseif (is_null($v)) {
             $stream .= chr(Constants::MARKER_NULL);
-        } elseif (true === $v) {
+        }
+        elseif (true === $v) {
             $stream .= chr(Constants::MARKER_TRUE);
-        } elseif (false === $v) {
+        }
+        elseif (false === $v) {
             $stream .= chr(Constants::MARKER_FALSE);
-        } elseif (is_float($v)) {
+        }
+        elseif (is_float($v)) {
             // if it is 64 bit integers casted to float
             $r = $v + $v;
             if ('double' === gettype($r)) {
                 $stream .= $this->packInteger($v);
             }
-        } else {
+        }
+        else {
             throw new BoltInvalidArgumentException(sprintf('Could not pack the value %s', $v));
         }
 
@@ -220,6 +238,37 @@ class Packer
         $str = chr(Constants::MARKER_FLOAT);
 
         return $str.strrev(pack('d', $v));
+    }
+
+    /**
+     * @param Point3D $v
+     *
+     * @return int|string
+     */
+    public function packPoint3D(Point3D $v)
+    {
+        $str = chr(Constants::MARKER_POINT3D).chr(Constants::SIGNATURE_POINT3D);
+
+        return $str
+            .$this->packInteger($v->getSrid())
+            .$this->packFloat($v->getX())
+            .$this->packFloat($v->getY())
+            .$this->packFloat($v->getZ());
+    }
+
+    /**
+     * @param Point2D $v
+     *
+     * @return int|string
+     */
+    public function packPoint2D(Point2D $v)
+    {
+        $str = chr(Constants::MARKER_POINT2D).chr(Constants::SIGNATURE_POINT2D);
+
+        return $str
+            .$this->packInteger($v->getSrid())
+            .$this->packFloat($v->getX())
+            .$this->packFloat($v->getY());
     }
 
     /**
