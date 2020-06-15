@@ -21,6 +21,7 @@ use GraphAware\Bolt\Protocol\Message\InitMessage;
 use GraphAware\Bolt\Protocol\Message\PullAllMessage;
 use GraphAware\Bolt\Protocol\Message\RawMessage;
 use GraphAware\Bolt\Protocol\Message\RunMessage;
+use GraphAware\Bolt\Protocol\Message\V4\PullMessage;
 use GraphAware\Bolt\Protocol\Pipeline;
 use GraphAware\Bolt\Exception\MessageFailureException;
 use GraphAware\Bolt\Result\Result as CypherResult;
@@ -88,7 +89,7 @@ class Session extends AbstractSession
         }
         $messages = [
             $this->createRunMessage($statement, $parameters),
-            new PullAllMessage()
+            $this->createPullAllMessage()
         ];
 
         $this->sendMessages($messages);
@@ -169,6 +170,10 @@ class Session extends AbstractSession
 
     protected function createRunMessage($statement, $prams = []) {
         return new RunMessage($statement, $prams);
+    }
+
+    protected function createPullAllMessage() {
+        return new PullAllMessage();
     }
 
     /**

@@ -21,6 +21,10 @@ class Constants
 
     const SIGNATURE_DISCARD_ALL = 0x2f;
 
+    const SIGNATURE_PULL = 0x3f; // V4
+
+    const SIGNATURE_DISCARD = 0x2f; // V4
+
     const SIGNATURE_SUCCESS = 0x70;
 
     const SIGNATURE_INIT = 0x01;
@@ -117,7 +121,7 @@ class Constants
 
     const MARKER_FLOAT = 0xc1;
 
-    // POINTS (V3+)
+    // POINTS (V2+)
 
     const MARKER_POINT2D = 0xb3;
 

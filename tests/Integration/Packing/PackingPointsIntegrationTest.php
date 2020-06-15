@@ -9,7 +9,8 @@ use GraphAware\Bolt\Type\Point3D;
 /**
  * @group packing
  * @group integration
- * @group floats
+ * @group points
+ * @group v2+
  */
 class PackingPointsIntegrationTest extends IntegrationTestCase
 {

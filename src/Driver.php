@@ -16,7 +16,9 @@ use GraphAware\Bolt\IO\StreamSocket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Bolt\Protocol\V2\Session as SessionV2;
 use GraphAware\Bolt\Protocol\V3\Session as SessionV3;
+use GraphAware\Bolt\Protocol\V4\Session as SessionV4;
 use GraphAware\Common\Driver\DriverInterface;
 use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -24,11 +26,11 @@ use GraphAware\Bolt\Exception\HandshakeException;
 
 class Driver implements DriverInterface
 {
-    const VERSION = '1.5.4';
+    const VERSION = '4.0.0';
 
     const DEFAULT_TCP_PORT = 7687;
 
-    const BOLT_VERSIONS = [3, 1, 0, 0];
+    const BOLT_VERSIONS = [4, 3, 2, 1];
 
     /**
      * @var StreamSocket
@@ -90,7 +92,9 @@ class Driver implements DriverInterface
         $this->io = StreamSocket::withConfiguration($host, $port, $config, $this->dispatcher);
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(Session::class);
+        $this->sessionRegistry->registerSession(SessionV2::class);
         $this->sessionRegistry->registerSession(SessionV3::class);
+        $this->sessionRegistry->registerSession(SessionV4::class);
     }
 
     /**
@@ -139,7 +143,7 @@ class Driver implements DriverInterface
 
             if (0 === $version) {
                 $this->throwHandshakeException(sprintf('Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
-                    json_encode(self::BOLT_VERSIONS)));
+                    json_encode($this->getBoltVersions())));
             }
 
             return $version;

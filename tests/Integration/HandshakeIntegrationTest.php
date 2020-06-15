@@ -16,9 +16,10 @@ class HandshakeIntegrationTest extends IntegrationTestCase
 {
     public function testHandshakeAgreeVersion()
     {
+        $version = getenv('BOLT_VERSION') ? getenv('BOLT_VERSION') : 4;
         $session = $this->getSession();
         $this->assertInstanceOf(SessionInterface::class, $session);
-        $this->assertEquals(3, $session::getProtocolVersion());
+        $this->assertEquals((int)$version, $session::getProtocolVersion());
     }
 
     public function testErrorIsThrownWhenNoVersionCanBeAgreed()

@@ -12,7 +12,6 @@ class CommitMessage extends AbstractMessage
 
     /**
      * Begin message starts transaction
-     * @param array $metaData
      */
     public function __construct()
     {
