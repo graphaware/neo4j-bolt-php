@@ -69,9 +69,9 @@ class ExceptionDispatchTest extends IntegrationTestCase
 
     public function testMessageFailuresAreHandledInSequence()
     {
+        $this->emptyDB();
         $session = $this->getSession();
         $this->createConstraint('User', 'id');
-        $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $this->setExpectedException(MessageFailureException::class);
         $session->run('CREATE (n:User {id:1})');
@@ -79,9 +79,9 @@ class ExceptionDispatchTest extends IntegrationTestCase
 
     public function testMessageFailuresAreHandledInPipelines()
     {
+        $this->emptyDB();
         $session = $this->getSession();
         $session->run('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
-        $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $pipeline = $session->createPipeline();
         $pipeline->push('CREATE (n:User {id:3})');
@@ -98,7 +98,7 @@ class ExceptionDispatchTest extends IntegrationTestCase
     public function testPipelineWithConstraintCreation()
     {
         $session = $this->getSession();
-        $session->run('MATCH (n) DETACH DELETE n');
+        $this->emptyDB();
         $session->run('CREATE (n:User {id:1})');
         $pipeline = $session->createPipeline();
         $pipeline->push('CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE');
@@ -112,9 +112,9 @@ class ExceptionDispatchTest extends IntegrationTestCase
      */
     public function testPipelinesCanBeRunAfterFailure()
     {
+        $this->emptyDB();
         $session = $this->getSession();
         $this->createConstraint('User', 'id');
-        $session->run('MATCH (n:User) DETACH DELETE n');
         $session->run('CREATE (n:User {id:1})');
         $pipeline = $session->createPipeline();
         $pipeline->push('CREATE (n:User {id:3})');
@@ -136,9 +136,8 @@ class ExceptionDispatchTest extends IntegrationTestCase
 
     public function testConstraintViolationInTransaction()
     {
+        $this->emptyDB();
         $session = $this->getSession();
-
-        $session->run('MATCH (n) DETACH DELETE n');
         $this->createConstraint('User', 'id');
         $this->createConstraint('User', 'login');
         $session->run('MERGE (n:User {login: "ikwattro", id:1})');

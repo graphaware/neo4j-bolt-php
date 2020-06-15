@@ -36,8 +36,22 @@ class ChunkingDechunkingContext implements Context, SnippetAcceptingContext
      */
     public function __construct()
     {
-        $this->driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
+        $this->driver = \GraphAware\Bolt\GraphDatabase::driver($this->getBoltUrl());
         $this->driver->session()->run("MATCH (n) DETACH DELETE n");
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBoltUrl(){
+        $boltUrl = 'bolt://localhost';
+        if (getenv('NEO4J_HOST')) {
+            $boltUrl = sprintf(
+                'bolt://%s',
+                getenv('NEO4J_HOST')
+            );
+        }
+        return $boltUrl;
     }
 
     /**

@@ -12,7 +12,7 @@ use GraphAware\Bolt\Tests\IntegrationTestCase;
  * @group integration
  * @group integers
  */
-class PackingIntegrationTest extends IntegrationTestCase
+class PackingIntegersIntegrationTest extends IntegrationTestCase
 {
     protected function setUp()
     {
@@ -118,12 +118,12 @@ class PackingIntegrationTest extends IntegrationTestCase
         $session = $this->getSession();
 
         foreach ($range as $i) {
-            $q = 'CREATE (n:Integer) SET n.value = {value}';
+            $q = 'CREATE (n:Integer) SET n.value = $value';
             $session->run($q, ['value' => $i]);
         }
 
         foreach ($range as $i) {
-            $response = $session->run('MATCH (n:Integer) WHERE n.value = {value} RETURN n.value', ['value' => $i]);
+            $response = $session->run('MATCH (n:Integer) WHERE n.value = $value RETURN n.value', ['value' => $i]);
             $this->assertCount(1, $response->getRecords());
             $this->assertEquals($i, $response->getRecord()->value('n.value'));
         }

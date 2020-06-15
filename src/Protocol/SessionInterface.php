@@ -11,7 +11,9 @@
 
 namespace GraphAware\Bolt\Protocol;
 
+use GraphAware\Common\Driver\PipelineInterface;
 use GraphAware\Common\Driver\SessionInterface as BaseSessionInterface;
+use GraphAware\Common\Transaction\TransactionInterface;
 
 interface SessionInterface extends BaseSessionInterface
 {
@@ -30,23 +32,41 @@ interface SessionInterface extends BaseSessionInterface
     public function run($statement, array $parameters = array(), $tag = null);
 
     /**
-     * @param Pipeline $pipeline
+     * @param PipelineInterface $pipeline
      *
      * @return mixed
      */
-    public function runPipeline(Pipeline $pipeline);
+    public function runPipeline(PipelineInterface $pipeline);
 
     /**
      * @param null|string $query
      * @param array       $parameters
      * @param null|string $tag
      *
-     * @return Pipeline
+     * @return PipelineInterface
      */
     public function createPipeline($query = null, array $parameters = array(), $tag = null);
 
     /**
-     * @return \GraphAware\Bolt\Protocol\V1\Transaction
+     * @return TransactionInterface
      */
     public function transaction();
+
+    /**
+     * Begin transaction
+     * @return void
+     */
+    public function begin();
+
+    /**
+     * Commit transaction
+     * @return void
+     */
+    public function commit();
+
+    /**
+     * Rollback transaction
+     * @return void
+     */
+    public function rollback();
 }

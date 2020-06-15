@@ -46,7 +46,21 @@ class ResultMetadataContext implements Context, SnippetAcceptingContext
      */
     public function thereIsADriverConfiguredWithTheUri($arg1)
     {
-        $this->driver = \GraphAware\Bolt\GraphDatabase::driver("bolt://localhost");
+        $this->driver = \GraphAware\Bolt\GraphDatabase::driver($this->getBoltUrl());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBoltUrl(){
+        $boltUrl = 'bolt://localhost';
+        if (getenv('NEO4J_HOST')) {
+            $boltUrl = sprintf(
+                'bolt://%s',
+                getenv('NEO4J_HOST')
+            );
+        }
+        return $boltUrl;
     }
 
     /**

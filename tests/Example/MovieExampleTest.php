@@ -38,7 +38,7 @@ QUERY;
 
     public function testGetSimpleNode()
     {
-        $q = 'MATCH (m:Movie {title: {title}}) RETURN m;';
+        $q = 'MATCH (m:Movie {title: $title}) RETURN m;';
         $p = ['title' => 'The Matrix'];
 
         $result = $this->getSession()->run($q, $p);
@@ -54,7 +54,7 @@ QUERY;
      */
     public function testRecordViewThrowsExceptionWhenKeyDoesntExist()
     {
-        $query = 'MATCH (m:Movie {title: {title} }) RETURN m';
+        $query = 'MATCH (m:Movie {title: $title }) RETURN m';
         $result = $this->getSession()->run($query, ['title' => 'The Matrix']);
         $record = $result->firstRecord();
 

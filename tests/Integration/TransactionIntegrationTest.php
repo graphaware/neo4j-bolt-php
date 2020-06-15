@@ -33,6 +33,23 @@ class TransactionIntegrationTest extends IntegrationTestCase
         $this->assertXNodesWithTestLabelExist(5);
     }
 
+    public function testManualRollback()
+    {
+        $this->emptyDB();
+
+        $statements = array();
+
+        for ($i = 0; $i < 5; ++$i) {
+            $statements[] = Statement::create('CREATE (n:Test)');
+        }
+
+        $tx = $this->getSession()->transaction();
+        $tx->begin();
+        $tx->runMultiple($statements);
+        $tx->rollback();
+        $this->assertXNodesWithTestLabelExist(0);
+    }
+
     public function testRunSingle()
     {
         $this->emptyDB();
@@ -57,6 +74,9 @@ class TransactionIntegrationTest extends IntegrationTestCase
         $this->assertTrue($result->firstRecord()->get('n') instanceof Node);
         $this->assertEquals(TransactionState::ROLLED_BACK, $tx->status());
     }
+
+
+
 
     /**
      * @group tx-tag-multiple-fix

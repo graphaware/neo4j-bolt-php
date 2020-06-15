@@ -16,9 +16,9 @@ class EmptyArraysHandlingTest extends IntegrationTestCase
     public function testEmptyArrayAsListIsHandled()
     {
         $this->emptyDB();
-        $query = 'MERGE (n:User {id: {id} }) 
+        $query = 'MERGE (n:User {id: $id }) 
         WITH n
-        UNWIND {friends} AS friend
+        UNWIND $friends AS friend
         MERGE (f:User {id: friend.name})
         MERGE (f)-[:KNOWS]->(n)';
 
@@ -34,9 +34,9 @@ class EmptyArraysHandlingTest extends IntegrationTestCase
     public function testEmptyArrayAsMapIsHandled()
     {
         $this->emptyDB();
-        $query = 'MERGE (n:User {id: {id} }) 
+        $query = 'MERGE (n:User {id: $id }) 
         WITH n
-        UNWIND {friends}.users AS friend
+        UNWIND $friends.users AS friend
         MERGE (f:User {id: friend.name})
         MERGE (f)-[:KNOWS]->(n)';
 

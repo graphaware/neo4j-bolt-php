@@ -25,6 +25,16 @@ class Constants
 
     const SIGNATURE_INIT = 0x01;
 
+    const SIGNATURE_HELLO = 0x01; // V3
+
+    const SIGNATURE_GOODBYE = 0x01; // V3
+
+    const SIGNATURE_BEGIN = 0x11; // V3
+
+    const SIGNATURE_COMMIT = 0x12; // V3
+
+    const SIGNATURE_ROLLBACK = 0x13; // V3
+
     const SIGNATURE_FAILURE = 0x7f;
 
     const SIGNATURE_ACK_FAILURE = 0x0f;

@@ -10,12 +10,13 @@
         }
     ],
     "require": {
-        "php": ">= 5.6",
+        "php": ">= 7.1",
         "ext-bcmath": "*",
         "ext-mbstring": "*",
         "symfony/event-dispatcher": "^2.7|^3.0|^4.0",
         "graphaware/neo4j-common": "^3.4",
-        "myclabs/php-enum": "^1.4"
+        "myclabs/php-enum": "^1.4",
+      "ext-json": "*"
     },
     "autoload": {
       "psr-4": {

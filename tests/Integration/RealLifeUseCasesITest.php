@@ -22,7 +22,7 @@ class RealLifeUseCasesITest extends IntegrationTestCase
             $batches[] = $this->createBatch($i);
         }
 
-        $query = 'UNWIND {batches} as batch
+        $query = 'UNWIND $batches as batch
         MERGE (p:Person {id: batch.id})
         SET p += batch.props
         WITH p, batch

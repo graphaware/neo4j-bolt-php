@@ -102,11 +102,11 @@ class TCK9TypesTest extends IntegrationTestCase
         }
 
         // string
-        $result = $session->run("CREATE (n {k: {value}}) RETURN n.k as v", ['value' => 'text']);
+        $result = $session->run('CREATE (n {k: $value}) RETURN n.k as v', ['value' => 'text']);
         $this->assertEquals('text', $result->getRecord()->value('v'));
 
         // float
-        $result = $session->run("CREATE (n {k: {value}}) RETURN n.k as v", ['value' => 1.38]);
+        $result = $session->run('CREATE (n {k: $value}) RETURN n.k as v', ['value' => 1.38]);
         $this->assertEquals(1.38, $result->getRecord()->value('v'));
 
         // collection of floats
@@ -206,7 +206,7 @@ class TCK9TypesTest extends IntegrationTestCase
     private function runValue($value)
     {
         return $this->getSession()
-            ->run("RETURN {x} as x", ['x' => $value])
+            ->run('RETURN $x as x', ['x' => $value])
             ->getRecord()
             ->value('x');
     }

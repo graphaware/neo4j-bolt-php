@@ -16,7 +16,9 @@ use GraphAware\Bolt\IO\StreamSocket;
 use GraphAware\Bolt\Protocol\SessionRegistry;
 use GraphAware\Bolt\PackStream\Packer;
 use GraphAware\Bolt\Protocol\V1\Session;
+use GraphAware\Bolt\Protocol\V3\Session as SessionV3;
 use GraphAware\Common\Driver\DriverInterface;
+use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use GraphAware\Bolt\Exception\HandshakeException;
 
@@ -25,6 +27,8 @@ class Driver implements DriverInterface
     const VERSION = '1.5.4';
 
     const DEFAULT_TCP_PORT = 7687;
+
+    const BOLT_VERSIONS = [3, 1, 0, 0];
 
     /**
      * @var StreamSocket
@@ -57,6 +61,11 @@ class Driver implements DriverInterface
     protected $credentials;
 
     /**
+     * @var int
+     */
+    private $forceBoltVersion;
+
+    /**
      * @return string
      */
     public static function getUserAgent()
@@ -65,33 +74,14 @@ class Driver implements DriverInterface
     }
 
     /**
-     * @param string             $uri
+     * @param string $uri
      * @param Configuration|null $configuration
+     * @param int $forceBoltVersion
      */
-    public function __construct($uri, Configuration $configuration = null)
+    public function __construct($uri, Configuration $configuration = null, $forceBoltVersion = 0)
     {
+        $this->forceBoltVersion = $forceBoltVersion;
         $this->credentials = null !== $configuration ? $configuration->getValue('credentials', []) : [];
-        /*
-        $ctx = stream_context_create(array());
-        define('CERTS_PATH',
-        '/Users/ikwattro/dev/_graphs/3.0-M02-NIGHTLY/conf');
-        $ssl_options = array(
-            'cafile' => CERTS_PATH . '/cacert.pem',
-            'local_cert' => CERTS_PATH . '/ssl/snakeoil.pem',
-            'peer_name' => 'example.com',
-            'allow_self_signed' => true,
-            'verify_peer' => true,
-            'capture_peer_cert' => true,
-            'capture_peer_cert_chain' => true,
-            'disable_compression' => true,
-            'SNI_enabled' => true,
-            'verify_depth' => 1
-        );
-        foreach ($ssl_options as $k => $v) {
-            stream_context_set_option($ctx, 'ssl', $k, $v);
-        }
-        */
-
         $config = null !== $configuration ? $configuration : Configuration::create();
         $parsedUri = parse_url($uri);
         $host = isset($parsedUri['host']) ? $parsedUri['host'] : $parsedUri['path'];
@@ -100,6 +90,7 @@ class Driver implements DriverInterface
         $this->io = StreamSocket::withConfiguration($host, $port, $config, $this->dispatcher);
         $this->sessionRegistry = new SessionRegistry($this->io, $this->dispatcher);
         $this->sessionRegistry->registerSession(Session::class);
+        $this->sessionRegistry->registerSession(SessionV3::class);
     }
 
     /**
@@ -136,7 +127,7 @@ class Driver implements DriverInterface
         $msg = '';
         $msg .= chr(0x60).chr(0x60).chr(0xb0).chr(0x17);
 
-        foreach (array(1, 0, 0, 0) as $v) {
+        foreach ($this->getBoltVersions() as $v) {
             $msg .= $packer->packBigEndian($v, 4);
         }
 
@@ -148,7 +139,7 @@ class Driver implements DriverInterface
 
             if (0 === $version) {
                 $this->throwHandshakeException(sprintf('Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
-                    json_encode(array(1, 0, 0, 0))));
+                    json_encode(self::BOLT_VERSIONS)));
             }
 
             return $version;
@@ -163,5 +154,12 @@ class Driver implements DriverInterface
     private function throwHandshakeException($message)
     {
         throw new HandshakeException($message);
+    }
+
+    private function getBoltVersions(){
+        if ($this->forceBoltVersion != 0){
+            return [$this->forceBoltVersion, 0, 0, 0];
+        }
+        return self::BOLT_VERSIONS;
     }
 }

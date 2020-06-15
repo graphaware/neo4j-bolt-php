@@ -31,9 +31,9 @@ class Pipeline implements PipelineInterface
     protected $messages = [];
 
     /**
-     * @param Session $session
+     * @param SessionInterface $session
      */
-    public function __construct(Session $session)
+    public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
@@ -54,8 +54,6 @@ class Pipeline implements PipelineInterface
      */
     public function run()
     {
-        $pullAllMessage = new PullAllMessage();
-        $batch = [];
         $resultCollection = new ResultCollection();
 
         foreach ($this->messages as $message) {
