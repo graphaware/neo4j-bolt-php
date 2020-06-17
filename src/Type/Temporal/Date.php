@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;
@@ -26,7 +25,7 @@ class Date implements DateTimeConvertible, PackableType
     }
 
 
-    static public function fromDateTime(\DateTimeInterface $dateTime): self
+    public static function fromDateTime(\DateTimeInterface $dateTime): self
     {
         $epoch = (new \DateTime())->setTimestamp(0);
         $diff = $dateTime->diff($epoch);

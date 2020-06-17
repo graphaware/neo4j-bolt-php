@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;
@@ -24,7 +23,7 @@ class LocalTime implements DateTimeConvertible, PackableType
         $this->nanoSecondsSinceMidnight = $nanoSecondsSinceMidnight;
     }
 
-    static public function fromDateTime(\DateTimeInterface $dateTime)
+    public static function fromDateTime(\DateTimeInterface $dateTime)
     {
         $midnight = clone($dateTime)->modify('midnight');
         $nano = ($dateTime->getTimestamp() - $midnight->getTimestamp())*1000000000;

@@ -25,5 +25,4 @@ class RollbackMessage extends AbstractMessage
     {
         return self::MESSAGE_TYPE;
     }
-
 }

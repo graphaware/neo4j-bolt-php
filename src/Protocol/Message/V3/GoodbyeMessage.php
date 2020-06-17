@@ -26,5 +26,4 @@ class GoodbyeMessage extends AbstractMessage
     {
         return self::MESSAGE_TYPE;
     }
-
 }

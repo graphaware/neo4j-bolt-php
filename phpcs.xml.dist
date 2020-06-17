@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="Plum Tree Systems PHP standards">
+    <description>Coding standard based on PSR2 with some additions.</description>
+
+    <!-- Apply only for src and folders -->
+    <file>./src</file>
+    <file>./tests</file>
+
+    <exclude-pattern>./src/Migrations</exclude-pattern>
+    <!-- Include the whole PSR2 standard -->
+    <rule ref="PSR2">
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
+        <exclude name="Generic.Files.LineEndings" />
+    </rule>
+
+    <!-- Include PTS rules -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
+        <type>warning</type>
+    </rule>
+</ruleset>

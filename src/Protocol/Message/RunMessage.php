@@ -37,10 +37,10 @@ class RunMessage extends AbstractMessage
      * @param array       $params
      * @param null|string $tag
      */
-    public function __construct($statement, array $params = array(), $tag = null)
+    public function __construct($statement, array $params = [], $tag = null)
     {
         parent::__construct(Constants::SIGNATURE_RUN);
-        $this->fields = array($statement, $params);
+        $this->fields = [$statement, $params];
         $this->statement = $statement;
         $this->params = $params;
         $this->tag = $tag;
@@ -59,7 +59,7 @@ class RunMessage extends AbstractMessage
      */
     public function getFields()
     {
-        return array($this->statement, $this->params);
+        return [$this->statement, $this->params];
     }
 
     /**

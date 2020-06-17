@@ -31,7 +31,8 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return string
      */
-    protected function getBoltUrl(){
+    protected function getBoltUrl()
+    {
         $boltUrl = 'bolt://localhost';
         if (getenv('NEO4J_HOST')) {
             $boltUrl = sprintf(
@@ -70,10 +71,10 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     protected function dropIndexesAndConstraints()
     {
         $indexRecords = $this->getSession()->run('CALL db.indexes()');
-        $drops = array_map(function ($record){
+        $drops = array_map(function ($record) {
             $name = $record->get('name');
             // older neo4j version
-            if(!$name){
+            if (!$name) {
                 if ($record->get('type') == 'node_label_property') {
                     return 'DROP '.$record->get('description');
                 }
@@ -81,7 +82,7 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
                 $property = $record->get('properties')[0];
                 return "DROP CONSTRAINT ON (n:$label) ASSERT n.$property IS UNIQUE";
             }
-            if (strpos($name, 'index') !== false){
+            if (strpos($name, 'index') !== false) {
                 return "DROP INDEX $name";
             }
 

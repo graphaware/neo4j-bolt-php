@@ -107,7 +107,7 @@ class Transaction implements TransactionInterface
     /**
      * {@inheritdoc}
      */
-    public function push($query, array $parameters = array(), $tag = null)
+    public function push($query, array $parameters = [], $tag = null)
     {
         //
     }

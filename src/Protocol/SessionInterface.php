@@ -29,7 +29,7 @@ interface SessionInterface extends BaseSessionInterface
      *
      * @return \PTS\Bolt\Result\Result
      */
-    public function run($statement, array $parameters = array(), $tag = null);
+    public function run($statement, array $parameters = [], $tag = null);
 
     /**
      * @param PipelineInterface $pipeline
@@ -45,7 +45,7 @@ interface SessionInterface extends BaseSessionInterface
      *
      * @return PipelineInterface
      */
-    public function createPipeline($query = null, array $parameters = array(), $tag = null);
+    public function createPipeline($query = null, array $parameters = [], $tag = null);
 
     /**
      * @return TransactionInterface

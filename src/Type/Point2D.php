@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 

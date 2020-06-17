@@ -42,7 +42,7 @@ class RunMessageWithMetadata extends AbstractMessage
      * @param array $params
      * @param array $meta
      */
-    public function __construct($statement, array $params = array(), array $meta = [])
+    public function __construct($statement, array $params = [], array $meta = [])
     {
         parent::__construct(Constants::SIGNATURE_RUN, [
             'statement' => $statement,
@@ -58,5 +58,4 @@ class RunMessageWithMetadata extends AbstractMessage
     {
         return self::MESSAGE_TYPE;
     }
-
 }

@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;
@@ -33,7 +32,7 @@ class DateTimeZoned implements DateTimeConvertible, PackableType
     }
 
 
-    static public function fromDateTime(\DateTimeInterface $dateTime): self
+    public static function fromDateTime(\DateTimeInterface $dateTime): self
     {
         return new self(
             (int)$dateTime->format('U'),
@@ -83,6 +82,4 @@ class DateTimeZoned implements DateTimeConvertible, PackableType
             .$packer->packInteger($this->getNanoseconds())
             .$packer->packText($this->getZoneId());
     }
-
-
 }

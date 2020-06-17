@@ -68,10 +68,12 @@ class Socket extends AbstractIO
             $errno = socket_last_error($this->socket);
             $errstr = socket_strerror($errno);
             throw new IOException(
-                sprintf('Error connecting to server "%s": %s',
+                sprintf(
+                    'Error connecting to server "%s": %s',
                     $errno,
                     $errstr
-                ), $errno
+                ),
+                $errno
             );
         }
 
@@ -79,8 +81,8 @@ class Socket extends AbstractIO
         socket_set_option($this->socket, SOL_TCP, TCP_NODELAY, 1);
         //socket_set_option($this->socket, SOL_SOCKET, SO_PASSCRED
         socket_set_option($this->socket, SOL_SOCKET, SO_KEEPALIVE, 1);
-        socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $this->timeout, 'usec' => 0));
-        socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $this->timeout, 'usec' => 0));
+        socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $this->timeout, 'usec' => 0]);
+        socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, ['sec' => $this->timeout, 'usec' => 0]);
 
         return true;
     }

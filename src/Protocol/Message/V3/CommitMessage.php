@@ -25,5 +25,4 @@ class CommitMessage extends AbstractMessage
     {
         return self::MESSAGE_TYPE;
     }
-
 }

@@ -94,6 +94,5 @@ class DateTimeConversionTest extends \PHPUnit_Framework_TestCase
         $originalDurInSec = $delta->add($interval)->getTimestamp();
         $convertedDurInSec = $delta->add($converted)->getTimestamp();
         $this->assertSame($originalDurInSec, $convertedDurInSec);
-
     }
 }

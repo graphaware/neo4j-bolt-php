@@ -57,7 +57,7 @@ class Result extends AbstractRecordCursor
      */
     public function pushRecord(Structure $structure)
     {
-        $elts = $this->array_map_deep($structure->getElements());
+        $elts = $this->arrayMapDeep($structure->getElements());
         $this->records[] = new RecordView($this->fields, $elts);
     }
 
@@ -125,12 +125,12 @@ class Result extends AbstractRecordCursor
         // TODO: Implement skip() method.
     }
 
-    private function array_map_deep(array $array)
+    private function arrayMapDeep(array $array)
     {
         foreach ($array as $k => $v) {
             if ($v instanceof Structure) {
                 $elts = $v->getElements();
-                switch ($v->getSignature()){
+                switch ($v->getSignature()) {
                     case Structure::SIGNATURE_NODE:
                         $array[$k] = new Node($elts[0], $elts[1], $elts[2]);
                         break;
@@ -142,9 +142,9 @@ class Result extends AbstractRecordCursor
                         break;
                     case Structure::SIGNATURE_PATH:
                         $array[$k] = new Path(
-                            $this->array_map_deep($elts[0]),
-                            $this->array_map_deep($elts[1]),
-                            $this->array_map_deep($elts[2])
+                            $this->arrayMapDeep($elts[0]),
+                            $this->arrayMapDeep($elts[1]),
+                            $this->arrayMapDeep($elts[2])
                         );
                         break;
                     case Structure::SIGNATURE_POINT3D:
@@ -175,11 +175,10 @@ class Result extends AbstractRecordCursor
                         $array[$k] = new Date($elts[0]);
                         break;
                     default:
-                        $array[$k] = $this->array_map_deep($v->getElements());
+                        $array[$k] = $this->arrayMapDeep($v->getElements());
                 }
-            }
-            elseif (is_array($v)){
-                $array[$k] = $this->array_map_deep($v);
+            } elseif (is_array($v)) {
+                $array[$k] = $this->arrayMapDeep($v);
             }
         }
 
@@ -218,6 +217,4 @@ class Result extends AbstractRecordCursor
 
         return $this->firstRecord();
     }
-
-
 }

@@ -34,41 +34,29 @@ class Packer
         $stream = '';
         if (is_string($v)) {
             $stream .= $this->packText($v);
-        }
-        elseif ($v instanceof PackableType) {
+        } elseif ($v instanceof PackableType) {
             $stream .= $v->pack($this);
-        }
-        elseif ($v instanceof \DateTimeInterface) {
+        } elseif ($v instanceof \DateTimeInterface) {
             $stream .= $this->pack(DateTimeZoned::fromDateTime($v));
-        }
-        elseif ($v instanceof \DateInterval) {
+        } elseif ($v instanceof \DateInterval) {
             $stream .= $this->pack(Duration::fromDateInterval($v));
-        }
-        elseif ($v instanceof CollectionInterface && $v instanceof Map) {
+        } elseif ($v instanceof CollectionInterface && $v instanceof Map) {
             $stream .= $this->packMap($v->getElements());
-        }
-        elseif ($v instanceof CollectionInterface && $v instanceof ArrayList) {
+        } elseif ($v instanceof CollectionInterface && $v instanceof ArrayList) {
             $stream .= $this->packList($v->getElements());
-        }
-        elseif (is_array($v)) {
+        } elseif (is_array($v)) {
             $stream .= ($this->isList($v) && !empty($v)) ? $this->packList($v) : $this->packMap($v);
-        }
-        elseif (is_float($v)) {
+        } elseif (is_float($v)) {
             $stream .= $this->packFloat($v);
-        }
-        elseif (is_int($v)) {
+        } elseif (is_int($v)) {
             $stream .= $this->packInteger($v);
-        }
-        elseif (is_null($v)) {
+        } elseif (is_null($v)) {
             $stream .= chr(Constants::MARKER_NULL);
-        }
-        elseif (true === $v) {
+        } elseif (true === $v) {
             $stream .= chr(Constants::MARKER_TRUE);
-        }
-        elseif (false === $v) {
+        } elseif (false === $v) {
             $stream .= chr(Constants::MARKER_FALSE);
-        }
-        else {
+        } else {
             throw new BoltInvalidArgumentException(sprintf('Could not pack the value %s', $v));
         }
 
@@ -108,7 +96,9 @@ class Packer
             return $stream;
         }
 
-        throw new SerializationException(sprintf('Unable pack the size "%d" of the structure, Out of bound !', $length));
+        throw new SerializationException(
+            sprintf('Unable pack the size "%d" of the structure, Out of bound !', $length)
+        );
     }
 
     /**
@@ -318,9 +308,11 @@ class Packer
             return $b;
         }
 
-        throw new \OutOfBoundsException(sprintf('String size overflow, Max PHP String size is %d, you gave a string of size %d',
+        throw new \OutOfBoundsException(sprintf(
+            'String size overflow, Max PHP String size is %d, you gave a string of size %d',
             2147483647,
-            $length));
+            $length
+        ));
     }
 
     /**
@@ -432,7 +424,9 @@ class Packer
             return $b;
         }
 
-        throw new BoltOutOfBoundsException(sprintf('Out of bound value, max is %d and you give %d', PHP_INT_MAX, $value));
+        throw new BoltOutOfBoundsException(
+            sprintf('Out of bound value, max is %d and you give %d', PHP_INT_MAX, $value)
+        );
     }
 
     /**
@@ -538,7 +532,9 @@ class Packer
     public function packBigEndian($x, $bytes)
     {
         if (($bytes <= 0) || ($bytes % 2)) {
-            throw new BoltInvalidArgumentException(sprintf('Expected bytes count must be multiply of 2, %s given', $bytes));
+            throw new BoltInvalidArgumentException(
+                sprintf('Expected bytes count must be multiply of 2, %s given', $bytes)
+            );
         }
 
         if (!is_int($x)) {
@@ -556,7 +552,7 @@ class Packer
         if ($isNeg) {
             $x = bcadd($x, -1, 0);
         } //in negative domain starting point is -1, not 0
-        $res = array();
+        $res = [];
 
         for ($b = 0; $b < $bytes; $b += 2) {
             $chnk = (int) bcmod($x, 65536);

@@ -25,7 +25,7 @@ class PackingTemporalIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
         $this->emptyDB();
-        if($this->driver->getAgreedVersion() < 2){
+        if ($this->driver->getAgreedVersion() < 2) {
             $this->markTestSkipped('Temporal structures require bolt V2+');
         }
     }
@@ -165,5 +165,4 @@ class PackingTemporalIntegrationTest extends IntegrationTestCase
         $this->assertInstanceOf(Duration::class, $durationOut);
         $this->assertEquals(7, $durationOut->getDays());
     }
-
 }

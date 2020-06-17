@@ -142,8 +142,10 @@ class Driver implements DriverInterface
             $version = $response[1];
 
             if (0 === $version) {
-                $this->throwHandshakeException(sprintf('Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
-                    json_encode($this->getBoltVersions())));
+                $this->throwHandshakeException(sprintf(
+                    'Handshake Exception. Unable to negotiate a version to use. Proposed versions were %s',
+                    json_encode($this->getBoltVersions())
+                ));
             }
 
             return $version;
@@ -161,8 +163,9 @@ class Driver implements DriverInterface
         throw new HandshakeException($message);
     }
 
-    private function getBoltVersions(){
-        if ($this->forceBoltVersion != 0){
+    private function getBoltVersions()
+    {
+        if ($this->forceBoltVersion != 0) {
             return [$this->forceBoltVersion, 0, 0, 0];
         }
         return self::BOLT_VERSIONS;
@@ -175,6 +178,4 @@ class Driver implements DriverInterface
     {
         return $this->versionAgreed;
     }
-
-
 }

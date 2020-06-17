@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;

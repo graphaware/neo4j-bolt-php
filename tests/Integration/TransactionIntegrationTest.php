@@ -20,7 +20,7 @@ class TransactionIntegrationTest extends IntegrationTestCase
     {
         $this->emptyDB();
 
-        $statements = array();
+        $statements = [];
 
         for ($i = 0; $i < 5; ++$i) {
             $statements[] = Statement::create('CREATE (n:Test)');
@@ -37,7 +37,7 @@ class TransactionIntegrationTest extends IntegrationTestCase
     {
         $this->emptyDB();
 
-        $statements = array();
+        $statements = [];
 
         for ($i = 0; $i < 5; ++$i) {
             $statements[] = Statement::create('CREATE (n:Test)');
@@ -85,7 +85,7 @@ class TransactionIntegrationTest extends IntegrationTestCase
     {
         $this->emptyDB();
 
-        $statements = array();
+        $statements = [];
         for ($i = 0; $i < 5; ++$i) {
             $statements[] = Statement::create('CREATE (n:Test) RETURN n', [], sprintf('statement_%d', $i));
         }

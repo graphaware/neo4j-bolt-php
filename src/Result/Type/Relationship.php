@@ -42,7 +42,7 @@ class Relationship extends MapAccess implements RelationshipInterface
      * @param string $type
      * @param array  $properties
      */
-    public function __construct($identity, $startNodeIdentity, $endNodeIdentity, $type, array $properties = array())
+    public function __construct($identity, $startNodeIdentity, $endNodeIdentity, $type, array $properties = [])
     {
         $this->identity = $identity;
         $this->startNodeIdentity = $startNodeIdentity;

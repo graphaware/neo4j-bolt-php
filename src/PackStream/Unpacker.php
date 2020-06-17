@@ -235,7 +235,9 @@ class Unpacker
             return false;
         }
 
-        throw new SerializationException(sprintf('Unable to find serialization type for marker %s', Helper::prettyHex($marker)));
+        throw new SerializationException(
+            sprintf('Unable to find serialization type for marker %s', Helper::prettyHex($marker))
+        );
     }
 
     /**
@@ -545,29 +547,6 @@ class Unpacker
         $range = range($start, $end);
 
         return in_array(ord($byte), $range);
-    }
-
-    /**
-     * @param BytesWalker $walker
-     *
-     * @return string
-     */
-    public function read_longlong(BytesWalker $walker)
-    {
-        $this->bitcount = $this->bits = 0;
-        list(, $hi, $lo) = unpack('N2', $walker->read(8));
-        $msb = self::getLongMSB($hi);
-
-        if (!$this->is64bits) {
-            if ($msb) {
-                $hi = sprintf('%u', $hi);
-            }
-            if (self::getLongMSB($lo)) {
-                $lo = sprintf('%u', $lo);
-            }
-        }
-
-        return bcadd($this->is64bits && !$msb ? $hi << 32 : bcmul($hi, '4294967296', 0), $lo, 0);
     }
 
     /**

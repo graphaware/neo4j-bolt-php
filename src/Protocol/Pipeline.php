@@ -41,7 +41,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function push($query, array $parameters = array(), $tag = null)
+    public function push($query, array $parameters = [], $tag = null)
     {
         if (null === $query) {
             throw new BoltInvalidArgumentException('Statement cannot be null');

@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 interface DateTimeConvertible
 {
     /**
@@ -11,7 +10,7 @@ interface DateTimeConvertible
      * @param \DateTimeInterface $dateTime
      * @return static
      */
-    static public function fromDateTime(\DateTimeInterface $dateTime);
+    public static function fromDateTime(\DateTimeInterface $dateTime);
 
     /**
      * Create DateTime object from current temporal

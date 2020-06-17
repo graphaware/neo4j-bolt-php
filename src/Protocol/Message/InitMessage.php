@@ -23,7 +23,7 @@ class InitMessage extends AbstractMessage
      */
     public function __construct($userAgent, array $credentials)
     {
-        $authToken = array();
+        $authToken = [];
 
         if (isset($credentials[1]) && null !== $credentials[1]) {
             $authToken = [
@@ -33,7 +33,7 @@ class InitMessage extends AbstractMessage
             ];
         }
 
-        parent::__construct(Constants::SIGNATURE_INIT, array($userAgent, $authToken));
+        parent::__construct(Constants::SIGNATURE_INIT, [$userAgent, $authToken]);
     }
 
     /**

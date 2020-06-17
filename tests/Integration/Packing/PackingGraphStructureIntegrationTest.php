@@ -27,10 +27,12 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
     {
         $result = $this->getSession()->run(
             'CREATE (n:Node) SET n.time = $t, n.desc = $d RETURN n',
-            ['t' => time(), 'd' => 'GraphAware is awesome !']);
+            ['t' => time(), 'd' => 'GraphAware is awesome !']
+        );
 
         $this->assertTrue($result->getRecord()->value('n') instanceof Node);
-        $this->assertEquals('GraphAware is awesome !',
+        $this->assertEquals(
+            'GraphAware is awesome !',
             $result->getRecord()
                 ->value('n')
                 ->value('desc')

@@ -55,7 +55,8 @@ class Session extends \PTS\Bolt\Protocol\V1\Session
         parent::close();
     }
 
-    public function hello() {
+    public function hello()
+    {
         $this->io->assertConnected();
         $ua = Driver::getUserAgent();
         $this->sendMessage(new HelloMessage($ua, $this->credentials));
@@ -73,23 +74,26 @@ class Session extends \PTS\Bolt\Protocol\V1\Session
     }
 
 
-    public function begin() {
+    public function begin()
+    {
         $this->sendMessage(new BeginMessage());
         $this->receiveMessage();
     }
 
-    public function commit() {
+    public function commit()
+    {
         $this->sendMessage(new CommitMessage());
         $this->receiveMessage();
     }
 
-    public function rollback() {
+    public function rollback()
+    {
         $this->sendMessage(new RollbackMessage());
         $this->receiveMessage();
     }
 
-    public function goodbye() {
+    public function goodbye()
+    {
         $this->sendMessage(new GoodbyeMessage());
     }
-
 }

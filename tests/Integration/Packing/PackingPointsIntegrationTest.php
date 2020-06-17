@@ -18,7 +18,7 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
         $this->emptyDB();
-        if($this->driver->getAgreedVersion() < 2){
+        if ($this->driver->getAgreedVersion() < 2) {
             $this->markTestSkipped('Point structures require bolt V2+');
         }
     }
@@ -53,6 +53,4 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
         $this->assertEquals($point->getY(), $pointOut->getY());
         $this->assertEquals($point->getZ(), $pointOut->getZ());
     }
-
-
 }

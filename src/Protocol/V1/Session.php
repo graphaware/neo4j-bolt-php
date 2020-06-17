@@ -62,11 +62,10 @@ class Session extends AbstractSession
         EventDispatcherInterface $dispatcher,
         array $credentials = [],
         $init = true
-    )
-    {
+    ) {
         parent::__construct($io, $dispatcher);
         $this->credentials = $credentials;
-        if ($init){
+        if ($init) {
             $this->init();
         }
     }
@@ -82,7 +81,7 @@ class Session extends AbstractSession
     /**
      * {@inheritdoc}
      */
-    public function run($statement, array $parameters = array(), $tag = null)
+    public function run($statement, array $parameters = [], $tag = null)
     {
         if (null === $statement) {
             //throw new BoltInvalidArgumentException("Statement cannot be null");
@@ -116,13 +115,13 @@ class Session extends AbstractSession
         }
 
         return $cypherResult;
-
     }
 
     /**
      * @return Response
      */
-    protected function fetchRunResponse() {
+    protected function fetchRunResponse()
+    {
         $runResponse = new Response();
         $r = $this->unpacker->unpack();
 
@@ -146,7 +145,8 @@ class Session extends AbstractSession
     /**
      * @return Response
      */
-    protected function fetchPullResponse() {
+    protected function fetchPullResponse()
+    {
         $pullResponse = new Response();
 
         while (!$pullResponse->isCompleted()) {
@@ -168,11 +168,13 @@ class Session extends AbstractSession
     }
 
 
-    protected function createRunMessage($statement, $prams = []) {
+    protected function createRunMessage($statement, $prams = [])
+    {
         return new RunMessage($statement, $prams);
     }
 
-    protected function createPullAllMessage() {
+    protected function createPullAllMessage()
+    {
         return new PullAllMessage();
     }
 
@@ -232,7 +234,11 @@ class Session extends AbstractSession
         $message = $this->serializer->deserialize($rawMessage);
 
         if ($message->getSignature() === 'FAILURE') {
-            $msg = sprintf('Neo4j Exception "%s" with code "%s"', $message->getElements()['message'], $message->getElements()['code']);
+            $msg = sprintf(
+                'Neo4j Exception "%s" with code "%s"',
+                $message->getElements()['message'],
+                $message->getElements()['code']
+            );
             $e = new MessageFailureException($msg);
             $e->setStatusCode($message->getElements()['code']);
             $this->sendMessage(new AckFailureMessage());
@@ -247,7 +253,7 @@ class Session extends AbstractSession
      */
     public function sendMessage(AbstractMessage $message)
     {
-        $this->sendMessages(array($message));
+        $this->sendMessages([$message]);
     }
 
     /**
@@ -297,7 +303,9 @@ class Session extends AbstractSession
     {
         $message = $this->unpacker->unpack();
         if ($messageType !== $message->getSignature()) {
-            throw new \RuntimeException(sprintf('Expected an %s message, got %s', $messageType, $message->getSignature()));
+            throw new \RuntimeException(
+                sprintf('Expected an %s message, got %s', $messageType, $message->getSignature())
+            );
         }
 
         return $message;

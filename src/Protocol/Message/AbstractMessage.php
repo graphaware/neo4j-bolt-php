@@ -37,7 +37,7 @@ abstract class AbstractMessage implements MessageInterface
      * @param string $signature
      * @param array  $fields
      */
-    public function __construct($signature, array $fields = array())
+    public function __construct($signature, array $fields = [])
     {
         $this->signature = $signature;
         $this->fields = $fields;

@@ -117,7 +117,8 @@ class StreamChannel
     {
         $n = (int) $n;
         if ($n > $this->position) {
-            throw new \InvalidArgumentException(sprintf('You try to rewind %d characters, but current position is %d',
+            throw new \InvalidArgumentException(sprintf(
+                'You try to rewind %d characters, but current position is %d',
                 $n,
                 $this->position
             ));

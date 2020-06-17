@@ -51,11 +51,14 @@ class TCK9TypesTest extends IntegrationTestCase
         $this->assertEquals('GraphAware is awesome !', $this->runValue('GraphAware is awesome !'));
 
         // list
-        $this->assertEquals(array(0,1,2), $this->runValue(array(0,1,2)));
-        $this->assertEquals(array("one", "two", "three"), $this->runValue(array("one", "two", "three")));
+        $this->assertEquals([0,1,2], $this->runValue([0,1,2]));
+        $this->assertEquals(["one", "two", "three"], $this->runValue(["one", "two", "three"]));
 
         // map
-        $this->assertEquals(['zone' => 1, 'code' => 'neo.TransientError'], $this->runValue(['zone' => 1, 'code' => 'neo.TransientError']));
+        $this->assertEquals(
+            ['zone' => 1, 'code' => 'neo.TransientError'],
+            $this->runValue(['zone' => 1, 'code' => 'neo.TransientError'])
+        );
     }
 
     /**
@@ -95,7 +98,9 @@ class TCK9TypesTest extends IntegrationTestCase
         $this->assertEquals(false, $result->getRecord()->value('bool2'));
 
         // collection of booleans
-        $result = $session->run("UNWIND range(0, 2) as r CREATE (n) SET n.x = (id(n) = id(n)) RETURN collect(n.x) as x");
+        $result = $session->run(
+            "UNWIND range(0, 2) as r CREATE (n) SET n.x = (id(n) = id(n)) RETURN collect(n.x) as x"
+        );
         $this->assertInternalType('array', $result->getRecord()->value('x'));
         foreach ($result->getRecord()->value('x') as $v) {
             $this->assertEquals(true, $v);
@@ -110,7 +115,9 @@ class TCK9TypesTest extends IntegrationTestCase
         $this->assertEquals(1.38, $result->getRecord()->value('v'));
 
         // collection of floats
-        $result = $session->run("UNWIND range(0,2) as r CREATE (n:X) SET n.k = (id(n) / 100.0f) RETURN collect(n.k) as x");
+        $result = $session->run(
+            "UNWIND range(0,2) as r CREATE (n:X) SET n.k = (id(n) / 100.0f) RETURN collect(n.k) as x"
+        );
         $this->assertCount(3, $result->getRecord()->value('x'));
         foreach ($result->getRecord()->value('x') as $v) {
             $this->assertInternalType('float', $v);
@@ -177,7 +184,9 @@ class TCK9TypesTest extends IntegrationTestCase
         $this->assertInstanceOf(Node::class, $result->getRecord()->value('x')['created']);
 
         // collection of map<string:<collection node>>
-        $result = $session->run("UNWIND range(0, 2) as r CREATE (n:X) WITH collect(n) as n RETURN collect({nodes: n}) as x");
+        $result = $session->run(
+            "UNWIND range(0, 2) as r CREATE (n:X) WITH collect(n) as n RETURN collect({nodes: n}) as x"
+        );
         $this->assertCount(1, $result->getRecord()->value('x'));
         $this->assertArrayHasKey('nodes', $result->getRecord()->value('x')[0]);
         $this->assertCount(3, $result->getRecord()->value('x')[0]['nodes']);

@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;
@@ -33,7 +32,7 @@ class DateTimeOffset implements DateTimeConvertible, PackableType
     }
 
 
-    static public function fromDateTime(\DateTimeInterface $dateTime): self
+    public static function fromDateTime(\DateTimeInterface $dateTime): self
     {
         return new self(
             (int)$dateTime->format('U'),
@@ -47,7 +46,7 @@ class DateTimeOffset implements DateTimeConvertible, PackableType
         $date = new \DateTime();
         $date
             ->setTimestamp($this->epochSeconds)
-            ->setTimezone(new \DateTimeZone(timezone_name_from_abbr('', $this->zoneOffset,1)));
+            ->setTimezone(new \DateTimeZone(timezone_name_from_abbr('', $this->zoneOffset, 1)));
         return $date;
     }
 

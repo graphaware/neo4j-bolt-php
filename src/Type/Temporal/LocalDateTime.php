@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Type\Temporal;
 
-
 use PTS\Bolt\PackStream\Packer;
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Type\PackableType;
@@ -29,7 +28,7 @@ class LocalDateTime implements DateTimeConvertible, PackableType
     }
 
 
-    static public function fromDateTime(\DateTimeInterface $dateTime)
+    public static function fromDateTime(\DateTimeInterface $dateTime)
     {
         return new self(
             (int)$dateTime->format('U'),

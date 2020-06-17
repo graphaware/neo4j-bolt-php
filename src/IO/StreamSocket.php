@@ -61,14 +61,21 @@ class StreamSocket extends AbstractIO
     private $configuration;
 
     /**
-     * @param string               $host
-     * @param int                  $port
-     * @param array|null           $context
-     * @param bool                 $keepAlive
+     * @param string $host
+     * @param int $port
+     * @param array|null $context
+     * @param bool $keepAlive
      * @param EventDispatcher|null $eventDispatcher
+     * @param Configuration|null $configuration
      */
-    public function __construct($host, $port, $context = null, $keepAlive = false, EventDispatcher $eventDispatcher = null, Configuration $configuration = null)
-    {
+    public function __construct(
+        $host,
+        $port,
+        $context = null,
+        $keepAlive = false,
+        EventDispatcher $eventDispatcher = null,
+        Configuration $configuration = null
+    ) {
         $this->host = $host;
         $this->port = $port;
         $this->context = $context;
@@ -89,8 +96,12 @@ class StreamSocket extends AbstractIO
         //stream_set_blocking($this->sock, false);
     }
 
-    public static function withConfiguration($host, $port, Configuration $configuration, EventDispatcher $eventDispatcher = null)
-    {
+    public static function withConfiguration(
+        $host,
+        $port,
+        Configuration $configuration,
+        EventDispatcher $eventDispatcher = null
+    ) {
         $context = null;
         if (null !== $configuration->getValue('bind_to_interface')) {
             $context = stream_context_create([
@@ -173,7 +184,7 @@ class StreamSocket extends AbstractIO
      */
     public function select($sec, $usec)
     {
-        $r = array($this->sock);
+        $r = [$this->sock];
         $w = $e = null;
         $result = stream_select($r, $w, $e, $sec, $usec);
 
@@ -205,12 +216,18 @@ class StreamSocket extends AbstractIO
 
         if (false === $this->sock) {
             throw new IOException(sprintf(
-                'Error to connect to the server(%s) :  "%s"', $errno, $errstr
+                'Error to connect to the server(%s) :  "%s"',
+                $errno,
+                $errstr
             ));
         }
 
         if ($this->shouldEnableCrypto()) {
-            $result = stream_socket_enable_crypto($this->sock, true, STREAM_CRYPTO_METHOD_SSLv23_CLIENT);
+            $result = stream_socket_enable_crypto(
+                $this->sock,
+                true,
+                STREAM_CRYPTO_METHOD_SSLv23_CLIENT
+            );
             if (true !== $result) {
                 throw new \RuntimeException(sprintf('Unable to enable crypto on socket'));
             }
@@ -259,7 +276,7 @@ class StreamSocket extends AbstractIO
     private function readAll()
     {
         stream_set_blocking($this->sock, false);
-        $r = array($this->sock);
+        $r = [$this->sock];
         $w = $e = [];
         $data = '';
         $continue = true;
@@ -279,7 +296,7 @@ class StreamSocket extends AbstractIO
                 stream_select($r, $w, $e, null, null);
             }
 
-            $r = array($this->sock);
+            $r = [$this->sock];
             $data .= $buffer;
         }
 
@@ -288,7 +305,9 @@ class StreamSocket extends AbstractIO
 
     public function shouldEnableCrypto()
     {
-        if (null !== $this->configuration && $this->configuration->getValue('tls_mode') === Configuration::TLSMODE_REQUIRED) {
+        if (null !== $this->configuration
+            && $this->configuration->getValue('tls_mode') === Configuration::TLSMODE_REQUIRED
+        ) {
             return true;
         }
 

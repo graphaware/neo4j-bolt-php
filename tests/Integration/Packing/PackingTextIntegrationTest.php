@@ -70,7 +70,7 @@ class PackingTextIntegrationTest extends IntegrationTestCase
 
         foreach (range($min, $max) as $i) {
             $txt = str_repeat('a', $i);
-            $session->run($q, array('value' => $txt));
+            $session->run($q, ['value' => $txt]);
         }
 
         $q = 'MATCH (n:Text) WHERE n.value = $value RETURN n.value as x';

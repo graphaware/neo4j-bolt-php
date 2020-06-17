@@ -3,7 +3,6 @@
 
 namespace PTS\Bolt\Protocol\Message\V3;
 
-
 use PTS\Bolt\Protocol\Constants;
 use PTS\Bolt\Protocol\Message\AbstractMessage;
 
