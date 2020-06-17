@@ -1,20 +1,37 @@
 ## Neo4j Bolt PHP
 
-PHP low level Driver for Neo4j's Bolt Remoting Protocol
+PHP low level Driver for Neo4j's binary Bolt Protocol
 
 [![Build Status](https://travis-ci.org/graphaware/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/graphaware/neo4j-bolt-php)
 
 ---
 
-### References :
+### About
 
-* PHP Client embedding Bolt along with the http driver (recommended way of using Neo4j in PHP) : https://github.com/graphaware/neo4j-php-client
-* Neo4j 3.0 : http://neo4j.com/docs
+Fork of no longer maintained [graphaware/neo4j-bolt-php](https://github.com/graphaware/neo4j-bolt-php) project.
+This fork aims to maintain and update PHP Bolt driver to the newest version (V4). This driver is curently compatible with `graphaware/common` and can be used as drop in replacement to used in [graphaware/neo4j-php-client](https://github.com/graphaware/neo4j-php-client), but eventually it will drop support for it.
+
+### Supported versions
+
+- Bolt V1 for Neo4j 3.0 to Neo4j 3.5
+- Bolt V2 for Neo4j 3.3 to Neo4j 3.5
+- Bolt V3 for Neo4j 3.5+
+- Bolt V4 for Neo4j 4.0+
+
+#### Structures
+- `Point2D`
+- `Point3D`
+- `Duration`
+-  `LocalDatetime` and `DateTime` (zoned and offset)
+- `Time` and `LocalTime`
+- `Duration`
+- PHP's `\DateTime` (converst to neo4j's zoned `DateTime`)
+- PHP's `\DateInterval` (converst to `Duration`)
 
 ### Requirements:
 
-* PHP5.6+
-* Neo4j3.0
+* PHP 7.2+
+* Neo4j 3.0+
 * PHP Sockets extension available
 * `bcmath` extension
 * `mbstring` extension
@@ -24,96 +41,21 @@ PHP low level Driver for Neo4j's Bolt Remoting Protocol
 Require the package in your dependencies :
 
 ```bash
-composer require graphaware/neo4j-bolt
+composer require plumtreesystems/neo4j-bolt
 ```
+### Usage
+[Making queries](docs/Queries.md)
 
-### Setting up a driver and creating a session
+[Types](docs/Queries.md)
 
-```php
+### TODO
+- improve pipeline
+- add support for async (ReactPHP)
 
-use GraphAware\Bolt\GraphDatabase;
+#### Bug reports and Pull requests are welcome!
 
-$driver = GraphDatabase::driver("bolt://localhost");
-$session = $driver->session();
-```
+### Credits
 
-### Sending a Cypher statement
-
-```php
-$session = $driver->session();
-$session->run("CREATE (n)");
-$session->close();
-
-// with parameters :
-
-$session->run("CREATE (n) SET n += {props}", ['name' => 'Mike', 'age' => 27]);
-```
-
-### Empty Arrays
-
-Due to lack of Collections types in php, there is no way to distinguish when an empty array
-should be treated as equivalent Java List or Map types.
-
-Therefore you can use a wrapper around arrays for type safety :
-
-```php
-use GraphAware\Common\Collections;
-
-        $query = 'MERGE (n:User {id: {id} }) 
-        WITH n
-        UNWIND {friends} AS friend
-        MERGE (f:User {id: friend.name})
-        MERGE (f)-[:KNOWS]->(n)';
-
-        $params = ['id' => 'me', 'friends' => Collections::asList([])];
-        $this->getSession()->run($query, $params);
-        
-// Or
-
-        $query = 'MERGE (n:User {id: {id} }) 
-        WITH n
-        UNWIND {friends}.users AS friend
-        MERGE (f:User {id: friend.name})
-        MERGE (f)-[:KNOWS]->(n)';
-
-        $params = ['id' => 'me', 'friends' => Collections::asMap([])];
-        $this->getSession()->run($query, $params);
-
-```
-
-### TLS Encryption
-
-In order to enable TLS support, you need to set the configuration option to `REQUIRED`, here an example :
-
-```php
-$config = \GraphAware\Bolt\Configuration::newInstance()
-    ->withCredentials('bolttest', 'L7n7SfTSj0e6U')
-    ->withTLSMode(\GraphAware\Bolt\Configuration::TLSMODE_REQUIRED);
-
-$driver = \GraphAware\Bolt\GraphDatabase::driver('bolt://hobomjfhocgbkeenl.dbs.graphenedb.com:24786', $config);
-$session = $driver->session();
-```
-
-### License
-
-Copyright (c) 2015-2016 GraphAware Ltd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+Since Bolt V2, V3 and V4 protocols are undocumented, other official and unofficial drivers were used as a reference.
+Big thanks goes to [bolt-rs](https://github.com/lucis-fluxum/bolt-rs) project.
 ---
