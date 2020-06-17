@@ -25,10 +25,16 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
      */
     public function testUnpackingNode()
     {
-        $result = $this->getSession()->run('CREATE (n:Node) SET n.time = $t, n.desc = $d RETURN n', ['t' => time(), 'd' => 'GraphAware is awesome !']);
+        $result = $this->getSession()->run(
+            'CREATE (n:Node) SET n.time = $t, n.desc = $d RETURN n',
+            ['t' => time(), 'd' => 'GraphAware is awesome !']);
 
         $this->assertTrue($result->getRecord()->value('n') instanceof Node);
-        $this->assertEquals('GraphAware is awesome !', $result->getRecord()->value('n')->value('desc'));
+        $this->assertEquals('GraphAware is awesome !',
+            $result->getRecord()
+                ->value('n')
+                ->value('desc')
+        );
     }
 
     public function testUnpackingUnboundRelationship()
@@ -48,7 +54,7 @@ class PackingGraphStructureIntegrationTest extends IntegrationTestCase
 
         $this->assertCount(3, $result->getRecord()->value('nodes'));
         foreach ($result->getRecord()->value('nodes') as $node) {
-            /** @var \GraphAware\Bolt\Result\Type\Node $node */
+            /** @var Node $node */
             $this->assertTrue(in_array('Node', $node->labels()));
         }
     }

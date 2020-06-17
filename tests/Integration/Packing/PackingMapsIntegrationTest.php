@@ -37,11 +37,11 @@ class PackingMapsIntegrationTest extends IntegrationTestCase
     }
 
     /**
-     * @group fail
+     * @group long
      */
     public function testMap16High()
     {
-        $this->doRangeTest(65533, 65535);
+        $this->doRangeTest(65534, 65535);
     }
 
     private function doRangeTest($min, $max)

@@ -52,7 +52,7 @@ class Unpacker
     /**
      * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
      *
-     * @return \GraphAware\Bolt\PackStream\Structure\Structure
+     * @return Structure
      */
     public function unpackRaw(RawMessage $message)
     {
@@ -77,9 +77,9 @@ class Unpacker
     }
 
     /**
-     * @param \GraphAware\Bolt\PackStream\BytesWalker $walker
+     * @param BytesWalker $walker
      *
-     * @return \GraphAware\Bolt\PackStream\Structure\Structure
+     * @return Structure | string | int | array | float | bool
      */
     public function unpackElement(BytesWalker $walker)
     {
@@ -125,6 +125,12 @@ class Unpacker
 
         if ($byte === Constants::MAP_16) {
             $size = $this->readUnsignedShort($walker);
+
+            return $this->unpackMap($size, $walker);
+        }
+
+        if ($byte === Constants::MAP_32) {
+            $size = $this->readUnsignedLong($walker);
 
             return $this->unpackMap($size, $walker);
         }
@@ -218,7 +224,7 @@ class Unpacker
 
         // Checks Primitive Values NULL, TRUE, FALSE
         if ($byte === Constants::MARKER_NULL) {
-            return;
+            return null;
         }
 
         if ($byte === Constants::MARKER_TRUE) {
@@ -341,6 +347,11 @@ class Unpacker
         if ($this->isMarkerHigh($marker, Constants::STRUCTURE_TINY)) {
             return $this->getLowNibbleValue($marker);
         }
+        $ordMarker = ord($marker);
+        if ($ordMarker == Constants::STRUCTURE_MEDIUM) {
+            return $this->readUnsignedShortShort($walker);
+        }
+        return $this->readUnsignedShort($walker);
     }
 
     /**
