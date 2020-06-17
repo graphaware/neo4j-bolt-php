@@ -12,39 +12,16 @@
 namespace GraphAware\Bolt\Protocol\V3;
 
 use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\IO\AbstractIO;
 use GraphAware\Bolt\Protocol\Message\V3\BeginMessage;
 use GraphAware\Bolt\Protocol\Message\V3\CommitMessage;
 use GraphAware\Bolt\Protocol\Message\V3\GoodbyeMessage;
 use GraphAware\Bolt\Protocol\Message\V3\HelloMessage;
 use GraphAware\Bolt\Protocol\Message\V3\RollbackMessage;
 use GraphAware\Bolt\Protocol\Message\V3\RunMessageWithMetadata;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Session extends \GraphAware\Bolt\Protocol\V1\Session
 {
     const PROTOCOL_VERSION = 3;
-
-    /**
-     * @param AbstractIO $io
-     * @param EventDispatcherInterface $dispatcher
-     * @param array $credentials
-     * @param bool $init
-     * @throws \Exception
-     */
-    public function __construct(
-        AbstractIO $io,
-        EventDispatcherInterface $dispatcher,
-        array $credentials = [],
-        $init = true
-    )
-    {
-        parent::__construct($io, $dispatcher, $credentials, false);
-        if ($init){
-            // in Bolt v3+ init is replaced by hello
-            $this->hello();
-        }
-    }
 
     /**
      * {@inheritdoc}
@@ -88,6 +65,13 @@ class Session extends \GraphAware\Bolt\Protocol\V1\Session
         }
         $this->isInitialized = true;
     }
+
+    public function init()
+    {
+        // v3+ init is replaced with hello
+        $this->hello();
+    }
+
 
     public function begin() {
         $this->sendMessage(new BeginMessage());

@@ -20,6 +20,7 @@ class Session extends \GraphAware\Bolt\Protocol\V3\Session
 
     protected function createPullAllMessage()
     {
+        // same effect as PullAll message
         return new PullMessage(['n' => -1]);
     }
 
