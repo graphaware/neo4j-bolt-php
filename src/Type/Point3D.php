@@ -4,8 +4,14 @@
 namespace GraphAware\Bolt\Type;
 
 
+use GraphAware\Bolt\PackStream\Packer;
+use GraphAware\Bolt\Protocol\Constants;
+
 class Point3D extends Point2D
 {
+    const SIGNATURE = Constants::SIGNATURE_POINT3D;
+    const MARKER = Constants::MARKER_POINT3D;
+
     protected $z;
 
     /**
@@ -29,5 +35,18 @@ class Point3D extends Point2D
         return $this->z;
     }
 
-
+    /**
+     * @param Packer $v
+     *
+     * @return string
+     */
+    public function pack(Packer $packer): string
+    {
+        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        return $str
+            .$packer->packInteger($this->getSrid())
+            .$packer->packFloat($this->getX())
+            .$packer->packFloat($this->getY())
+            .$packer->packFloat($this->getZ());
+    }
 }

@@ -14,15 +14,10 @@ namespace GraphAware\Bolt\PackStream;
 use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
 use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
-use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Constants;
 use GraphAware\Bolt\Type\PackableType;
-use GraphAware\Bolt\Type\Point2D;
-use GraphAware\Bolt\Type\Point3D;
-use GraphAware\Bolt\Type\Temporal\Date;
 use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
 use GraphAware\Bolt\Type\Temporal\Duration;
-use GraphAware\Bolt\Type\Temporal\Time;
 use GraphAware\Common\Collection\ArrayList;
 use GraphAware\Common\Collection\CollectionInterface;
 use GraphAware\Common\Collection\Map;
@@ -48,12 +43,6 @@ class Packer
         }
         elseif ($v instanceof \DateInterval) {
             $stream .= $this->pack(Duration::fromDateInterval($v));
-        }
-        elseif ($v instanceof Point3D) {
-            $stream .= $this->packPoint3D($v);
-        }
-        elseif ($v instanceof Point2D) {
-            $stream .= $this->packPoint2D($v);
         }
         elseif ($v instanceof CollectionInterface && $v instanceof Map) {
             $stream .= $this->packMap($v->getElements());
@@ -252,37 +241,6 @@ class Packer
         $str = chr(Constants::MARKER_FLOAT);
 
         return $str.strrev(pack('d', $v));
-    }
-
-    /**
-     * @param Point3D $v
-     *
-     * @return int|string
-     */
-    public function packPoint3D(Point3D $v)
-    {
-        $str = chr(Constants::MARKER_POINT3D).chr(Constants::SIGNATURE_POINT3D);
-
-        return $str
-            .$this->packInteger($v->getSrid())
-            .$this->packFloat($v->getX())
-            .$this->packFloat($v->getY())
-            .$this->packFloat($v->getZ());
-    }
-
-    /**
-     * @param Point2D $v
-     *
-     * @return int|string
-     */
-    public function packPoint2D(Point2D $v)
-    {
-        $str = chr(Constants::MARKER_POINT2D).chr(Constants::SIGNATURE_POINT2D);
-
-        return $str
-            .$this->packInteger($v->getSrid())
-            .$this->packFloat($v->getX())
-            .$this->packFloat($v->getY());
     }
 
     /**
@@ -582,7 +540,7 @@ class Packer
      * @param int $x
      * @param int $bytes
      *
-     * @return array
+     * @return string
      *
      * @throws BoltInvalidArgumentException
      */

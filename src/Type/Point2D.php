@@ -4,8 +4,14 @@
 namespace GraphAware\Bolt\Type;
 
 
-class Point2D
+use GraphAware\Bolt\PackStream\Packer;
+use GraphAware\Bolt\Protocol\Constants;
+
+class Point2D implements PackableType
 {
+    const SIGNATURE = Constants::SIGNATURE_POINT2D;
+    const MARKER = Constants::MARKER_POINT2D;
+
     protected $x;
 
     protected $y;
@@ -51,5 +57,17 @@ class Point2D
     }
 
 
-
+    /**
+     * @param Packer $v
+     *
+     * @return string
+     */
+    public function pack(Packer $packer): string
+    {
+        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        return $str
+            .$packer->packInteger($this->getSrid())
+            .$packer->packFloat($this->getX())
+            .$packer->packFloat($this->getY());
+    }
 }

@@ -26,10 +26,10 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
         $point = new Point2D(5421394.5693251, 1.9287);
         $result = $session->run('CREATE (n:Point) SET n.prop = $x RETURN n.prop as x', ['x' => $point]);
         /**
-         * @var \GraphAware\Bolt\Result\Type\Point2D $pointOut
+         * @var \GraphAware\Bolt\Type\Point2D $pointOut
          */
         $pointOut = $result->getRecord()->value('x');
-        $this->assertInstanceOf(\GraphAware\Bolt\Result\Type\Point2D::class, $pointOut);
+        $this->assertInstanceOf(Point2D::class, $pointOut);
         $this->assertEquals($point->getSrid(), $pointOut->getSrid());
         $this->assertEquals($point->getX(), $pointOut->getX());
         $this->assertEquals($point->getY(), $pointOut->getY());
@@ -41,10 +41,10 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
         $point = new Point3D(1234.56543, 5421394.5693251, 1.9287);
         $result = $session->run('CREATE (n:Point3d) SET n.prop = $x RETURN n.prop as x', ['x' => $point]);
         /**
-         * @var \GraphAware\Bolt\Result\Type\Point3D $pointOut
+         * @var \GraphAware\Bolt\Type\Point3D $pointOut
          */
         $pointOut = $result->getRecord()->value('x');
-        $this->assertInstanceOf(\GraphAware\Bolt\Result\Type\Point3D::class, $pointOut);
+        $this->assertInstanceOf(Point3D::class, $pointOut);
         $this->assertEquals($point->getSrid(), $pointOut->getSrid());
         $this->assertEquals($point->getX(), $pointOut->getX());
         $this->assertEquals($point->getY(), $pointOut->getY());

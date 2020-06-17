@@ -15,8 +15,8 @@ use GraphAware\Bolt\PackStream\Structure\Structure;
 use GraphAware\Bolt\Record\RecordView;
 use GraphAware\Bolt\Result\Type\Node;
 use GraphAware\Bolt\Result\Type\Path;
-use GraphAware\Bolt\Result\Type\Point2D;
-use GraphAware\Bolt\Result\Type\Point3D;
+use GraphAware\Bolt\Type\Point2D;
+use GraphAware\Bolt\Type\Point3D;
 use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\UnboundRelationship;
 use GraphAware\Bolt\Type\Temporal\Date;
@@ -28,7 +28,6 @@ use GraphAware\Bolt\Type\Temporal\LocalTime;
 use GraphAware\Bolt\Type\Temporal\Time;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
-use GraphAware\Common\Result\Record;
 use RuntimeException;
 
 class Result extends AbstractRecordCursor
@@ -73,12 +72,12 @@ class Result extends AbstractRecordCursor
     /**
      * @return RecordView
      *
-     * @throws \RuntimeException When there is no record.
+     * @throws RuntimeException When there is no record.
      */
     public function getRecord()
     {
         if (count($this->records) < 1) {
-            throw new \RuntimeException('There is no record');
+            throw new RuntimeException('There is no record');
         }
 
         return $this->records[0];
