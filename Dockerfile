@@ -19,4 +19,5 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 WORKDIR /app
+COPY php.ini /usr/local/etc/php/conf.d
 ENTRYPOINT ["tail", "-f", "/dev/null"]

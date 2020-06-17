@@ -41,7 +41,7 @@ class PackingMapsIntegrationTest extends IntegrationTestCase
      */
     public function testMap16High()
     {
-        // $this->doRangeTest(65533, 65535);
+        $this->doRangeTest(65533, 65535);
     }
 
     private function doRangeTest($min, $max)

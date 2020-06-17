@@ -68,13 +68,6 @@ class Packer
         elseif (false === $v) {
             $stream .= chr(Constants::MARKER_FALSE);
         }
-        elseif (is_float($v)) {
-            // if it is 64 bit integers casted to float
-            $r = $v + $v;
-            if ('double' === gettype($r)) {
-                $stream .= $this->packInteger($v);
-            }
-        }
         else {
             throw new BoltInvalidArgumentException(sprintf('Could not pack the value %s', $v));
         }
@@ -195,14 +188,14 @@ class Packer
             return $b;
         }
 
-        if ($b < Constants::SIZE_16) {
+        if ($size < Constants::SIZE_16) {
             $b .= chr(Constants::LIST_16);
             $b .= $this->packUnsignedShort($size);
 
             return $b;
         }
 
-        if ($b < Constants::SIZE_32) {
+        if ($size < Constants::SIZE_32) {
             $b .= chr(Constants::LIST_32);
             $b .= $this->packUnsignedLong($size);
 
@@ -372,8 +365,6 @@ class Packer
         $b = '';
 
         if ($value > -16 && $value < 128) {
-            //$b .= chr(Constants::INT_8);
-            //$b .= $this->packBigEndian($value, 2);
             return $this->packSignedShortShort($value);
         }
 
@@ -574,7 +565,9 @@ class Packer
         }
 
         if ($x || ($isNeg && ($chnk & 0x8000))) {
-            throw new BoltOutOfBoundsException(sprintf('Overflow detected while attempting to pack %s into %s bytes', $ox, $bytes));
+            throw new BoltOutOfBoundsException(
+                sprintf('Overflow detected while attempting to pack %s into %s bytes', $ox, $bytes)
+            );
         }
 
         return implode(array_reverse($res));
