@@ -1,20 +1,34 @@
 language: php
 php:
-    - 5.6
-    - 7.0
-
-before_install:
-    - sudo apt-get update > /dev/null
-    # install Oracle JDK8
-    - sh -c ./build/install-jdk8.sh
-    # install and launch neo4j
-    - sh -c ./build/install-neo.sh
-    - composer install --prefer-source --no-interaction
-    - composer self-update
+    - 7.2
+    - 7.4
 
 script:
-    - vendor/bin/phpunit --exclude-group fail
-    - vendor/bin/behat
+    - vendor/bin/phpunit --exclude-group long
+
+env:
+    global:
+        - NEO4J_HOST=127.0.0.1:7687
+        - NEO4J_USER=neo4j
+        - NEO4J_PASSWORD=neo4j
+    jobs:
+        - NEO4J_VERSION=3.3 BOLT_VERSION=1
+        - NEO4J_VERSION=3.4 BOLT_VERSION=2
+        - NEO4J_VERSION=3.5 BOLT_VERSION=3
+        - NEO4J_VERSION=4.0 BOLT_VERSION=4
+
+
+before_install:
+    - composer install --prefer-source --no-interaction
+    - |
+        if [[ $NEO4J_VERSION ]]; then
+          docker pull neo4j:$NEO4J_VERSION
+          docker run -d -p 7474:7474 -p 7687:7687 neo4j:$NEO4J_VERSION bash -c "neo4j-admin set-initial-password neo4j; neo4j console"
+          docker ps -a
+        fi
+
+services:
+    - docker
 
 notifications:
-    email: "christophe@graphaware.com"
+    email: "matt@plumtreesystems.com"

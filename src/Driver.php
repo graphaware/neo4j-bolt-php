@@ -48,9 +48,9 @@ class Driver implements DriverInterface
     protected $sessionRegistry;
 
     /**
-     * @var bool
+     * @var int
      */
-    protected $versionAgreed = false;
+    protected $versionAgreed = 0;
 
     /**
      * @var Session
@@ -106,7 +106,7 @@ class Driver implements DriverInterface
             return $this->session;
         }
 
-        if (!$this->versionAgreed) {
+        if ($this->versionAgreed == 0) {
             $this->versionAgreed = $this->handshake();
         }
 
@@ -150,6 +150,7 @@ class Driver implements DriverInterface
         } catch (IOException $e) {
             $this->throwHandshakeException($e->getMessage());
         }
+        return 0;
     }
 
     /**
@@ -166,4 +167,14 @@ class Driver implements DriverInterface
         }
         return self::BOLT_VERSIONS;
     }
+
+    /**
+     * @return int
+     */
+    public function getAgreedVersion(): int
+    {
+        return $this->versionAgreed;
+    }
+
+
 }

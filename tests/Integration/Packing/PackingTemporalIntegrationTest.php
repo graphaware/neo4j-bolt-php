@@ -17,7 +17,7 @@ use GraphAware\Bolt\Type\Temporal\Time;
  * @group packing
  * @group integration
  * @group temporal
- * @group v2+
+ * @group V2+
  */
 class PackingTemporalIntegrationTest extends IntegrationTestCase
 {
@@ -25,6 +25,9 @@ class PackingTemporalIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
         $this->emptyDB();
+        if($this->driver->getAgreedVersion() < 2){
+            $this->markTestSkipped('Temporal structures require bolt V2+');
+        }
     }
 
     public function testPackingDateTimeZoned()

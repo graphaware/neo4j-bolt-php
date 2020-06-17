@@ -18,6 +18,9 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
         $this->emptyDB();
+        if($this->driver->getAgreedVersion() < 2){
+            $this->markTestSkipped('Point structures require bolt V2+');
+        }
     }
 
     public function testPackingPoint2D()
