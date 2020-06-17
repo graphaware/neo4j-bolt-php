@@ -70,7 +70,10 @@ class RecordView implements RecordViewInterface
      */
     public function value($key)
     {
-        return $this->values[$this->keyToIndexMap[$key]];
+        if (!isset($this->keyToIndexMap[$key])) {
+            return null;
+        }
+        return $this->values[$this->keyToIndexMap[$key]] ?? null;
     }
 
     /**

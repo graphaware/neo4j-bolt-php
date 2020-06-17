@@ -30,7 +30,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
      */
     public function testBindToInterface()
     {
-        $config = Configuration::create()
+        $config = $this->getConfig()
             ->bindToInterface('0:0');
         $driver = GraphDatabase::driver($this->getBoltUrl(), $config);
         $result = $driver->session()->run('MATCH (n) RETURN count(n)');
