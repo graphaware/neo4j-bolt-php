@@ -15,7 +15,7 @@ This fork aims to maintain and update PHP Bolt driver to the newest version (V4)
 ### Supported versions
 
 - Bolt V1 for Neo4j 3.0 to Neo4j 3.5
-- Bolt V2 for Neo4j 3.3 to Neo4j 3.5
+- Bolt V2 for Neo4j 3.4 to Neo4j 3.5
 - Bolt V3 for Neo4j 3.5+
 - Bolt V4 for Neo4j 4.0+
 

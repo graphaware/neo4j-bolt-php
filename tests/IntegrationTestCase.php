@@ -83,7 +83,12 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
                 if ($record->get('type') == 'node_label_property') {
                     return 'DROP ' . $record->get('description');
                 }
+
                 $label = $record->get('label');
+                // neo4j 3.5
+                if (!$label) {
+                    $label = $record->get('tokenNames')[0];
+                }
                 $property = $record->get('properties')[0];
                 return "DROP CONSTRAINT ON (n:$label) ASSERT n.$property IS UNIQUE";
             }
