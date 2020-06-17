@@ -2,7 +2,8 @@
 
 PHP low level Driver for Neo4j's binary Bolt Protocol
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/graphaware/neo4j-bolt-php)
+
+[![Build Status](https://travis-ci.org/PlumTreeSystems/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/PlumTreeSystems/neo4j-bolt-php)
 
 ---
 
