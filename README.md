@@ -2,14 +2,15 @@
 
 PHP low level Driver for Neo4j's binary Bolt Protocol
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/graphaware/neo4j-bolt-php)
+
+[![Build Status](https://travis-ci.org/PlumTreeSystems/neo4j-bolt-php.svg?branch=master)](https://travis-ci.org/PlumTreeSystems/neo4j-bolt-php)
 
 ---
 
 ### About
 
 Fork of no longer maintained [graphaware/neo4j-bolt-php](https://github.com/graphaware/neo4j-bolt-php) project.
-This fork aims to maintain and update PHP Bolt driver to the newest version (V4). This driver is curently compatible with `graphaware/common` and can be used as drop in replacement to used in [graphaware/neo4j-php-client](https://github.com/graphaware/neo4j-php-client), but eventually it will drop support for it.
+This fork aims to maintain and update PHP Bolt driver to the newest version (V4). This driver is curently compatible with `graphaware/common` and can be used as drop in replacement to be used in [graphaware/neo4j-php-client](https://github.com/graphaware/neo4j-php-client), but eventually it will drop support for it.
 
 ### Supported versions
 
@@ -58,4 +59,3 @@ composer require plumtreesystems/neo4j-bolt
 
 Since Bolt V2, V3 and V4 protocols are undocumented, other official and unofficial drivers were used as a reference.
 Big thanks goes to [bolt-rs](https://github.com/lucis-fluxum/bolt-rs) project.
----
