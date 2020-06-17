@@ -33,7 +33,7 @@ class SessionRegistry
     protected $sessions = [];
 
     /**
-     * @param AbstractIO               $io
+     * @param AbstractIO $io
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(AbstractIO $io, EventDispatcherInterface $dispatcher)
@@ -47,7 +47,7 @@ class SessionRegistry
      */
     public function registerSession($sessionClass)
     {
-        $v = (int) $sessionClass::getProtocolVersion();
+        $v = (int)$sessionClass::getProtocolVersion();
 
         if (array_key_exists($v, $this->sessions)) {
             throw new \RuntimeException(sprintf('There is already a Session registered for supporting Version#%d', $v));
@@ -71,18 +71,18 @@ class SessionRegistry
      */
     public function supportsVersion($version)
     {
-        return array_key_exists((int) $version, $this->sessions);
+        return array_key_exists((int)$version, $this->sessions);
     }
 
     /**
-     * @param int   $version
+     * @param int $version
      * @param array $credentials
      *
      * @return SessionInterface
      */
     public function getSession($version, array $credentials)
     {
-        $v = (int) $version;
+        $v = (int)$version;
 
         if (!$this->supportsVersion($v)) {
             throw new \InvalidArgumentException(sprintf('No session registered supporting Version %d', $v));

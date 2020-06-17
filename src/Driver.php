@@ -72,7 +72,7 @@ class Driver implements DriverInterface
      */
     public static function getUserAgent()
     {
-        return 'GraphAware-BoltPHP/'.self::VERSION;
+        return 'PTS-BoltPHP/' . self::VERSION;
     }
 
     /**
@@ -129,7 +129,7 @@ class Driver implements DriverInterface
         }
 
         $msg = '';
-        $msg .= chr(0x60).chr(0x60).chr(0xb0).chr(0x17);
+        $msg .= chr(0x60) . chr(0x60) . chr(0xb0) . chr(0x17);
 
         foreach ($this->getBoltVersions() as $v) {
             $msg .= $packer->packBigEndian($v, 4);

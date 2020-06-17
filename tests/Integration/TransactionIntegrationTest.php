@@ -76,8 +76,6 @@ class TransactionIntegrationTest extends IntegrationTestCase
     }
 
 
-
-
     /**
      * @group tx-tag-multiple-fix
      */

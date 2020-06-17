@@ -36,11 +36,11 @@ class Relationship extends MapAccess implements RelationshipInterface
     protected $type;
 
     /**
-     * @param int    $identity
-     * @param int    $startNodeIdentity
-     * @param int    $endNodeIdentity
+     * @param int $identity
+     * @param int $startNodeIdentity
+     * @param int $endNodeIdentity
      * @param string $type
-     * @param array  $properties
+     * @param array $properties
      */
     public function __construct($identity, $startNodeIdentity, $endNodeIdentity, $type, array $properties = [])
     {

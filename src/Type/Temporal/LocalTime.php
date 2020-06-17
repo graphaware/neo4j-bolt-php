@@ -25,8 +25,8 @@ class LocalTime implements DateTimeConvertible, PackableType
 
     public static function fromDateTime(\DateTimeInterface $dateTime)
     {
-        $midnight = clone($dateTime)->modify('midnight');
-        $nano = ($dateTime->getTimestamp() - $midnight->getTimestamp())*1000000000;
+        $midnight = clone ($dateTime)->modify('midnight');
+        $nano = ($dateTime->getTimestamp() - $midnight->getTimestamp()) * 1000000000;
         return new self($nano);
     }
 
@@ -49,8 +49,8 @@ class LocalTime implements DateTimeConvertible, PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getNanoSecondsSinceMidnight());
+            . $packer->packInteger($this->getNanoSecondsSinceMidnight());
     }
 }

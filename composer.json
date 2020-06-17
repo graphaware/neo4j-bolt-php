@@ -1,47 +1,47 @@
 {
-    "name": "plumtreesystems/neo4j-bolt",
-    "description": "Neo4j Bolt Binary Protocol PHP Driver",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Christophe Willemsen",
-            "email": "christophe@graphaware.com"
-        },
-        {
-            "name": "Matas Valužis",
-            "email": "matt@plumtreesystems.com",
-            "role": "Maintainer"
-        }
-    ],
-    "require": {
-        "php": ">=7.2",
-        "ext-bcmath": "*",
-        "ext-mbstring": "*",
-        "symfony/event-dispatcher": "^2.7|^3.0|^4.0",
-        "graphaware/neo4j-common": "^3.4",
-        "myclabs/php-enum": "^1.4",
-      "ext-json": "*"
+  "name": "plumtreesystems/neo4j-bolt",
+  "description": "Neo4j Bolt Binary Protocol PHP Driver",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christophe Willemsen",
+      "email": "christophe@graphaware.com"
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit --exclude-group long",
-        "lint": "vendor/bin/phpcs",
-        "fix-lint": "vendor/bin/phpcbf"
-    },
-    "autoload": {
-      "psr-4": {
-          "PTS\\Bolt\\": "src/"
-      }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "PTS\\Bolt\\Tests\\": "tests/"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^4.8",
-        "symfony/stopwatch": "^2.7",
-        "squizlabs/php_codesniffer": "3.*"
-    },
-    "minimum-stability": "dev"
+    {
+      "name": "Matas Valužis",
+      "email": "matt@plumtreesystems.com",
+      "role": "Maintainer"
+    }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "ext-bcmath": "*",
+    "ext-mbstring": "*",
+    "symfony/event-dispatcher": "^2.7|^3.0|^4.0",
+    "graphaware/neo4j-common": "^3.4",
+    "myclabs/php-enum": "^1.4",
+    "ext-json": "*"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit --exclude-group long",
+    "lint": "vendor/bin/phpcs",
+    "lint-fix": "vendor/bin/phpcbf"
+  },
+  "autoload": {
+    "psr-4": {
+      "PTS\\Bolt\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PTS\\Bolt\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "symfony/stopwatch": "^2.7",
+    "squizlabs/php_codesniffer": "3.*"
+  },
+  "minimum-stability": "dev"
 }

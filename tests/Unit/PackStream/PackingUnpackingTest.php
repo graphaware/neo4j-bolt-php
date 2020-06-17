@@ -72,7 +72,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
 
     public function testPackingText8()
     {
-        $text = str_repeat('a', (Constants::SIZE_8)-1);
+        $text = str_repeat('a', (Constants::SIZE_8) - 1);
         $length = strlen($text);
         $binary = chr(Constants::TEXT_8) . $this->packer->packUnsignedShortShort($length) . $text;
         $w = $this->getWalkerForBinary($binary);
@@ -82,7 +82,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
 
     public function testPackingText16()
     {
-        $text = str_repeat("a", (Constants::SIZE_16)-1);
+        $text = str_repeat("a", (Constants::SIZE_16) - 1);
         $length = strlen($text);
         $bin = chr(Constants::TEXT_16) . $this->packer->packUnsignedShort($length) . $text;
         $w = $this->getWalkerForBinary($bin);
@@ -106,7 +106,7 @@ class UnpackerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $binary
-     * @param int    $pos
+     * @param int $pos
      *
      * @return BytesWalker
      */

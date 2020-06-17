@@ -19,7 +19,7 @@ class InitMessage extends AbstractMessage
 
     /**
      * @param string $userAgent
-     * @param array  $credentials
+     * @param array $credentials
      */
     public function __construct($userAgent, array $credentials)
     {

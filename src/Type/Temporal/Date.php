@@ -35,7 +35,7 @@ class Date implements DateTimeConvertible, PackableType
     public function toDateTime(): \DateTime
     {
         $epoch = (new \DateTime())->setTimestamp(0);
-        $epoch->add(new \DateInterval('P'.$this->daysSinceEpoch.'D'));
+        $epoch->add(new \DateInterval('P' . $this->daysSinceEpoch . 'D'));
         return $epoch;
     }
 
@@ -49,8 +49,8 @@ class Date implements DateTimeConvertible, PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getDaysSinceEpoch());
+            . $packer->packInteger($this->getDaysSinceEpoch());
     }
 }

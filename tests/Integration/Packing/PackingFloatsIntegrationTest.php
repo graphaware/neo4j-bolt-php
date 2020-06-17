@@ -22,8 +22,8 @@ class PackingFloatsIntegrationTest extends IntegrationTestCase
         $session = $this->getSession();
 
         for ($x = 1; $x < 1000; ++$x) {
-            $result = $session->run('CREATE (n:Float) SET n.prop = $x RETURN n.prop as x', ['x' => $x/100]);
-            $this->assertEquals($x/100, $result->getRecord()->value('x'));
+            $result = $session->run('CREATE (n:Float) SET n.prop = $x RETURN n.prop as x', ['x' => $x / 100]);
+            $this->assertEquals($x / 100, $result->getRecord()->value('x'));
         }
     }
 
@@ -32,8 +32,8 @@ class PackingFloatsIntegrationTest extends IntegrationTestCase
         $session = $this->getSession();
 
         for ($x = -1; $x > -1000; --$x) {
-            $result = $session->run('CREATE (n:Float) SET n.prop = $x RETURN n.prop as x', ['x' => $x/100]);
-            $this->assertEquals($x/100, $result->getRecord()->value('x'));
+            $result = $session->run('CREATE (n:Float) SET n.prop = $x RETURN n.prop as x', ['x' => $x / 100]);
+            $this->assertEquals($x / 100, $result->getRecord()->value('x'));
         }
     }
 

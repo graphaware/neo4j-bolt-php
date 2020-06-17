@@ -36,7 +36,7 @@ class DateTimeOffset implements DateTimeConvertible, PackableType
     {
         return new self(
             (int)$dateTime->format('U'),
-            $dateTime->format('u')*1000,
+            $dateTime->format('u') * 1000,
             $dateTime->getOffset()
         );
     }
@@ -76,10 +76,10 @@ class DateTimeOffset implements DateTimeConvertible, PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getEpochSeconds())
-            .$packer->packInteger($this->getNanoseconds())
-            .$packer->packInteger($this->getZoneOffset());
+            . $packer->packInteger($this->getEpochSeconds())
+            . $packer->packInteger($this->getNanoseconds())
+            . $packer->packInteger($this->getZoneOffset());
     }
 }

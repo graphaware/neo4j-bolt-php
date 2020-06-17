@@ -26,7 +26,7 @@ class Node extends MapAccess implements BaseNodeInterface
     protected $labels;
 
     /**
-     * @param int   $identity
+     * @param int $identity
      * @param array $labels
      * @param array $properties
      */

@@ -33,8 +33,8 @@ class RunMessage extends AbstractMessage
     protected $tag;
 
     /**
-     * @param string      $statement
-     * @param array       $params
+     * @param string $statement
+     * @param array $params
      * @param null|string $tag
      */
     public function __construct($statement, array $params = [], $tag = null)

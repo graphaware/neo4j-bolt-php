@@ -13,7 +13,7 @@ class HelloMessage extends AbstractMessage
     /**
      * Hello message combines auth and user agent into metadata field
      * @param string $userAgent
-     * @param array  $credentials
+     * @param array $credentials
      */
     public function __construct($userAgent, array $credentials)
     {

@@ -32,13 +32,13 @@ class LocalDateTime implements DateTimeConvertible, PackableType
     {
         return new self(
             (int)$dateTime->format('U'),
-            $dateTime->format('u')*1000
+            $dateTime->format('u') * 1000
         );
     }
 
     public function toDateTime(): \DateTime
     {
-        return new \DateTime('@'.$this->epochSeconds);
+        return new \DateTime('@' . $this->epochSeconds);
     }
 
     /**
@@ -60,9 +60,9 @@ class LocalDateTime implements DateTimeConvertible, PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getEpochSeconds())
-            .$packer->packInteger($this->getNanoseconds());
+            . $packer->packInteger($this->getEpochSeconds())
+            . $packer->packInteger($this->getNanoseconds());
     }
 }

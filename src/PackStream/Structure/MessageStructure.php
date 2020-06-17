@@ -30,7 +30,7 @@ class MessageStructure
 
     /**
      * @param string $signature
-     * @param int    $size
+     * @param int $size
      */
     public function __construct($signature, $size)
     {

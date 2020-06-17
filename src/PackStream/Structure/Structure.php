@@ -36,7 +36,7 @@ class Structure
     public function __construct($signature, $size)
     {
         $this->signature = $signature;
-        $this->size = (int) $size;
+        $this->size = (int)$size;
     }
 
     /**

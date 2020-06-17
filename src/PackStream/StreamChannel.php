@@ -87,7 +87,7 @@ class StreamChannel
      */
     public function forward($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
 
         if (($this->position + $n) > $this->length) {
             throw new \OutOfBoundsException(sprintf('No more bytes to read'));
@@ -101,7 +101,7 @@ class StreamChannel
      */
     public function setPosition($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
 
         if ($n > $this->length) {
             throw new \OutOfBoundsException(sprintf('Require position out of bound'));
@@ -115,7 +115,7 @@ class StreamChannel
      */
     public function rewind($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
         if ($n > $this->position) {
             throw new \InvalidArgumentException(sprintf(
                 'You try to rewind %d characters, but current position is %d',

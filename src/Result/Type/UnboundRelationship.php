@@ -26,8 +26,8 @@ class UnboundRelationship extends MapAccess implements BaseRelationshipInterface
     protected $type;
 
     /**
-     * @param string       $identity
-     * @param string       $type
+     * @param string $identity
+     * @param string $type
      * @param string array $properties
      */
     public function __construct($identity, $type, array $properties)

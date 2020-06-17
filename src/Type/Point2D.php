@@ -63,10 +63,10 @@ class Point2D implements PackableType
      */
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getSrid())
-            .$packer->packFloat($this->getX())
-            .$packer->packFloat($this->getY());
+            . $packer->packInteger($this->getSrid())
+            . $packer->packFloat($this->getX())
+            . $packer->packFloat($this->getY());
     }
 }

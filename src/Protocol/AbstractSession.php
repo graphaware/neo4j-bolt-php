@@ -56,7 +56,7 @@ abstract class AbstractSession implements SessionInterface
     protected $streamChannel;
 
     /**
-     * @param AbstractIO               $io
+     * @param AbstractIO $io
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(AbstractIO $io, EventDispatcherInterface $dispatcher)

@@ -66,6 +66,6 @@ class FailureMessage extends AbstractMessage
      */
     public function getFullMessage()
     {
-        return $this->code.' : '.$this->message;
+        return $this->code . ' : ' . $this->message;
     }
 }

@@ -23,8 +23,8 @@ interface SessionInterface extends BaseSessionInterface
     public static function getProtocolVersion();
 
     /**
-     * @param string      $statement
-     * @param array       $parameters
+     * @param string $statement
+     * @param array $parameters
      * @param null|string $tag
      *
      * @return \PTS\Bolt\Result\Result
@@ -40,7 +40,7 @@ interface SessionInterface extends BaseSessionInterface
 
     /**
      * @param null|string $query
-     * @param array       $parameters
+     * @param array $parameters
      * @param null|string $tag
      *
      * @return PipelineInterface

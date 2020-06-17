@@ -44,9 +44,9 @@ class Socket extends AbstractIO
     /**
      * Socket constructor.
      *
-     * @param string                        $host
-     * @param int                           $port
-     * @param int                           $timeout
+     * @param string $host
+     * @param int $port
+     * @param int $timeout
      * @param EventDispatcherInterface|null $dispatcher
      */
     public function __construct($host, $port, $timeout = 5, EventDispatcherInterface $dispatcher = null)

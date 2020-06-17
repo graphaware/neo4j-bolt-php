@@ -71,7 +71,7 @@ class PackingIntegersIntegrationTest extends IntegrationTestCase
 
     public function testMinIntegers32End()
     {
-        $min = (-1*abs(pow(2, 31)));
+        $min = (-1 * abs(pow(2, 31)));
         $this->doRangeTest($min, $min + 100);
     }
 
@@ -80,7 +80,7 @@ class PackingIntegersIntegrationTest extends IntegrationTestCase
      */
     public function testMinIntegers64()
     {
-        $max = (-1*abs(pow(2, 31)))-1;
+        $max = (-1 * abs(pow(2, 31))) - 1;
         $this->doRangeTest($max - 100, $max);
     }
 
@@ -89,8 +89,8 @@ class PackingIntegersIntegrationTest extends IntegrationTestCase
      */
     public function testMin64IntegersEnd()
     {
-        $min = -1*abs(pow(2, 63));
-        $this->doRangeTest((int) $min, (int) $min+1);
+        $min = -1 * abs(pow(2, 63));
+        $this->doRangeTest((int)$min, (int)$min + 1);
     }
 
     /**
@@ -99,7 +99,7 @@ class PackingIntegersIntegrationTest extends IntegrationTestCase
     public function test64Integers()
     {
         $min = pow(2, 31);
-        $this->doRangeTest($min, $min+100);
+        $this->doRangeTest($min, $min + 100);
     }
 
     /**
@@ -108,8 +108,8 @@ class PackingIntegersIntegrationTest extends IntegrationTestCase
     public function test64IntegersEnd()
     {
         $this->emptyDB();
-        $max = (int) pow(2, 63);
-        $this->doRangeTest($max-1000, $max);
+        $max = (int)pow(2, 63);
+        $this->doRangeTest($max - 1000, $max);
     }
 
     private function doRangeTest($min, $max)

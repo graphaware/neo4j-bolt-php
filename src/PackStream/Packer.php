@@ -108,7 +108,7 @@ class Packer
      */
     public function getStructureMarker($length)
     {
-        $length = (int) $length;
+        $length = (int)$length;
         $bytes = '';
 
         if ($length < Constants::SIZE_TINY) {
@@ -223,7 +223,7 @@ class Packer
     {
         $str = chr(Constants::MARKER_FLOAT);
 
-        return $str.strrev(pack('d', $v));
+        return $str . strrev(pack('d', $v));
     }
 
     /**
@@ -555,7 +555,7 @@ class Packer
         $res = [];
 
         for ($b = 0; $b < $bytes; $b += 2) {
-            $chnk = (int) bcmod($x, 65536);
+            $chnk = (int)bcmod($x, 65536);
             $x = bcdiv($x, 65536, 0);
             $res[] = pack('n', $isNeg ? ~$chnk : $chnk);
         }

@@ -51,7 +51,7 @@ class TCK9TypesTest extends IntegrationTestCase
         $this->assertEquals('GraphAware is awesome !', $this->runValue('GraphAware is awesome !'));
 
         // list
-        $this->assertEquals([0,1,2], $this->runValue([0,1,2]));
+        $this->assertEquals([0, 1, 2], $this->runValue([0, 1, 2]));
         $this->assertEquals(["one", "two", "three"], $this->runValue(["one", "two", "three"]));
 
         // map

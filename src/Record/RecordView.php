@@ -75,7 +75,7 @@ class RecordView implements RecordViewInterface
 
     /**
      * @param string $key
-     * @param mixed  $defaultValue
+     * @param mixed $defaultValue
      *
      * @return \PTS\Bolt\Result\Type\Node|\PTS\Bolt\Result\Type\Path|\PTS\Bolt\Result\Type\Relationship|mixed
      */

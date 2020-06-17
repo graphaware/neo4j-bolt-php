@@ -33,7 +33,7 @@ class Serializer
     /**
      * Serializer constructor.
      *
-     * @param Packer   $packer
+     * @param Packer $packer
      * @param Unpacker $unpacker
      */
     public function __construct(Packer $packer, Unpacker $unpacker)
@@ -69,7 +69,7 @@ class Serializer
 
     /**
      * @param MessageStructure $structure
-     * @param RawMessage       $rawMessage
+     * @param RawMessage $rawMessage
      *
      * @return SuccessMessage
      */
@@ -83,7 +83,7 @@ class Serializer
 
     /**
      * @param MessageStructure $structure
-     * @param RawMessage       $rawMessage
+     * @param RawMessage $rawMessage
      *
      * @return RecordMessage
      */
@@ -97,7 +97,7 @@ class Serializer
 
     /**
      * @param MessageStructure $structure
-     * @param RawMessage       $rawMessage
+     * @param RawMessage $rawMessage
      *
      * @return FailureMessage
      */

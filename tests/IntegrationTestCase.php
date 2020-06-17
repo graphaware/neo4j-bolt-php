@@ -76,7 +76,7 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
             // older neo4j version
             if (!$name) {
                 if ($record->get('type') == 'node_label_property') {
-                    return 'DROP '.$record->get('description');
+                    return 'DROP ' . $record->get('description');
                 }
                 $label = $record->get('label');
                 $property = $record->get('properties')[0];

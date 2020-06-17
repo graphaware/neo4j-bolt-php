@@ -32,8 +32,8 @@ class BytesWalker
 
     /**
      * @param RawMessage $message
-     * @param int        $position
-     * @param string     $encoding
+     * @param int $position
+     * @param string $encoding
      */
     public function __construct(RawMessage $message, $position = 0, $encoding = 'ASCII')
     {
@@ -49,7 +49,7 @@ class BytesWalker
      */
     public function read($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
         $raw = substr($this->bytes, $this->position, $n);
         $this->position += $n;
 
@@ -63,7 +63,7 @@ class BytesWalker
      */
     public function forward($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
         if (($this->position + $n) > $this->getLength()) {
             throw new \OutOfBoundsException(sprintf('No more bytes to read'));
         }
@@ -78,7 +78,7 @@ class BytesWalker
      */
     public function setPosition($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
         if ($n > $this->getLength()) {
             throw new \OutOfBoundsException(sprintf('Require position out of bound'));
         }
@@ -93,7 +93,7 @@ class BytesWalker
      */
     public function rewind($n)
     {
-        $n = (int) $n;
+        $n = (int)$n;
         if ($n > $this->position) {
             throw new \InvalidArgumentException(sprintf(
                 'You try to rewind %d characters, but current position is %d',

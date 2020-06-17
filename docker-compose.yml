@@ -1,21 +1,21 @@
 version: '3.4'
 
 services:
-    client:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        environment:
-            - NEO4J_HOST=neo4j
-            - NEO4J_SCHEMA=bolt
-        volumes:
-            - ./:/app:rw,cached
-    neo4j:
-        image: neo4j:4.0
-        environment:
-            - NEO4J_AUTH=none
-        ports:
-        - 7474:7474
-        - 7687:7687
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NEO4J_HOST=neo4j
+      - NEO4J_SCHEMA=bolt
+    volumes:
+      - ./:/app:rw,cached
+  neo4j:
+    image: neo4j:4.0
+    environment:
+      - NEO4J_AUTH=none
+    ports:
+      - 7474:7474
+      - 7687:7687
 
 

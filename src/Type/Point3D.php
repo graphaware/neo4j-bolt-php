@@ -41,11 +41,11 @@ class Point3D extends Point2D
      */
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getSrid())
-            .$packer->packFloat($this->getX())
-            .$packer->packFloat($this->getY())
-            .$packer->packFloat($this->getZ());
+            . $packer->packInteger($this->getSrid())
+            . $packer->packFloat($this->getX())
+            . $packer->packFloat($this->getY())
+            . $packer->packFloat($this->getZ());
     }
 }

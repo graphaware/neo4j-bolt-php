@@ -219,7 +219,7 @@ class Unpacker
         if ($byte === Constants::MARKER_FLOAT) {
             list(, $v) = unpack('d', strrev($walker->read(8)));
 
-            return (float) $v;
+            return (float)$v;
         }
 
         // Checks Primitive Values NULL, TRUE, FALSE
@@ -281,7 +281,7 @@ class Unpacker
     }
 
     /**
-     * @param int         $size
+     * @param int $size
      * @param BytesWalker $walker
      *
      * @return string
@@ -298,11 +298,11 @@ class Unpacker
      */
     public function unpackInteger($value)
     {
-        return (int) $value;
+        return (int)$value;
     }
 
     /**
-     * @param int         $size
+     * @param int $size
      * @param BytesWalker $walker
      *
      * @return array
@@ -320,14 +320,14 @@ class Unpacker
     }
 
     /**
-     * @param int         $size
+     * @param int $size
      * @param BytesWalker $walker
      *
      * @return array
      */
     public function unpackList($size, BytesWalker $walker)
     {
-        $size = (int) $size;
+        $size = (int)$size;
         $list = [];
         for ($i = 0; $i < $size; ++$i) {
             $list[] = $this->unpackElement($walker);
@@ -532,12 +532,12 @@ class Unpacker
     {
         list(, $high, $low) = unpack('N2', $walker->read(8));
 
-        return (int) bcadd($high << 32, $low, 0);
+        return (int)bcadd($high << 32, $low, 0);
     }
 
     /**
-     * @param int    $start
-     * @param int    $end
+     * @param int $start
+     * @param int $end
      * @param string $byte
      *
      * @return mixed
@@ -569,6 +569,6 @@ class Unpacker
      */
     private static function getLongMSB($longInt)
     {
-        return (bool) ($longInt & 0x80000000);
+        return (bool)($longInt & 0x80000000);
     }
 }

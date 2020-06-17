@@ -33,9 +33,9 @@ class Path implements BasePathInterface
     protected $sequence;
 
     /**
-     * @param NodeInterface[]       $nodes
+     * @param NodeInterface[] $nodes
      * @param UnboundRelationship[] $relationships
-     * @param int[]                 $sequence
+     * @param int[] $sequence
      */
     public function __construct(array $nodes, array $relationships, array $sequence)
     {

@@ -19,7 +19,7 @@ class IssuesIntegrationTest extends IntegrationTestCase
 
         $props = [];
         for ($i = 0; $i < 22; ++$i) {
-            $props['prop'.$i] = $i;
+            $props['prop' . $i] = $i;
         }
         $this->assertCount(22, $props);
         $this->getSession()->run('CREATE (n:IssueNode) SET n = $props RETURN n', ['props' => $props]);

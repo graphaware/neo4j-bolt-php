@@ -36,7 +36,7 @@ class DateTimeZoned implements DateTimeConvertible, PackableType
     {
         return new self(
             (int)$dateTime->format('U'),
-            $dateTime->format('u')*1000,
+            $dateTime->format('u') * 1000,
             $dateTime->getTimezone()->getName()
         );
     }
@@ -76,10 +76,10 @@ class DateTimeZoned implements DateTimeConvertible, PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getEpochSeconds())
-            .$packer->packInteger($this->getNanoseconds())
-            .$packer->packText($this->getZoneId());
+            . $packer->packInteger($this->getEpochSeconds())
+            . $packer->packInteger($this->getNanoseconds())
+            . $packer->packText($this->getZoneId());
     }
 }

@@ -30,7 +30,7 @@ class ChunkWriter
 
     /**
      * @param AbstractIO $io
-     * @param Packer     $packer
+     * @param Packer $packer
      */
     public function __construct(AbstractIO $io, Packer $packer)
     {

@@ -43,11 +43,11 @@ class Duration implements PackableType
     {
         // Years are turned into months, minutes and hours are turned into seconds
         return new self(
-            (int) $interval->format('%m') + (int) $interval->format('%y')*12,
-            (int) $interval->format('%d'),
-            (int) $interval->format('%s')
-                + (int) $interval->format('%i')*60
-                + (int) $interval->format('%h')*3600,
+            (int)$interval->format('%m') + (int)$interval->format('%y') * 12,
+            (int)$interval->format('%d'),
+            (int)$interval->format('%s')
+            + (int)$interval->format('%i') * 60
+            + (int)$interval->format('%h') * 3600,
             (int)$interval->format('%f') * 1000
         );
     }
@@ -97,11 +97,11 @@ class Duration implements PackableType
 
     public function pack(Packer $packer): string
     {
-        $str = chr(self::MARKER).chr(self::SIGNATURE);
+        $str = chr(self::MARKER) . chr(self::SIGNATURE);
         return $str
-            .$packer->packInteger($this->getMonths())
-            .$packer->packInteger($this->getDays())
-            .$packer->packInteger($this->getSeconds())
-            .$packer->packInteger($this->getNanoSeconds());
+            . $packer->packInteger($this->getMonths())
+            . $packer->packInteger($this->getDays())
+            . $packer->packInteger($this->getSeconds())
+            . $packer->packInteger($this->getNanoSeconds());
     }
 }
