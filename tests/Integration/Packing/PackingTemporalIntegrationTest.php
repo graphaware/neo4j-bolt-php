@@ -1,0 +1,166 @@
+<?php
+
+namespace GraphAware\Bolt\Tests\Integration\Packing;
+
+use GraphAware\Bolt\Tests\IntegrationTestCase;
+use GraphAware\Bolt\Type\Point2D;
+use GraphAware\Bolt\Type\Point3D;
+use GraphAware\Bolt\Type\Temporal\Date;
+use GraphAware\Bolt\Type\Temporal\DateTimeOffset;
+use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
+use GraphAware\Bolt\Type\Temporal\Duration;
+use GraphAware\Bolt\Type\Temporal\LocalDateTime;
+use GraphAware\Bolt\Type\Temporal\LocalTime;
+use GraphAware\Bolt\Type\Temporal\Time;
+
+/**
+ * @group packing
+ * @group integration
+ * @group temporal
+ * @group v2+
+ */
+class PackingTemporalIntegrationTest extends IntegrationTestCase
+{
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->emptyDB();
+    }
+
+    public function testPackingDateTimeZoned()
+    {
+        $session = $this->getSession();
+        $date = DateTimeZoned::fromDateTime(new \DateTime('2000-01-01 01:00'));
+        $result = $session->run('CREATE (n:Date) SET n.prop = $x RETURN n.prop as x', ['x' => $date]);
+        /**
+         * @var DateTimeZoned $dateOut
+         */
+        $dateOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(DateTimeZoned::class, $dateOut);
+        $this->assertEquals($date->getNanoseconds(), $dateOut->getNanoseconds());
+        $this->assertEquals($date->getEpochSeconds(), $dateOut->getEpochSeconds());
+        $this->assertEquals($date->getZoneId(), $dateOut->getZoneId());
+    }
+
+    public function testPackingNativeDateTime()
+    {
+        $session = $this->getSession();
+        $date = new \DateTime('2000-01-01 01:00');
+        $result = $session->run('CREATE (n:Date) SET n.prop = $x RETURN n.prop as x', ['x' => $date]);
+        /**
+         * @var DateTimeZoned $dateOut
+         */
+        $dateOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(DateTimeZoned::class, $dateOut);
+    }
+
+    public function testPackingDateTimeOffset()
+    {
+        $session = $this->getSession();
+        $date = DateTimeOffset::fromDateTime(new \DateTime('2000-01-01 01:00'));
+        $result = $session->run('CREATE (n:Date) SET n.prop = $x RETURN n.prop as x', ['x' => $date]);
+        /**
+         * @var DateTimeOffset $dateOut
+         */
+        $dateOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(DateTimeOffset::class, $dateOut);
+        $this->assertEquals($date->getNanoseconds(), $dateOut->getNanoseconds());
+        $this->assertEquals($date->getEpochSeconds(), $dateOut->getEpochSeconds());
+        $this->assertEquals($date->getZoneOffset(), $dateOut->getZoneOffset());
+    }
+
+    public function testPackingDate()
+    {
+        $session = $this->getSession();
+        $date = Date::fromDateTime(new \DateTime('2000-01-01'));
+        $result = $session->run('CREATE (n:Date) SET n.prop = $x RETURN n.prop as x', ['x' => $date]);
+        /**
+         * @var Date $dateOut
+         */
+        $dateOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(Date::class, $dateOut);
+        $this->assertEquals($date->getDaysSinceEpoch(), $dateOut->getDaysSinceEpoch());
+    }
+
+    public function testPackingLocalDateTime()
+    {
+        $session = $this->getSession();
+        $date = LocalDateTime::fromDateTime(new \DateTime('2000-01-01 01:00', new \DateTimeZone('EST')));
+        $result = $session->run('CREATE (n:Date) SET n.prop = $x RETURN n.prop as x', ['x' => $date]);
+        /**
+         * @var LocalDateTime $dateOut
+         */
+        $dateOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(LocalDateTime::class, $dateOut);
+        $this->assertEquals($date->getNanoseconds(), $dateOut->getNanoseconds());
+        $this->assertEquals($date->getEpochSeconds(), $dateOut->getEpochSeconds());
+    }
+
+    public function testPackingLocalTime()
+    {
+        $session = $this->getSession();
+        $time = LocalTime::fromDateTime(new \DateTime('01:00:00'));
+        $result = $session->run('CREATE (n:Time) SET n.prop = $x RETURN n.prop as x', ['x' => $time]);
+        /**
+         * @var LocalTime $timeOut
+         */
+        $timeOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(LocalTime::class, $timeOut);
+        $this->assertEquals($time->getNanoSecondsSinceMidnight(), $timeOut->getNanoSecondsSinceMidnight());
+    }
+
+    public function testPackingTime()
+    {
+        $session = $this->getSession();
+        $time = Time::fromDateTime(new \DateTime('01:00:00', new \DateTimeZone('EST')));
+        $result = $session->run('CREATE (n:Time) SET n.prop = $x RETURN n.prop as x', ['x' => $time]);
+        /**
+         * @var Time $timeOut
+         */
+        $timeOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(Time::class, $timeOut);
+        $this->assertEquals($time->getNanoSecondsSinceMidnight(), $timeOut->getNanoSecondsSinceMidnight());
+        $this->assertEquals($time->getZoneOffset(), $timeOut->getZoneOffset());
+    }
+
+    public function testPackingDuration()
+    {
+        $session = $this->getSession();
+        $duration = Duration::fromDateInterval(new \DateInterval('P1Y1M1DT1H1M1S'));
+        $result = $session->run('CREATE (n:Duration) SET n.prop = $x RETURN n.prop as x', ['x' => $duration]);
+        /**
+         * @var Duration $durationOut
+         */
+        $durationOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(Duration::class, $durationOut);
+        $this->assertEquals($duration->getMonths(), $durationOut->getMonths());
+        $this->assertEquals($duration->getDays(), $durationOut->getDays());
+        $this->assertEquals($duration->getSeconds(), $durationOut->getSeconds());
+        $this->assertEquals($duration->getNanoSeconds(), $durationOut->getNanoSeconds());
+    }
+
+    public function testPackingDateInterval()
+    {
+        $session = $this->getSession();
+        $duration = new \DateInterval('P1Y1M1DT1H1M1S');
+        $result = $session->run('CREATE (n:Duration) SET n.prop = $x RETURN n.prop as x', ['x' => $duration]);
+        /**
+         * @var Duration $durationOut
+         */
+        $durationOut = $result->getRecord()->value('x');
+        $this->assertInstanceOf(Duration::class, $durationOut);
+    }
+
+    public function testUnpackingDateInterval()
+    {
+        $session = $this->getSession();
+        $result = $session->run('RETURN duration({weeks: 1});');
+        /**
+         * @var Duration $durationOut
+         */
+        $durationOut = $result->getRecord()->getByIndex(0);
+        $this->assertInstanceOf(Duration::class, $durationOut);
+        $this->assertEquals(7, $durationOut->getDays());
+    }
+
+}

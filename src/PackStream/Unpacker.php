@@ -359,16 +359,21 @@ class Unpacker
             Constants::SIGNATURE_NODE => Structure::SIGNATURE_NODE,
             Constants::SIGNATURE_PATH => Structure::SIGNATURE_PATH,
             Constants::SIGNATURE_RELATIONSHIP => Structure::SIGNATURE_RELATIONSHIP,
-            Constants::SIGNATURE_POINT3D => Structure::SIGNATURE_POINT3D,
-            Constants::SIGNATURE_POINT2D => Structure::SIGNATURE_POINT2D
+            Constants::SIGNATURE_DATE => Structure::SIGNATURE_DATE,
+            Constants::SIGNATURE_DATE_TIME_OFFSET => Structure::SIGNATURE_DATE_TIME_OFFSET,
+            Constants::SIGNATURE_DATE_TIME_ZONED => Structure::SIGNATURE_DATE_TIME_ZONED,
+            Constants::SIGNATURE_DURATION => Structure::SIGNATURE_DURATION,
+            Constants::SIGNATURE_TIME => Structure::SIGNATURE_TIME,
+            Constants::SIGNATURE_LOCAL_TIME => Structure::SIGNATURE_LOCAL_TIME,
+            Constants::SIGNATURE_LOCAL_DATE_TIME => Structure::SIGNATURE_LOCAL_DATE_TIME,
+            Constants::SIGNATURE_POINT2D => Structure::SIGNATURE_POINT2D,
+            Constants::SIGNATURE_POINT3D => Structure::SIGNATURE_POINT3D
         ];
 
         $sigMarker = $walker->read(1);
         $ordMarker = ord($sigMarker);
 
         return $signatures[$ordMarker];
-
-
     }
 
     /**

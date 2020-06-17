@@ -19,6 +19,13 @@ use GraphAware\Bolt\Result\Type\Point2D;
 use GraphAware\Bolt\Result\Type\Point3D;
 use GraphAware\Bolt\Result\Type\Relationship;
 use GraphAware\Bolt\Result\Type\UnboundRelationship;
+use GraphAware\Bolt\Type\Temporal\Date;
+use GraphAware\Bolt\Type\Temporal\DateTimeOffset;
+use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
+use GraphAware\Bolt\Type\Temporal\Duration;
+use GraphAware\Bolt\Type\Temporal\LocalDateTime;
+use GraphAware\Bolt\Type\Temporal\LocalTime;
+use GraphAware\Bolt\Type\Temporal\Time;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
 use GraphAware\Common\Result\Record;
@@ -146,6 +153,27 @@ class Result extends AbstractRecordCursor
                         break;
                     case Structure::SIGNATURE_POINT2D:
                         $array[$k] = new Point2D($elts[1], $elts[2], $elts[0]);
+                        break;
+                    case Structure::SIGNATURE_DATE_TIME_OFFSET:
+                        $array[$k] = new DateTimeOffset($elts[0], $elts[1], $elts[2]);
+                        break;
+                    case Structure::SIGNATURE_DATE_TIME_ZONED:
+                        $array[$k] = new DateTimeZoned($elts[0], $elts[1], $elts[2]);
+                        break;
+                    case Structure::SIGNATURE_LOCAL_DATE_TIME:
+                        $array[$k] = new LocalDateTime($elts[0], $elts[1]);
+                        break;
+                    case Structure::SIGNATURE_LOCAL_TIME:
+                        $array[$k] = new LocalTime($elts[0]);
+                        break;
+                    case Structure::SIGNATURE_TIME:
+                        $array[$k] = new Time($elts[0], $elts[1]);
+                        break;
+                    case Structure::SIGNATURE_DURATION:
+                        $array[$k] = new Duration($elts[0], $elts[1], $elts[2], $elts[3]);
+                        break;
+                    case Structure::SIGNATURE_DATE:
+                        $array[$k] = new Date($elts[0]);
                         break;
                     default:
                         $array[$k] = $this->array_map_deep($v->getElements());

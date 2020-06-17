@@ -131,6 +131,36 @@ class Constants
 
     const SIGNATURE_POINT3D = 0x59;
 
+    // TEMPORAL (V2+)
+
+    const MARKER_DATE = 0xB1;
+
+    const SIGNATURE_DATE = 0x44;
+
+    const MARKER_DATE_TIME_OFFSET = 0xB3;
+
+    const SIGNATURE_DATE_TIME_OFFSET = 0x46;
+
+    const MARKER_DATE_TIME_ZONED = 0xB3;
+
+    const SIGNATURE_DATE_TIME_ZONED = 0x66;
+
+    const MARKER_DURATION = 0xB4;
+
+    const SIGNATURE_DURATION = 0x45;
+
+    const MARKER_TIME = 0xB2;
+
+    const SIGNATURE_TIME = 0x54;
+
+    const MARKER_LOCAL_TIME = 0xB1;
+
+    const SIGNATURE_LOCAL_TIME = 0x74;
+
+    const MARKER_LOCAL_DATE_TIME = 0xB2;
+
+    const SIGNATURE_LOCAL_DATE_TIME = 0x64;
+
     // MISC
 
     const MISC_ZERO = 0x00;

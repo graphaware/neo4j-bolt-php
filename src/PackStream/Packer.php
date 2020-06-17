@@ -16,8 +16,13 @@ use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
 use GraphAware\Bolt\Exception\SerializationException;
 use GraphAware\Bolt\Misc\Helper;
 use GraphAware\Bolt\Protocol\Constants;
+use GraphAware\Bolt\Type\PackableType;
 use GraphAware\Bolt\Type\Point2D;
 use GraphAware\Bolt\Type\Point3D;
+use GraphAware\Bolt\Type\Temporal\Date;
+use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
+use GraphAware\Bolt\Type\Temporal\Duration;
+use GraphAware\Bolt\Type\Temporal\Time;
 use GraphAware\Common\Collection\ArrayList;
 use GraphAware\Common\Collection\CollectionInterface;
 use GraphAware\Common\Collection\Map;
@@ -34,6 +39,15 @@ class Packer
         $stream = '';
         if (is_string($v)) {
             $stream .= $this->packText($v);
+        }
+        elseif ($v instanceof PackableType) {
+            $stream .= $v->pack($this);
+        }
+        elseif ($v instanceof \DateTimeInterface) {
+            $stream .= $this->pack(DateTimeZoned::fromDateTime($v));
+        }
+        elseif ($v instanceof \DateInterval) {
+            $stream .= $this->pack(Duration::fromDateInterval($v));
         }
         elseif ($v instanceof Point3D) {
             $stream .= $this->packPoint3D($v);

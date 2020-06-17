@@ -10,6 +10,13 @@ class Structure
     const SIGNATURE_RELATIONSHIP = 'RELATIONSHIP';
     const SIGNATURE_POINT2D = 'POINT2D';
     const SIGNATURE_POINT3D = 'POINT3D';
+    const SIGNATURE_DATE = 'DATE';
+    const SIGNATURE_DATE_TIME_OFFSET = 'DATE_TIME_OFFSET';
+    const SIGNATURE_DATE_TIME_ZONED = 'DATE_TIME_ZONED';
+    const SIGNATURE_LOCAL_DATE_TIME = 'LOCAL_DATE_TIME';
+    const SIGNATURE_LOCAL_TIME = 'LOCAL_TIME';
+    const SIGNATURE_TIME = 'TIME';
+    const SIGNATURE_DURATION = 'DURATION';
 
     /**
      * @var string
@@ -167,7 +174,14 @@ class Structure
             self::SIGNATURE_PATH,
             self::SIGNATURE_UNBOUND_RELATIONSHIP,
             self::SIGNATURE_POINT2D,
-            self::SIGNATURE_POINT3D
+            self::SIGNATURE_POINT3D,
+            self::SIGNATURE_DATE,
+            self::SIGNATURE_DATE_TIME_OFFSET,
+            self::SIGNATURE_DATE_TIME_ZONED,
+            self::SIGNATURE_LOCAL_DATE_TIME,
+            self::SIGNATURE_LOCAL_TIME,
+            self::SIGNATURE_TIME,
+            self::SIGNATURE_DURATION,
         ];
     }
 }
