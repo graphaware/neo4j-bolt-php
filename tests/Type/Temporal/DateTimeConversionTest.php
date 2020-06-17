@@ -1,19 +1,19 @@
 <?php
 
 
-namespace GraphAware\Bolt\Tests\Type\Temporal;
+namespace PTS\Bolt\Tests\Type\Temporal;
 
-use GraphAware\Bolt\Type\Temporal\Date;
-use GraphAware\Bolt\Type\Temporal\DateTimeOffset;
-use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
-use GraphAware\Bolt\Type\Temporal\Duration;
-use GraphAware\Bolt\Type\Temporal\LocalDateTime;
-use GraphAware\Bolt\Type\Temporal\LocalTime;
-use GraphAware\Bolt\Type\Temporal\Time;
+use PTS\Bolt\Type\Temporal\Date;
+use PTS\Bolt\Type\Temporal\DateTimeOffset;
+use PTS\Bolt\Type\Temporal\DateTimeZoned;
+use PTS\Bolt\Type\Temporal\Duration;
+use PTS\Bolt\Type\Temporal\LocalDateTime;
+use PTS\Bolt\Type\Temporal\LocalTime;
+use PTS\Bolt\Type\Temporal\Time;
 
 /**
  * Class DateTimeConversionTest
- * @package GraphAware\Bolt\Tests\Type\Temporal
+ * @package PTS\Bolt\Tests\Type\Temporal
  * @group unit
  * @group v2+
  */

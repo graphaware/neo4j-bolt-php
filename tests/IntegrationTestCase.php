@@ -1,15 +1,15 @@
 <?php
 
-namespace GraphAware\Bolt\Tests;
+namespace PTS\Bolt\Tests;
 
-use GraphAware\Bolt\Configuration;
-use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\GraphDatabase;
+use PTS\Bolt\Configuration;
+use PTS\Bolt\Driver;
+use PTS\Bolt\GraphDatabase;
 
 class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \GraphAware\Bolt\Driver
+     * @var \PTS\Bolt\Driver
      */
     protected $driver;
 
@@ -43,7 +43,7 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \GraphAware\Bolt\Driver
+     * @return \PTS\Bolt\Driver
      */
     protected function getDriver()
     {
@@ -51,7 +51,7 @@ class IntegrationTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Graphaware\Bolt\Protocol\SessionInterface
+     * @return \PTS\Bolt\Protocol\SessionInterface
      */
     protected function getSession()
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration\Packing;
+namespace PTS\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
-use GraphAware\Bolt\Result\Type\Node;
-use GraphAware\Bolt\Result\Type\Relationship;
-use GraphAware\Bolt\Result\Type\Path;
+use PTS\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Result\Type\Node;
+use PTS\Bolt\Result\Type\Relationship;
+use PTS\Bolt\Result\Type\Path;
 
 /**
  * @group packstream

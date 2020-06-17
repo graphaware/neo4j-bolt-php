@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
-use GraphAware\Bolt\IO\AbstractIO;
+use PTS\Bolt\IO\AbstractIO;
 use GraphAware\Common\Driver\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

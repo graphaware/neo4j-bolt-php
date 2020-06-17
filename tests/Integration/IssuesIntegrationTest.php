@@ -1,11 +1,11 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace PTS\Bolt\Tests\Integration;
 
-use GraphAware\Bolt\Configuration;
-use GraphAware\Bolt\GraphDatabase;
-use GraphAware\Bolt\Result\Result;
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Configuration;
+use PTS\Bolt\GraphDatabase;
+use PTS\Bolt\Result\Result;
+use PTS\Bolt\Tests\IntegrationTestCase;
 
 class IssuesIntegrationTest extends IntegrationTestCase
 {

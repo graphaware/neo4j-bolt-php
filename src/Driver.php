@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt;
+namespace PTS\Bolt;
 
-use GraphAware\Bolt\Exception\IOException;
-use GraphAware\Bolt\IO\StreamSocket;
-use GraphAware\Bolt\Protocol\SessionRegistry;
-use GraphAware\Bolt\PackStream\Packer;
-use GraphAware\Bolt\Protocol\V1\Session;
-use GraphAware\Bolt\Protocol\V2\Session as SessionV2;
-use GraphAware\Bolt\Protocol\V3\Session as SessionV3;
-use GraphAware\Bolt\Protocol\V4\Session as SessionV4;
+use PTS\Bolt\Exception\IOException;
+use PTS\Bolt\IO\StreamSocket;
+use PTS\Bolt\Protocol\SessionRegistry;
+use PTS\Bolt\PackStream\Packer;
+use PTS\Bolt\Protocol\V1\Session;
+use PTS\Bolt\Protocol\V2\Session as SessionV2;
+use PTS\Bolt\Protocol\V3\Session as SessionV3;
+use PTS\Bolt\Protocol\V4\Session as SessionV4;
 use GraphAware\Common\Driver\DriverInterface;
 use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use GraphAware\Bolt\Exception\HandshakeException;
+use PTS\Bolt\Exception\HandshakeException;
 
 class Driver implements DriverInterface
 {

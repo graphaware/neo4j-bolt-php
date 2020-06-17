@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Result\Type;
+namespace PTS\Bolt\Result\Type;
 
 use GraphAware\Common\Type\Node as NodeInterface;
 use GraphAware\Common\Type\Path as BasePathInterface;

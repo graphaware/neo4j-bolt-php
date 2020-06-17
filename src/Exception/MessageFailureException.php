@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Exception;
+namespace PTS\Bolt\Exception;
 
 class MessageFailureException extends \RuntimeException implements BoltExceptionInterface
 {

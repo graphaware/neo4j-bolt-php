@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphAware\Bolt\PackStream\Structure;
+namespace PTS\Bolt\PackStream\Structure;
 
 class Structure
 {

@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\V1;
+namespace PTS\Bolt\Protocol\V1;
 
-use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
-use GraphAware\Bolt\IO\AbstractIO;
-use GraphAware\Bolt\Protocol\AbstractSession;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
-use GraphAware\Bolt\Protocol\Message\AckFailureMessage;
-use GraphAware\Bolt\Protocol\Message\InitMessage;
-use GraphAware\Bolt\Protocol\Message\PullAllMessage;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
-use GraphAware\Bolt\Protocol\Message\RunMessage;
-use GraphAware\Bolt\Protocol\Message\V4\PullMessage;
-use GraphAware\Bolt\Protocol\Pipeline;
-use GraphAware\Bolt\Exception\MessageFailureException;
-use GraphAware\Bolt\Result\Result as CypherResult;
+use PTS\Bolt\Driver;
+use PTS\Bolt\Exception\BoltInvalidArgumentException;
+use PTS\Bolt\IO\AbstractIO;
+use PTS\Bolt\Protocol\AbstractSession;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Protocol\Message\AckFailureMessage;
+use PTS\Bolt\Protocol\Message\InitMessage;
+use PTS\Bolt\Protocol\Message\PullAllMessage;
+use PTS\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\Protocol\Message\RunMessage;
+use PTS\Bolt\Protocol\Message\V4\PullMessage;
+use PTS\Bolt\Protocol\Pipeline;
+use PTS\Bolt\Exception\MessageFailureException;
+use PTS\Bolt\Result\Result as CypherResult;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Driver\PipelineInterface;
 use http\Exception\RuntimeException;
@@ -209,7 +209,7 @@ class Session extends AbstractSession
     }
 
     /**
-     * @return \GraphAware\Bolt\PackStream\Structure\Structure
+     * @return \PTS\Bolt\PackStream\Structure\Structure
      */
     public function receiveMessage()
     {
@@ -243,7 +243,7 @@ class Session extends AbstractSession
     }
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\AbstractMessage $message
+     * @param \PTS\Bolt\Protocol\Message\AbstractMessage $message
      */
     public function sendMessage(AbstractMessage $message)
     {
@@ -251,7 +251,7 @@ class Session extends AbstractSession
     }
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\AbstractMessage[] $messages
+     * @param \PTS\Bolt\Protocol\Message\AbstractMessage[] $messages
      */
     public function sendMessages(array $messages)
     {

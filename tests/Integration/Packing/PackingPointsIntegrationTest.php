@@ -1,10 +1,10 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration\Packing;
+namespace PTS\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
-use GraphAware\Bolt\Type\Point2D;
-use GraphAware\Bolt\Type\Point3D;
+use PTS\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Type\Point2D;
+use PTS\Bolt\Type\Point3D;
 
 /**
  * @group packing
@@ -29,7 +29,7 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
         $point = new Point2D(5421394.5693251, 1.9287);
         $result = $session->run('CREATE (n:Point) SET n.prop = $x RETURN n.prop as x', ['x' => $point]);
         /**
-         * @var \GraphAware\Bolt\Type\Point2D $pointOut
+         * @var \PTS\Bolt\Type\Point2D $pointOut
          */
         $pointOut = $result->getRecord()->value('x');
         $this->assertInstanceOf(Point2D::class, $pointOut);
@@ -44,7 +44,7 @@ class PackingPointsIntegrationTest extends IntegrationTestCase
         $point = new Point3D(1234.56543, 5421394.5693251, 1.9287);
         $result = $session->run('CREATE (n:Point3d) SET n.prop = $x RETURN n.prop as x', ['x' => $point]);
         /**
-         * @var \GraphAware\Bolt\Type\Point3D $pointOut
+         * @var \PTS\Bolt\Type\Point3D $pointOut
          */
         $pointOut = $result->getRecord()->value('x');
         $this->assertInstanceOf(Point3D::class, $pointOut);

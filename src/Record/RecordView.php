@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Record;
+namespace PTS\Bolt\Record;
 
 use GraphAware\Common\Result\RecordViewInterface;
 use GraphAware\Common\Type\Node;
@@ -66,7 +66,7 @@ class RecordView implements RecordViewInterface
     /**
      * @param $key
      *
-     * @return mixed|\GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Relationship|\GraphAware\Bolt\Result\Type\Path
+     * @return mixed|\PTS\Bolt\Result\Type\Node|\PTS\Bolt\Result\Type\Relationship|\PTS\Bolt\Result\Type\Path
      */
     public function value($key)
     {
@@ -77,7 +77,7 @@ class RecordView implements RecordViewInterface
      * @param string $key
      * @param mixed  $defaultValue
      *
-     * @return \GraphAware\Bolt\Result\Type\Node|\GraphAware\Bolt\Result\Type\Path|\GraphAware\Bolt\Result\Type\Relationship|mixed
+     * @return \PTS\Bolt\Result\Type\Node|\PTS\Bolt\Result\Type\Path|\PTS\Bolt\Result\Type\Relationship|mixed
      */
     public function get($key, $defaultValue = null)
     {
@@ -93,7 +93,7 @@ class RecordView implements RecordViewInterface
      *
      * @param $key
      *
-     * @return \GraphAware\Bolt\Result\Type\Node
+     * @return \PTS\Bolt\Result\Type\Node
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Node
      */
@@ -109,7 +109,7 @@ class RecordView implements RecordViewInterface
     /**
      * @param $key
      *
-     * @return \GraphAware\Bolt\Result\Type\Relationship
+     * @return \PTS\Bolt\Result\Type\Relationship
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Relationship
      */
@@ -125,7 +125,7 @@ class RecordView implements RecordViewInterface
     /**
      * @param $key
      *
-     * @return \GraphAware\Bolt\Result\Type\Path
+     * @return \PTS\Bolt\Result\Type\Path
      *
      * @throws \InvalidArgumentException When the value is not null or instance of Path
      */

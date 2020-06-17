@@ -1,12 +1,12 @@
 <?php
 
 
-namespace GraphAware\Bolt\Type\Temporal;
+namespace PTS\Bolt\Type\Temporal;
 
 
-use GraphAware\Bolt\PackStream\Packer;
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Type\PackableType;
+use PTS\Bolt\PackStream\Packer;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Type\PackableType;
 
 class Duration implements PackableType
 {

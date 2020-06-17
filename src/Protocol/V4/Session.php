@@ -1,12 +1,12 @@
 <?php
 
 
-namespace GraphAware\Bolt\Protocol\V4;
+namespace PTS\Bolt\Protocol\V4;
 
 
-use GraphAware\Bolt\Protocol\Message\V4\PullMessage;
+use PTS\Bolt\Protocol\Message\V4\PullMessage;
 
-class Session extends \GraphAware\Bolt\Protocol\V3\Session
+class Session extends \PTS\Bolt\Protocol\V3\Session
 {
     const PROTOCOL_VERSION = 4;
 

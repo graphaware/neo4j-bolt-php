@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Result;
+namespace PTS\Bolt\Result;
 
-use GraphAware\Bolt\PackStream\Structure\Structure;
-use GraphAware\Bolt\Record\RecordView;
-use GraphAware\Bolt\Result\Type\Node;
-use GraphAware\Bolt\Result\Type\Path;
-use GraphAware\Bolt\Type\Point2D;
-use GraphAware\Bolt\Type\Point3D;
-use GraphAware\Bolt\Result\Type\Relationship;
-use GraphAware\Bolt\Result\Type\UnboundRelationship;
-use GraphAware\Bolt\Type\Temporal\Date;
-use GraphAware\Bolt\Type\Temporal\DateTimeOffset;
-use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
-use GraphAware\Bolt\Type\Temporal\Duration;
-use GraphAware\Bolt\Type\Temporal\LocalDateTime;
-use GraphAware\Bolt\Type\Temporal\LocalTime;
-use GraphAware\Bolt\Type\Temporal\Time;
+use PTS\Bolt\PackStream\Structure\Structure;
+use PTS\Bolt\Record\RecordView;
+use PTS\Bolt\Result\Type\Node;
+use PTS\Bolt\Result\Type\Path;
+use PTS\Bolt\Type\Point2D;
+use PTS\Bolt\Type\Point3D;
+use PTS\Bolt\Result\Type\Relationship;
+use PTS\Bolt\Result\Type\UnboundRelationship;
+use PTS\Bolt\Type\Temporal\Date;
+use PTS\Bolt\Type\Temporal\DateTimeOffset;
+use PTS\Bolt\Type\Temporal\DateTimeZoned;
+use PTS\Bolt\Type\Temporal\Duration;
+use PTS\Bolt\Type\Temporal\LocalDateTime;
+use PTS\Bolt\Type\Temporal\LocalTime;
+use PTS\Bolt\Type\Temporal\Time;
 use GraphAware\Common\Cypher\StatementInterface;
 use GraphAware\Common\Result\AbstractRecordCursor;
 use RuntimeException;

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\V1;
+namespace PTS\Bolt\Protocol\V1;
 
-use GraphAware\Bolt\Exception\MessageFailureException;
+use PTS\Bolt\Exception\MessageFailureException;
 
 class Response
 {

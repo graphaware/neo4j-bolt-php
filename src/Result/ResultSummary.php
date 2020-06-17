@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphAware\Bolt\Result;
+namespace PTS\Bolt\Result;
 
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Cypher\StatementInterface;

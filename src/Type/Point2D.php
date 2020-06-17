@@ -1,11 +1,11 @@
 <?php
 
 
-namespace GraphAware\Bolt\Type;
+namespace PTS\Bolt\Type;
 
 
-use GraphAware\Bolt\PackStream\Packer;
-use GraphAware\Bolt\Protocol\Constants;
+use PTS\Bolt\PackStream\Packer;
+use PTS\Bolt\Protocol\Constants;
 
 class Point2D implements PackableType
 {

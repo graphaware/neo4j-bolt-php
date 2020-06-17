@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Tests\Documentation;
+namespace PTS\Bolt\Tests\Documentation;
 
-use GraphAware\Bolt\GraphDatabase;
+use PTS\Bolt\GraphDatabase;
 use GraphAware\Common\Driver\DriverInterface;
 
 /**

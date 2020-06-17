@@ -1,10 +1,10 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Result;
+namespace PTS\Bolt\Tests\Result;
 
 /**
  * Class MapAccessUnitTest
- * @package GraphAware\Bolt\Tests\Result
+ * @package PTS\Bolt\Tests\Result
  *
  * @group result-unit
  */

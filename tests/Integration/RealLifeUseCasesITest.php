@@ -1,14 +1,14 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace PTS\Bolt\Tests\Integration;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Result\StatementStatisticsInterface;
 
 /**
  * Class RealLifeUseCasesITest
- * @package GraphAware\Bolt\Tests\Integration
+ * @package PTS\Bolt\Tests\Integration
  *
  * @group real-life
  */

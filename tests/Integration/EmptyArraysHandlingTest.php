@@ -1,13 +1,13 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace PTS\Bolt\Tests\Integration;
 
 use GraphAware\Common\Collections;
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class EmptyArraysHandlingTest
- * @package GraphAware\Bolt\Tests\Integration
+ * @package PTS\Bolt\Tests\Integration
  *
  * @group empty-list
  */

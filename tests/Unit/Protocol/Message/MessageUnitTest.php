@@ -1,13 +1,13 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Protocol\Message;
+namespace PTS\Bolt\Tests\Protocol\Message;
 
-use GraphAware\Bolt\Protocol\Message\SuccessMessage;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Protocol\Message\SuccessMessage;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
 
 /**
  * Class MessageUnitTest
- * @package GraphAware\Bolt\Tests\Protocol\Message
+ * @package PTS\Bolt\Tests\Protocol\Message
  *
  * @group message
  * @group unit

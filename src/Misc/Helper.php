@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Misc;
+namespace PTS\Bolt\Misc;
 
 class Helper
 {

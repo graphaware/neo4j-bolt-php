@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\TCK;
+namespace PTS\Bolt\Tests\TCK;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Type\Node;
 use GraphAware\Common\Type\Relationship;
 use GraphAware\Common\Type\Path;

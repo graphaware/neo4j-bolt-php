@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream\Structure;
+namespace PTS\Bolt\PackStream\Structure;
 
 class MessageStructure
 {

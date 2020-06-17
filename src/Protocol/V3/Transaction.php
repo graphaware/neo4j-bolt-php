@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\V3;
+namespace PTS\Bolt\Protocol\V3;
 
-use GraphAware\Bolt\Exception\MessageFailureException;
-use GraphAware\Bolt\Protocol\Message\V3\BeginMessage;
-use GraphAware\Bolt\Protocol\Message\V3\CommitMessage;
+use PTS\Bolt\Exception\MessageFailureException;
+use PTS\Bolt\Protocol\Message\V3\BeginMessage;
+use PTS\Bolt\Protocol\Message\V3\CommitMessage;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Transaction\TransactionInterface;
 

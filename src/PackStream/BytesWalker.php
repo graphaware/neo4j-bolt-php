@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream;
+namespace PTS\Bolt\PackStream;
 
-use GraphAware\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\Protocol\Message\RawMessage;
 
 class BytesWalker
 {

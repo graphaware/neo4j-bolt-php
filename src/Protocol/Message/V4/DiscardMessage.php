@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\Message\V4;
+namespace PTS\Bolt\Protocol\Message\V4;
 
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
 
 class DiscardMessage extends AbstractMessage
 {

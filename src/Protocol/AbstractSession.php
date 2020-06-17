@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
-use GraphAware\Bolt\IO\AbstractIO;
-use GraphAware\Bolt\PackStream\Serializer;
-use GraphAware\Bolt\PackStream\StreamChannel;
-use GraphAware\Bolt\PackStream\Unpacker;
-use GraphAware\Bolt\PackStream\Packer;
+use PTS\Bolt\IO\AbstractIO;
+use PTS\Bolt\PackStream\Serializer;
+use PTS\Bolt\PackStream\StreamChannel;
+use PTS\Bolt\PackStream\Unpacker;
+use PTS\Bolt\PackStream\Packer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractSession implements SessionInterface

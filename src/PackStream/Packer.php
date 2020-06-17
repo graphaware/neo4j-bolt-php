@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream;
+namespace PTS\Bolt\PackStream;
 
-use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
-use GraphAware\Bolt\Exception\BoltOutOfBoundsException;
-use GraphAware\Bolt\Exception\SerializationException;
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Type\PackableType;
-use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
-use GraphAware\Bolt\Type\Temporal\Duration;
+use PTS\Bolt\Exception\BoltInvalidArgumentException;
+use PTS\Bolt\Exception\BoltOutOfBoundsException;
+use PTS\Bolt\Exception\SerializationException;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Type\PackableType;
+use PTS\Bolt\Type\Temporal\DateTimeZoned;
+use PTS\Bolt\Type\Temporal\Duration;
 use GraphAware\Common\Collection\ArrayList;
 use GraphAware\Common\Collection\CollectionInterface;
 use GraphAware\Common\Collection\Map;

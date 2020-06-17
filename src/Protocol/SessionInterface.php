@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
 use GraphAware\Common\Driver\PipelineInterface;
 use GraphAware\Common\Driver\SessionInterface as BaseSessionInterface;
@@ -27,7 +27,7 @@ interface SessionInterface extends BaseSessionInterface
      * @param array       $parameters
      * @param null|string $tag
      *
-     * @return \GraphAware\Bolt\Result\Result
+     * @return \PTS\Bolt\Result\Result
      */
     public function run($statement, array $parameters = array(), $tag = null);
 

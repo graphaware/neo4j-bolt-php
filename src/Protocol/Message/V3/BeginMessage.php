@@ -1,11 +1,11 @@
 <?php
 
 
-namespace GraphAware\Bolt\Protocol\Message\V3;
+namespace PTS\Bolt\Protocol\Message\V3;
 
 
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
 
 class BeginMessage extends AbstractMessage
 {

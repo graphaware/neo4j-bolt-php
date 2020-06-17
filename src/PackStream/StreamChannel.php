@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream;
+namespace PTS\Bolt\PackStream;
 
-use GraphAware\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\Protocol\Message\RawMessage;
 
 class StreamChannel
 {
@@ -33,12 +33,12 @@ class StreamChannel
     protected $length = 0;
 
     /**
-     * @var \GraphAware\Bolt\IO\AbstractIO
+     * @var \PTS\Bolt\IO\AbstractIO
      */
     protected $io;
 
     /**
-     * @param \GraphAware\Bolt\IO\AbstractIO $io
+     * @param \PTS\Bolt\IO\AbstractIO $io
      */
     public function __construct($io)
     {

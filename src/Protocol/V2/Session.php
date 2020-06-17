@@ -1,9 +1,9 @@
 <?php
 
 
-namespace GraphAware\Bolt\Protocol\V2;
+namespace PTS\Bolt\Protocol\V2;
 
-class Session extends \GraphAware\Bolt\Protocol\V1\Session
+class Session extends \PTS\Bolt\Protocol\V1\Session
 {
     const PROTOCOL_VERSION = 2;
 

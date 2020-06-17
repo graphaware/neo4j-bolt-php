@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream;
+namespace PTS\Bolt\PackStream;
 
-use GraphAware\Bolt\Exception\SerializationException;
-use GraphAware\Bolt\Misc\Helper;
-use GraphAware\Bolt\PackStream\Structure\Structure;
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
-use GraphAware\Bolt\Result\Type\Node;
-use GraphAware\Bolt\Result\Type\Path;
-use GraphAware\Bolt\Result\Type\Relationship;
+use PTS\Bolt\Exception\SerializationException;
+use PTS\Bolt\Misc\Helper;
+use PTS\Bolt\PackStream\Structure\Structure;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\Result\Type\Node;
+use PTS\Bolt\Result\Type\Path;
+use PTS\Bolt\Result\Type\Relationship;
 
 class Unpacker
 {
@@ -50,7 +50,7 @@ class Unpacker
     }
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\RawMessage $message
+     * @param \PTS\Bolt\Protocol\Message\RawMessage $message
      *
      * @return Structure
      */

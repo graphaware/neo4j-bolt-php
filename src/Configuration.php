@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt;
+namespace PTS\Bolt;
 
 use GraphAware\Common\Driver\ConfigInterface;
 use GraphAware\Common\Connection\BaseConfiguration;

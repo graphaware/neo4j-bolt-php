@@ -1,7 +1,7 @@
 <?php
 
 
-namespace GraphAware\Bolt\Type\Temporal;
+namespace PTS\Bolt\Type\Temporal;
 
 
 interface DateTimeConvertible

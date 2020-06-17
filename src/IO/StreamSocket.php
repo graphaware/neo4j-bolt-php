@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\IO;
+namespace PTS\Bolt\IO;
 
-use GraphAware\Bolt\Configuration;
-use GraphAware\Bolt\Exception\IOException;
-use GraphAware\Bolt\Misc\Helper;
+use PTS\Bolt\Configuration;
+use PTS\Bolt\Exception\IOException;
+use PTS\Bolt\Misc\Helper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class StreamSocket extends AbstractIO
@@ -108,7 +108,7 @@ class StreamSocket extends AbstractIO
      */
     public function write($data)
     {
-        //echo \GraphAware\Bolt\Misc\Helper::prettyHex($data) . PHP_EOL;
+        //echo \PTS\Bolt\Misc\Helper::prettyHex($data) . PHP_EOL;
         $this->assertConnected();
         $written = 0;
         $len = mb_strlen($data, 'ASCII');
@@ -142,7 +142,7 @@ class StreamSocket extends AbstractIO
 
         while ($read < $n) {
             $buffer = fread($this->sock, ($n - $read));
-            //var_dump(\GraphAware\Bolt\Misc\Helper::prettyHex($buffer));
+            //var_dump(\PTS\Bolt\Misc\Helper::prettyHex($buffer));
             // check '' later for non-blocking mode use case
             if ($buffer === false || '' === $buffer) {
                 throw new IOException('Error receiving data');

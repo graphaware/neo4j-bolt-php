@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Result;
+namespace PTS\Bolt\Tests\Result;
 
-use GraphAware\Bolt\Result\Type\MapAccess;
+use PTS\Bolt\Result\Type\MapAccess;
 
 class DummyMA extends MapAccess
 {

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
 class Constants
 {

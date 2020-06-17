@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\V3;
+namespace PTS\Bolt\Protocol\V3;
 
-use GraphAware\Bolt\Driver;
-use GraphAware\Bolt\Protocol\Message\V3\BeginMessage;
-use GraphAware\Bolt\Protocol\Message\V3\CommitMessage;
-use GraphAware\Bolt\Protocol\Message\V3\GoodbyeMessage;
-use GraphAware\Bolt\Protocol\Message\V3\HelloMessage;
-use GraphAware\Bolt\Protocol\Message\V3\RollbackMessage;
-use GraphAware\Bolt\Protocol\Message\V3\RunMessageWithMetadata;
+use PTS\Bolt\Driver;
+use PTS\Bolt\Protocol\Message\V3\BeginMessage;
+use PTS\Bolt\Protocol\Message\V3\CommitMessage;
+use PTS\Bolt\Protocol\Message\V3\GoodbyeMessage;
+use PTS\Bolt\Protocol\Message\V3\HelloMessage;
+use PTS\Bolt\Protocol\Message\V3\RollbackMessage;
+use PTS\Bolt\Protocol\Message\V3\RunMessageWithMetadata;
 
-class Session extends \GraphAware\Bolt\Protocol\V1\Session
+class Session extends \PTS\Bolt\Protocol\V1\Session
 {
     const PROTOCOL_VERSION = 3;
 

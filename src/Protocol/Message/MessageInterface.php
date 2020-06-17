@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\Message;
+namespace PTS\Bolt\Protocol\Message;
 
 interface MessageInterface
 {

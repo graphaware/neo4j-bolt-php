@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\IO;
+namespace PTS\Bolt\IO;
 
-use GraphAware\Bolt\Exception\IOException;
+use PTS\Bolt\Exception\IOException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Socket extends AbstractIO

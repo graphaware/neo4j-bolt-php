@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\PackStream;
+namespace PTS\Bolt\PackStream;
 
-use GraphAware\Bolt\PackStream\Structure\MessageStructure;
-use GraphAware\Bolt\Protocol\Message\AbstractMessage;
-use GraphAware\Bolt\Protocol\Message\FailureMessage;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
-use GraphAware\Bolt\Protocol\Message\RecordMessage;
-use GraphAware\Bolt\Protocol\Message\SuccessMessage;
+use PTS\Bolt\PackStream\Structure\MessageStructure;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Protocol\Message\FailureMessage;
+use PTS\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\Protocol\Message\RecordMessage;
+use PTS\Bolt\Protocol\Message\SuccessMessage;
 
 class Serializer
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace GraphAware\Bolt\Type;
+namespace PTS\Bolt\Type;
 
 
-use GraphAware\Bolt\PackStream\Packer;
+use PTS\Bolt\PackStream\Packer;
 
 interface PackableType
 {

@@ -25,12 +25,12 @@
     },
     "autoload": {
       "psr-4": {
-          "GraphAware\\Bolt\\": "src/"
+          "PTS\\Bolt\\": "src/"
       }
     },
     "autoload-dev": {
         "psr-4": {
-            "GraphAware\\Bolt\\Tests\\": "tests/"
+            "PTS\\Bolt\\Tests\\": "tests/"
         }
     },
     "require-dev": {

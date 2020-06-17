@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol\Message;
+namespace PTS\Bolt\Protocol\Message;
 
-use GraphAware\Bolt\Protocol\Constants;
+use PTS\Bolt\Protocol\Constants;
 
 class AckFailureMessage extends AbstractMessage
 {

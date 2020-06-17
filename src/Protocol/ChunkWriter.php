@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
-use GraphAware\Bolt\IO\AbstractIO;
-use GraphAware\Bolt\PackStream\Packer;
+use PTS\Bolt\IO\AbstractIO;
+use PTS\Bolt\PackStream\Packer;
 
 class ChunkWriter
 {
@@ -39,7 +39,7 @@ class ChunkWriter
     }
 
     /**
-     * @param \GraphAware\Bolt\Protocol\Message\AbstractMessage[] $messages
+     * @param \PTS\Bolt\Protocol\Message\AbstractMessage[] $messages
      */
     public function writeMessages(array $messages)
     {

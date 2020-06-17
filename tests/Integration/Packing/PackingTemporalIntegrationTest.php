@@ -1,17 +1,17 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration\Packing;
+namespace PTS\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
-use GraphAware\Bolt\Type\Point2D;
-use GraphAware\Bolt\Type\Point3D;
-use GraphAware\Bolt\Type\Temporal\Date;
-use GraphAware\Bolt\Type\Temporal\DateTimeOffset;
-use GraphAware\Bolt\Type\Temporal\DateTimeZoned;
-use GraphAware\Bolt\Type\Temporal\Duration;
-use GraphAware\Bolt\Type\Temporal\LocalDateTime;
-use GraphAware\Bolt\Type\Temporal\LocalTime;
-use GraphAware\Bolt\Type\Temporal\Time;
+use PTS\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Type\Point2D;
+use PTS\Bolt\Type\Point3D;
+use PTS\Bolt\Type\Temporal\Date;
+use PTS\Bolt\Type\Temporal\DateTimeOffset;
+use PTS\Bolt\Type\Temporal\DateTimeZoned;
+use PTS\Bolt\Type\Temporal\Duration;
+use PTS\Bolt\Type\Temporal\LocalDateTime;
+use PTS\Bolt\Type\Temporal\LocalTime;
+use PTS\Bolt\Type\Temporal\Time;
 
 /**
  * @group packing

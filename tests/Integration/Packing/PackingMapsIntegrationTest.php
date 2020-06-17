@@ -1,12 +1,12 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration\Packing;
+namespace PTS\Bolt\Tests\Integration\Packing;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Tests\IntegrationTestCase;
 
 /**
  * Class PackingMapsIntegrationTest
- * @package GraphAware\Bolt\Tests\Integration\Packing
+ * @package PTS\Bolt\Tests\Integration\Packing
  *
  * @group integration
  * @group packing

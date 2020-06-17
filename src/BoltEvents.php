@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt;
+namespace PTS\Bolt;
 
 final class BoltEvents
 {

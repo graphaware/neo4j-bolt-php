@@ -1,16 +1,16 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Integration;
+namespace PTS\Bolt\Tests\Integration;
 
-use GraphAware\Bolt\Exception\MessageFailureException;
-use GraphAware\Bolt\Result\Type\Node;
-use GraphAware\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Exception\MessageFailureException;
+use PTS\Bolt\Result\Type\Node;
+use PTS\Bolt\Tests\IntegrationTestCase;
 use GraphAware\Common\Cypher\Statement;
 use GraphAware\Common\Transaction\TransactionState;
 
 /**
  * Class TransactionIntegrationTest
- * @package GraphAware\Bolt\Tests\Integration
+ * @package PTS\Bolt\Tests\Integration
  *
  * @group tx-it
  */

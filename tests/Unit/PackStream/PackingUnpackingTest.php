@@ -1,18 +1,18 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Unit\PackSream;
+namespace PTS\Bolt\Tests\Unit\PackSream;
 
-use GraphAware\Bolt\IO\StreamSocket;
-use GraphAware\Bolt\PackStream\BytesWalker;
-use GraphAware\Bolt\PackStream\StreamChannel;
-use GraphAware\Bolt\PackStream\Unpacker;
-use GraphAware\Bolt\Protocol\Constants;
-use GraphAware\Bolt\Protocol\Message\RawMessage;
-use GraphAware\Bolt\PackStream\Packer;
+use PTS\Bolt\IO\StreamSocket;
+use PTS\Bolt\PackStream\BytesWalker;
+use PTS\Bolt\PackStream\StreamChannel;
+use PTS\Bolt\PackStream\Unpacker;
+use PTS\Bolt\Protocol\Constants;
+use PTS\Bolt\Protocol\Message\RawMessage;
+use PTS\Bolt\PackStream\Packer;
 
 /**
  * Class UnpackerTest
- * @package GraphAware\Bolt\Tests\Unit\PackSream
+ * @package PTS\Bolt\Tests\Unit\PackSream
  *
  * @group unit
  * @group unpack
@@ -20,12 +20,12 @@ use GraphAware\Bolt\PackStream\Packer;
 class UnpackerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \GraphAware\Bolt\PackStream\Unpacker
+     * @var \PTS\Bolt\PackStream\Unpacker
      */
     protected $unpacker;
 
     /**
-     * @var \GraphAware\Bolt\PackStream\Packer
+     * @var \PTS\Bolt\PackStream\Packer
      */
     protected $packer;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphAware\Bolt\Tests\Example;
+namespace PTS\Bolt\Tests\Example;
 
-use GraphAware\Bolt\Tests\IntegrationTestCase;
-use GraphAware\Bolt\Result\Type\Node;
+use PTS\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Result\Type\Node;
 
 /**
  * @group example

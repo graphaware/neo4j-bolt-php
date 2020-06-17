@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace GraphAware\Bolt\Protocol;
+namespace PTS\Bolt\Protocol;
 
-use GraphAware\Bolt\Exception\BoltInvalidArgumentException;
-use GraphAware\Bolt\Protocol\Message\PullAllMessage;
-use GraphAware\Bolt\Protocol\Message\RunMessage;
-use GraphAware\Bolt\Protocol\V1\Session;
+use PTS\Bolt\Exception\BoltInvalidArgumentException;
+use PTS\Bolt\Protocol\Message\PullAllMessage;
+use PTS\Bolt\Protocol\Message\RunMessage;
+use PTS\Bolt\Protocol\V1\Session;
 use GraphAware\Common\Driver\PipelineInterface;
 use GraphAware\Common\Result\ResultCollection;
 
