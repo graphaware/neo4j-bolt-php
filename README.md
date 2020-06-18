@@ -25,8 +25,8 @@ This fork aims to maintain and update PHP Bolt driver to the newest version (V4)
 -  `LocalDatetime` and `DateTime` (zoned and offset)
 - `Time` and `LocalTime`
 - `Duration`
-- PHP's `\DateTime` (converst to neo4j's zoned `DateTime`)
-- PHP's `\DateInterval` (converst to `Duration`)
+- PHP's `\DateTime` (converts to neo4j's zoned `DateTime`)
+- PHP's `\DateInterval` (converts to `Duration`)
 
 ### Requirements:
 
