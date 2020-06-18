@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.2', '7.3', '7.4']
-        neo4j-versions: [3.3, 3.4, 3.5, 4.0]
+        neo4j-versions: ['3.3', '3.4', '3.5', '4.0']
         include:
           - neo4j-versions: 3.3
             bolt-version: 1
