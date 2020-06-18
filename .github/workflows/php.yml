@@ -1,0 +1,61 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4']
+        neo4j-versions: [3.3, 3.4, 3.5, 4.0]
+        include:
+          - neo4j-versions: 3.3
+            bolt-version: 1
+          - neo4j-versions: 3.4
+            bolt-version: 2
+          - neo4j-versions: 3.5
+            bolt-version: 3
+          - neo4j-versions: 4.0
+            bolt-version: 4
+    services:
+      neo4j:
+        image: neo4j:${{ matrix.neo4j-versions }}
+        env:
+          NEO4J_AUTH: none
+        ports: 
+          - 7687:7687
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+      
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress --no-suggest
+    
+    - name: Lint
+      run: composer test
+    
+    - name: Test
+      env:
+        BOLT_VERSION: ${{ matrix.bolt-versions }}
+      run: composer test
+
+   
