@@ -2,6 +2,8 @@
 
 PHP low level Driver for Neo4j's binary Bolt Protocol
 
+![build](https://github.com/PlumTreeSystems/neo4j-bolt-php/workflows/phpunit/badge.svg)
+
 ---
 
 ### About
