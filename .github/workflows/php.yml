@@ -55,7 +55,7 @@ jobs:
     
     - name: Test
       env:
-        BOLT_VERSION: ${{ matrix.bolt-versions }}
+        BOLT_VERSION: ${{ matrix.bolt-version }}
       run: composer test
 
    
