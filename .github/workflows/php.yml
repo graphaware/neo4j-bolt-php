@@ -57,5 +57,8 @@ jobs:
       env:
         BOLT_VERSION: ${{ matrix.bolt-version }}
       run: composer test
+    
+    - name: Coverage
+      uses: codecov/codecov-action@v1
 
    
