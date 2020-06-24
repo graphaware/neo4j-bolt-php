@@ -1,0 +1,11 @@
+{
+
+	"recommendations": [
+		"ms-vscode-remote.remote-containers",
+		"felixfbecker.php-debug",
+		"bmewburn.vscode-intelephense-client",
+		"ikappas.phpcs",
+		"recca0120.vscode-phpunit"
+	],
+	
+}

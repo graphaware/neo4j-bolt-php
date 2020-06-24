@@ -2,3 +2,4 @@ vendor/
 test.php
 phpunit.xml
 .idea/
+clover.xml
