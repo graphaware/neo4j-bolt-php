@@ -134,7 +134,7 @@ class ExceptionDispatchTest extends IntegrationTestCase
         $this->assertEquals(2, $results->size());
     }
 
-    public function testConstraintViolationInTransaction()
+    public function testConstraintViolationInPipeline()
     {
         $this->emptyDB();
         $session = $this->getSession();

@@ -60,8 +60,8 @@ class Session extends \PTS\Bolt\Protocol\V1\Session
         $this->io->assertConnected();
         $ua = Driver::getUserAgent();
         $this->sendMessage(new HelloMessage($ua, $this->credentials));
-        $responseMessage = $this->receiveMessage();
-        if ($responseMessage->getSignature() != 'SUCCESS') {
+        $responseMessage = $this->fetchResponse();
+        if (!$responseMessage->isSuccess()) {
             throw new \Exception('Unable to HELLO');
         }
         $this->isInitialized = true;
@@ -77,19 +77,19 @@ class Session extends \PTS\Bolt\Protocol\V1\Session
     public function begin()
     {
         $this->sendMessage(new BeginMessage());
-        $this->receiveMessage();
+        $this->fetchResponse();
     }
 
     public function commit()
     {
         $this->sendMessage(new CommitMessage());
-        $this->receiveMessage();
+        $this->fetchResponse();
     }
 
     public function rollback()
     {
         $this->sendMessage(new RollbackMessage());
-        $this->receiveMessage();
+        $this->fetchResponse();
     }
 
     public function goodbye()

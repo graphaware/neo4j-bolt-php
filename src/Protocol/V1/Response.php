@@ -20,6 +20,17 @@ class Response
      */
     protected $completed = false;
 
+
+    /**
+     * @var bool
+     */
+    protected $ignored = false;
+
+      /**
+     * @var bool
+     */
+    protected $success = false;
+
     /**
      * @var array
      */
@@ -36,6 +47,17 @@ class Response
     public function onSuccess($metadata)
     {
         $this->completed = true;
+        $this->success = true;
+        $this->metadata[] = $metadata;
+    }
+
+     /**
+     * @param $metadata
+     */
+    public function onIgnored($metadata)
+    {
+        $this->completed = true;
+        $this->ignored = true;
         $this->metadata[] = $metadata;
     }
 
@@ -80,5 +102,21 @@ class Response
     public function isCompleted()
     {
         return $this->completed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->success;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnored()
+    {
+        return $this->ignored;
     }
 }

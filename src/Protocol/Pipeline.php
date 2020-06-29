@@ -11,6 +11,7 @@
 
 namespace PTS\Bolt\Protocol;
 
+use Exception\PipelineFinishedException;
 use PTS\Bolt\Exception\BoltInvalidArgumentException;
 use PTS\Bolt\Protocol\Message\PullAllMessage;
 use PTS\Bolt\Protocol\Message\RunMessage;
@@ -21,12 +22,14 @@ use GraphAware\Common\Result\ResultCollection;
 class Pipeline implements PipelineInterface
 {
     /**
-     * @var Session
+     * @var SessionInterface
      */
     protected $session;
 
+    protected $completed = false;
+
     /**
-     * @var RunMessage[]
+     * @var array
      */
     protected $messages = [];
 
@@ -46,7 +49,11 @@ class Pipeline implements PipelineInterface
         if (null === $query) {
             throw new BoltInvalidArgumentException('Statement cannot be null');
         }
-        $this->messages[] = new RunMessage($query, $parameters, $tag);
+        if ($this->completed) {
+            throw new PipelineFinishedException('Pipeline has completed');
+        }
+        $this->session->runQueued($query, $parameters);
+        $this->messages[] = ['query' => $query, 'parameters' => $parameters, 'tag' => $tag];
     }
 
     /**
@@ -55,21 +62,18 @@ class Pipeline implements PipelineInterface
     public function run()
     {
         $resultCollection = new ResultCollection();
-
+        $this->session->flushQueue();
+        $numOfResults = sizeof($this->messages);
         foreach ($this->messages as $message) {
-            $result = $this->session->run($message->getStatement(), $message->getParams(), $message->getTag());
+            $result = $this->session->fetchRunResult(
+                $message['query'],
+                $message['parameters'],
+                $message['tag']
+            );
             $resultCollection->add($result);
         }
-
+        $this->completed = true;
         return $resultCollection;
-    }
-
-    /**
-     * @return RunMessage[]
-     */
-    public function getMessages()
-    {
-        return $this->messages;
     }
 
     /**

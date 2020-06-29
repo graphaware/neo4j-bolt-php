@@ -102,6 +102,14 @@ class Structure
     /**
      * @return bool
      */
+    public function isIgnored()
+    {
+        return 'IGNORED' === $this->signature;
+    }
+
+    /**
+     * @return bool
+     */
     public function isRecord()
     {
         return 'RECORD' === $this->signature;

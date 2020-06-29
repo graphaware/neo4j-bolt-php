@@ -2,7 +2,6 @@
 
 namespace PTS\Bolt\Tests\Integration;
 
-use PTS\Bolt\Configuration;
 use PTS\Bolt\GraphDatabase;
 use PTS\Bolt\Result\Result;
 use PTS\Bolt\Tests\IntegrationTestCase;
