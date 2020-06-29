@@ -30,7 +30,7 @@ class ExceptionDispatchTest extends IntegrationTestCase
         }
     }
 
-    public function testNeo4jStatusCodeIsAvalailble()
+    public function testNeo4jStatusCodeIsAvailable()
     {
         try {
             $this->getSession()->run("CR");
