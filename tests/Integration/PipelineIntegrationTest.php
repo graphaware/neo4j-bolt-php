@@ -2,6 +2,8 @@
 
 namespace PTS\Bolt\Tests\Integration;
 
+use PTS\Bolt\Exception\PipelineFinishedException;
+use PTS\Bolt\Exception\BoltInvalidArgumentException;
 use PTS\Bolt\Tests\IntegrationTestCase;
 
 class PipelineIntegrationTest extends IntegrationTestCase
@@ -11,7 +13,6 @@ class PipelineIntegrationTest extends IntegrationTestCase
      */
     public function testPipelinesCanBeRun()
     {
-        $this->emptyDB();
         $session = $this->getSession();
         $pipeline = $session->createPipeline();
         $pipeline->push('CREATE (n:User {id:1}) RETURN n', [], 'first');
@@ -22,5 +23,29 @@ class PipelineIntegrationTest extends IntegrationTestCase
         $this->assertEquals(3, $results->get('last')->firstRecord()->getByIndex(0)->get('id'));
         $results->next();
         $this->assertEquals(2, $results->current()->firstRecord()->getByIndex(0)->get('id'));
+
+        // no more statements after pipeline has run
+        $this->setExpectedException(PipelineFinishedException::class);
+        $pipeline->push('CREATE (n:User {id:1}) RETURN n', [], 'first');
+    }
+
+    
+    public function testPipelinesDoNotAllowEmptyStatements()
+    {
+        $session = $this->getSession();
+        $pipeline = $session->createPipeline();
+        // no empty statements
+        $this->setExpectedException(BoltInvalidArgumentException::class);
+        $pipeline->push('');
+    }
+
+    public function testPipelinesCanNotBeRunTwice()
+    {
+        $session = $this->getSession();
+        $pipeline = $session->createPipeline();
+        $pipeline->push('CREATE (n:User {id:1}) RETURN n', [], 'first');
+        $pipeline->run();
+        $this->setExpectedException(PipelineFinishedException::class);
+        $pipeline->run();
     }
 }

@@ -11,10 +11,9 @@
 
 namespace PTS\Bolt\Protocol;
 
-use GraphAware\Common\Driver\PipelineInterface;
-use GraphAware\Common\Driver\SessionInterface as BaseSessionInterface;
+use PTS\Bolt\Protocol\PipelineInterface;
 use GraphAware\Common\Transaction\TransactionInterface;
-use PTS\Bolt\Result\Result;
+use GraphAware\Common\Driver\SessionInterface as BaseSessionInterface;
 
 interface SessionInterface extends BaseSessionInterface
 {
@@ -31,32 +30,6 @@ interface SessionInterface extends BaseSessionInterface
      * @return \PTS\Bolt\Result\Result
      */
     public function run($statement, array $parameters = [], $tag = null);
-
-    /**
-     * Fetch Result from query
-     * @param string $statement
-     * @param array $parameters
-     * @param null|string $tag
-     *
-     * @return \PTS\Bolt\Result\Result
-     */
-    public function fetchRunResult($statement, array $parameters = [], $tag = null): Result;
-
-    /**
-     * Queue query
-     * @param $statement
-     * @param array $parameters
-     * @return void
-     */
-    public function runQueued($statement, array $parameters = []);
-    
-
-    /**
-     * Flush message queue
-     * @return void
-     */
-    public function flushQueue();
- 
 
     /**
      * @param PipelineInterface $pipeline

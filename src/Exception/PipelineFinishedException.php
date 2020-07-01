@@ -1,6 +1,6 @@
 <?php
 
-namespace Exception;
+namespace PTS\Bolt\Exception;
 
 use PTS\Bolt\Exception\BoltExceptionInterface;
 

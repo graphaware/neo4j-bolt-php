@@ -4,6 +4,7 @@ namespace PTS\Bolt\Tests\Integration;
 
 use PTS\Bolt\Protocol\SessionInterface;
 use PTS\Bolt\Tests\IntegrationTestCase;
+use PTS\Bolt\Driver;
 
 /**
  * Class HandshakeIntegrationTest
@@ -24,6 +25,17 @@ class HandshakeIntegrationTest extends IntegrationTestCase
 
     public function testErrorIsThrownWhenNoVersionCanBeAgreed()
     {
-        // needs some refactoring for mocking the session registry
+        $version = getenv('BOLT_VERSION') ? getenv('BOLT_VERSION') : 4;
+        if ($version != 4) {
+            $this->markTestSkipped('Version 1 is supported');
+            return;
+        }
+        $driver = new Driver(
+            $this->getBoltUrl(),
+            $this->getConfig(),
+            1
+        );
+        $this->setExpectedException(\PTS\Bolt\Exception\HandshakeException::class);
+        $driver->session();
     }
 }

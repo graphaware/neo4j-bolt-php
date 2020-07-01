@@ -4,7 +4,7 @@
 		"ms-vscode-remote.remote-containers",
 		"felixfbecker.php-debug",
 		"bmewburn.vscode-intelephense-client",
-		"ikappas.phpcs",
+		"valeryanm.vscode-phpsab",
 		"recca0120.vscode-phpunit"
 	],
 	

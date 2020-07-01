@@ -11,13 +11,9 @@
 
 namespace PTS\Bolt\Protocol;
 
-use Exception\PipelineFinishedException;
+use PTS\Bolt\Exception\PipelineFinishedException;
+use PTS\Bolt\Protocol\PipelineInterface;
 use PTS\Bolt\Exception\BoltInvalidArgumentException;
-use PTS\Bolt\Protocol\Message\PullAllMessage;
-use PTS\Bolt\Protocol\Message\RunMessage;
-use PTS\Bolt\Protocol\V1\Session;
-use GraphAware\Common\Driver\PipelineInterface;
-use GraphAware\Common\Result\ResultCollection;
 
 class Pipeline implements PipelineInterface
 {
@@ -29,7 +25,7 @@ class Pipeline implements PipelineInterface
     protected $completed = false;
 
     /**
-     * @var array
+     * @var PipelineMessage[]
      */
     protected $messages = [];
 
@@ -44,16 +40,15 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function push($query, array $parameters = [], $tag = null)
+    public function push($query, array $parameters = [], $tag = '')
     {
-        if (null === $query) {
+        if (!$query) {
             throw new BoltInvalidArgumentException('Statement cannot be null');
         }
         if ($this->completed) {
             throw new PipelineFinishedException('Pipeline has completed');
         }
-        $this->session->runQueued($query, $parameters);
-        $this->messages[] = ['query' => $query, 'parameters' => $parameters, 'tag' => $tag];
+        $this->messages[] = new PipelineMessage($query, $parameters, $tag);
     }
 
     /**
@@ -61,19 +56,11 @@ class Pipeline implements PipelineInterface
      */
     public function run()
     {
-        $resultCollection = new ResultCollection();
-        $this->session->flushQueue();
-        $numOfResults = sizeof($this->messages);
-        foreach ($this->messages as $message) {
-            $result = $this->session->fetchRunResult(
-                $message['query'],
-                $message['parameters'],
-                $message['tag']
-            );
-            $resultCollection->add($result);
+        if ($this->completed) {
+            throw new PipelineFinishedException('Pipeline has completed');
         }
         $this->completed = true;
-        return $resultCollection;
+        return $this->session->runPipeline($this);
     }
 
     /**
@@ -82,5 +69,13 @@ class Pipeline implements PipelineInterface
     public function isEmpty()
     {
         return empty($this->messages);
+    }
+
+    /**
+     * @return PipelineMessage[]
+     */
+    public function getMessages(): array
+    {
+        return $this->messages;
     }
 }

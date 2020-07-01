@@ -12,27 +12,28 @@
 namespace PTS\Bolt\Protocol\V1;
 
 use PTS\Bolt\Driver;
-use PTS\Bolt\Exception\BoltInvalidArgumentException;
+use OutOfBoundsException;
 use PTS\Bolt\IO\AbstractIO;
+use PTS\Bolt\Protocol\Pipeline;
+use PTS\Bolt\Exception\IOException;
+use http\Exception\RuntimeException;
 use PTS\Bolt\Protocol\AbstractSession;
-use PTS\Bolt\Protocol\Message\AbstractMessage;
-use PTS\Bolt\Protocol\Message\AckFailureMessage;
-use PTS\Bolt\Protocol\Message\InitMessage;
-use PTS\Bolt\Protocol\Message\PullAllMessage;
+use GraphAware\Common\Cypher\Statement;
+use PTS\Bolt\Protocol\PipelineInterface;
 use PTS\Bolt\Protocol\Message\RawMessage;
 use PTS\Bolt\Protocol\Message\RunMessage;
-use PTS\Bolt\Protocol\Pipeline;
-use PTS\Bolt\Exception\MessageFailureException;
-use PTS\Bolt\Result\Result as CypherResult;
-use GraphAware\Common\Cypher\Statement;
-use GraphAware\Common\Driver\PipelineInterface;
-use http\Exception\RuntimeException;
-use OutOfBoundsException;
+use PTS\Bolt\Protocol\Message\InitMessage;
 use phpDocumentor\Reflection\Types\Boolean;
+use PTS\Bolt\Result\Result as CypherResult;
+use PTS\Bolt\Protocol\Message\PullAllMessage;
+use GraphAware\Common\Result\ResultCollection;
 use PTS\Bolt\Exception\SerializationException;
-use PTS\Bolt\Exception\BoltOutOfBoundsException;
-use PTS\Bolt\Exception\IOException;
+use PTS\Bolt\Protocol\Message\AbstractMessage;
+use PTS\Bolt\Exception\MessageFailureException;
 use RuntimeException as GlobalRuntimeException;
+use PTS\Bolt\Exception\BoltOutOfBoundsException;
+use PTS\Bolt\Protocol\Message\AckFailureMessage;
+use PTS\Bolt\Exception\BoltInvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Session extends AbstractSession
@@ -53,11 +54,6 @@ class Session extends AbstractSession
      * @var array
      */
     protected $credentials;
-
-    /**
-     * @var AbstractMessage[]
-     */
-    private $messageQueue = [];
 
     private $remainingResponses = 0;
 
@@ -94,8 +90,8 @@ class Session extends AbstractSession
      */
     public function run($statement, array $parameters = [], $tag = null)
     {
-        if (null === $statement) {
-            //throw new BoltInvalidArgumentException("Statement cannot be null");
+        if (!$statement) {
+            throw new BoltInvalidArgumentException("Statement cannot be null");
         }
         $messages = [
             $this->createRunMessage($statement, $parameters),
@@ -106,7 +102,7 @@ class Session extends AbstractSession
         return $this->fetchRunResult($statement, $parameters, $tag);
     }
 
-    public function fetchRunResult($statement, array $parameters = [], $tag = null): CypherResult
+    protected function fetchRunResult($statement, array $parameters = [], $tag = null): CypherResult
     {
         $runResponse = $this->fetchResponse();
         $pullResponse = $this->fetchResponse();
@@ -165,25 +161,6 @@ class Session extends AbstractSession
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function runQueued($statement, array $parameters = [])
-    {
-        $this->messageQueue[] = $this->createRunMessage($statement, $parameters);
-        $this->messageQueue[] = $this->createPullAllMessage();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flushQueue()
-    {
-        $this->sendMessages($this->messageQueue);
-        $this->messageQueue = [];
-    }
-
-
     protected function createRunMessage($statement, $prams = [])
     {
         return new RunMessage($statement, $prams);
@@ -199,7 +176,25 @@ class Session extends AbstractSession
      */
     public function runPipeline(PipelineInterface $pipeline)
     {
-        return $pipeline->run();
+        $resultCollection = new ResultCollection();
+        $messages = $pipeline->getMessages();
+        $boltMessages = [];
+        // create messages
+        foreach ($messages as $message) {
+            $boltMessages[] = $this->createRunMessage($message->getStatement(), $message->getParameters());
+            $boltMessages[] = $this->createPullAllMessage();
+        }
+        $this->sendMessages($boltMessages);
+        // fetch responses
+        foreach ($messages as $message) {
+            $result = $this->fetchRunResult(
+                $message->getStatement(),
+                $message->getParameters(),
+                $message->getTag()
+            );
+            $resultCollection->add($result);
+        }
+        return $resultCollection;
     }
 
     /**
