@@ -49,7 +49,7 @@ composer require plumtreesystems/neo4j-bolt
 [Types](docs/Queries.md)
 
 ### TODO
-- improve pipeline
+- add proper result cursor
 - add support for async (ReactPHP)
 
 #### Bug reports and Pull requests are welcome!
