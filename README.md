@@ -1,3 +1,9 @@
+THIS REPOSITORY IS ARCHIVED.
+
+Please head to http://github.com/neo4j-php or http://neo4j.com/developer/php for up-to-date PHP support for Neo4j.
+
+---
+
 ## Neo4j Bolt PHP
 
 PHP low level Driver for Neo4j's Bolt Remoting Protocol
